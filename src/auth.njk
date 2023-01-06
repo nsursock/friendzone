@@ -24,8 +24,8 @@
   <body class="h-full">
   ```
 -->
-  <div class="flex min-h-screen" x-data="{ email: '', password: '' }">
-    
+  <div class="flex min-h-screen" x-data="data()">
+
     <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
@@ -110,7 +110,7 @@
               </div>
 
               <div>
-                <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign in</button>
+                <button @click="handleSubmit" type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Log in</button>
               </div>
             </form>
           </div>
@@ -118,8 +118,40 @@
       </div>
     </div>
 
-    <div class="relative hidden w-0 flex-1 lg:block bg-gradient-to-r from-blue-800 via-purple-800 to-indigo-800">
-      {# <img class="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80" alt=""> #}
+    <div class="relative hidden w-0 flex-1 lg:block">
+      <img class="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80" alt="">
     </div>
   </div>
+
+  <script>
+    function data() {
+      return {
+        email: '',
+        password: '',
+        error: '',
+        isFetching: false,
+        handleSubmit() {
+          this.isFetching = true
+          this.error = ''
+          fetch('/api/auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: this.email, password: this.password })
+          })
+            .then((response) => response.json())
+            .then((message) => {
+              if (message.success) {
+                console.log(message.user)
+              }
+            })
+            .catch((error) => {
+
+              this.isFetching = false
+            })
+          }
+      }
+    }
+  </script>
 {% endblock %}
