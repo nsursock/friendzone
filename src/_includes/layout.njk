@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/main.bundle.css">
+  <script src="/assets/main.bundle.js" defer></script>
+  <title>{{ title }} | TEA Stack</title>
+</head>
+
+<body class="{{ 'debug-screens' if env.devMode }}">
+  {% include 'header.njk' %}
+  {% block body %}
+    {{ content | safe }}
+  {% endblock %}
+</body>
+
+</html>
