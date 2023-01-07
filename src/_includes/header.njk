@@ -12,13 +12,58 @@
   }
   ```
 -->
+<style>
+  [x-cloak] {
+    display: none;
+  }
+</style>
+{# <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+  <symbol id="icon-logo" fill="none" viewBox="0 0 256 256" stroke="currentColor" stroke-width="2">
+    <g>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M1489 2121 c-137 -68 -240 -142 -350 -251 -138 -137 -228 -272 -299 -447 l-33 -82 43 -65 43 -66 38 66 c134 229 417 469 695 590 35 16 64 33 64 39 0 9 -98 254 -104 262 -1 1 -45 -19 -97 -46z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M1435 1740 c-33 -22 -60 -43 -60 -49 0 -5 27 -27 60 -49 201 -135 386 -355 513 -612 31 -63 58 -117 59 -119 5 -9 263 103 263 115 0 21 -80 171 -135 253 -89 133 -252 291 -390 378 -45 29 -237 124 -246 122 -2 0 -31 -18 -64 -39z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M528 1508 l-126 -51 24 -56 c125 -283 388 -546 669 -669 160 -70 155 -69 228 -26 l63 38 -75 46 c-251 151 -468 400 -601 693 -19 42 -39 76 -45 76 -5 0 -67 -23 -137 -51z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M1327 1366 c-51 -19 -76 -42 -99 -95 -30 -66 -18 -123 36 -177 72 -72 160 -72 232 0 54 54 66 111 36 177 -10 24 -28 52 -40 62 -22 20 -86 46 -112 46 -8 0 -32 -6 -53 -13z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M1805 1102 c-62 -88 -240 -260 -345 -335 -52 -37 -153 -97 -225 -133 -71 -36 -130 -69 -130 -73 0 -10 96 -245 104 -253 11 -12 145 56 251 127 197 132 350 306 459 522 l21 43 -41 72 c-22 40 -44 76 -47 80 -4 4 -25 -19 -47 -50z"/>
+    </g>
+  </symbol>
+</svg> #}
+
 <nav class="bg-white shadow {{ 'hidden' if page.url == '/' or page.url.includes('auth') }}">
   <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
     <div class="flex h-16 justify-between">
       <div class="flex px-2 lg:px-0">
         <div class="flex flex-shrink-0 items-center">
-          <img class="block h-8 w-auto lg:hidden" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-          <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+          <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="270.000000pt" height="260.000000pt" viewBox="0 0 270.000000 260.000000"
+ preserveAspectRatio="xMidYMid meet" class="h-8 w-8 text-indigo-600">
+
+            <g transform="translate(0.000000,260.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+              <path d="M1489 2121 c-137 -68 -240 -142 -350 -251 -138 -137 -228 -272 -299
+-447 l-33 -82 43 -65 43 -66 38 66 c134 229 417 469 695 590 35 16 64 33 64
+39 0 9 -98 254 -104 262 -1 1 -45 -19 -97 -46z"/>
+              <path d="M1435 1740 c-33 -22 -60 -43 -60 -49 0 -5 27 -27 60 -49 201 -135
+386 -355 513 -612 31 -63 58 -117 59 -119 5 -9 263 103 263 115 0 21 -80 171
+-135 253 -89 133 -252 291 -390 378 -45 29 -237 124 -246 122 -2 0 -31 -18
+-64 -39z"/>
+              <path d="M528 1508 l-126 -51 24 -56 c125 -283 388 -546 669 -669 160 -70 155
+-69 228 -26 l63 38 -75 46 c-251 151 -468 400 -601 693 -19 42 -39 76 -45 76
+-5 0 -67 -23 -137 -51z"/>
+              <path d="M1327 1366 c-51 -19 -76 -42 -99 -95 -30 -66 -18 -123 36 -177 72
+-72 160 -72 232 0 54 54 66 111 36 177 -10 24 -28 52 -40 62 -22 20 -86 46
+-112 46 -8 0 -32 -6 -53 -13z"/>
+              <path d="M1805 1102 c-62 -88 -240 -260 -345 -335 -52 -37 -153 -97 -225 -133
+-71 -36 -130 -69 -130 -73 0 -10 96 -245 104 -253 11 -12 145 56 251 127 197
+132 350 306 459 522 l21 43 -41 72 c-22 40 -44 76 -47 80 -4 4 -25 -19 -47
+-50z"/>
+            </g>
+          </svg>
+          {# <svg class="icon icon-logo flex-shrink-0 h-8 w-8 text-indigo-600" aria-hidden="true" focusable="false" role="presentation">
+            <use href="#icon-logo"/>
+          </svg> #}
+          {# <img class="block h-8 w-auto lg:hidden" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+          <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company"> #}
         </div>
         <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
           <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->

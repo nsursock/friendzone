@@ -29,11 +29,11 @@
     <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <img class="h-12 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-          <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+          <img class="w-auto sm:hidden" src="/banner.jpg" alt="Friendzone Banner">
+          <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Log in to your account</h2>
           <p class="mt-2 text-sm text-gray-600">
           Or
-          <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">start your 14-day free trial</a>
+          <button @click="first = !first" class="font-medium text-indigo-600 hover:text-indigo-500">sign up if it's your first visit</button>
           </p>
         </div>
 
@@ -83,7 +83,7 @@
           </div> #}
 
           <div class="mt-6">
-            <form action="#" method="POST" class="space-y-6">
+            <form @submit.prevent="handleSubmit" method="POST" class="space-y-6">
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
                 <div class="mt-1">
@@ -109,9 +109,34 @@
                 </div>
               </div>
 
-              <div>
-                <button @click="handleSubmit" type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Log in</button>
-              </div>
+              <template x-if="!first">
+                <div>
+                  <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Log in</button>
+                  {# <span class="text-center">
+                    <button @click="first = !first" class="text-xs leading-7">First visit? Sign up!</button>
+                  </span> #}
+                </div>
+              </template>
+              <template x-if="first">
+                <div>
+                  <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign up</button>
+                </div>
+              </template>
+
+              <template x-if="error">
+                <div class="flex items-center py-2 px-3 border border-transparent text-sm font-medium rounded-md text-red-100 bg-red-600 mt-1">
+                  <span class="h-6 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 20 20" fill="currentColor">
+                      <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clip-rule="evenodd"/>
+                    </svg>
+                  </span>
+                  <span class="ml-2" x-text="error"></span>
+                </div>
+              </template>
+
             </form>
           </div>
         </div>
@@ -119,13 +144,14 @@
     </div>
 
     <div class="relative hidden w-0 flex-1 lg:block">
-      <img class="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80" alt="">
+      <img class="absolute inset-0 h-4/5 object-cover m-auto" src="/banner.jpg" alt="friendzone banner">
     </div>
   </div>
 
   <script>
     function data() {
       return {
+        first: false,
         email: '',
         password: '',
         error: '',
@@ -133,21 +159,26 @@
         handleSubmit() {
           this.isFetching = true
           this.error = ''
-          fetch('/api/auth', {
+          fetch(
+            `/api/auth?mode=${this.first
+            ? 'signup'
+            : 'login'}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email: this.email, password: this.password })
+            body: JSON.stringify({email: this.email, password: this.password})
           })
             .then((response) => response.json())
             .then((message) => {
-              if (message.success) {
-                console.log(message.user)
+              if (!message.success) {
+                this.error = message.error
+                this.isFetching = false
+              } else {
+                window.location.href = '/home'
               }
             })
             .catch((error) => {
-
               this.isFetching = false
             })
           }

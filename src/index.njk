@@ -69,10 +69,10 @@
             <div class="mt-6 flow-root">
               <div class="-my-6 divide-y divide-gray-500/10">
                 <div class="py-6 grid grid-cols-2 gap-x-12 gap-y-4 text-center" x-data="{ links: [
-                  { text: 'Product', href: 'home.html' },
-                  { text: 'Features', href: 'about.html' },
-                  { text: 'Marketplace', href: 'contact.html' },
-                  { text: 'Company', href:'messages.html' }
+                  { text: 'Product', href: '/product' },
+                  { text: 'Features', href: '/features' },
+                  { text: 'Marketplace', href: '/marketplace' },
+                  { text: 'Company', href:'/company' }
                 ]}">
                   <template x-for="link in links" :key="link.href">
                     <div class="relative">
@@ -115,7 +115,7 @@
               <div class="mt-8 flex gap-x-4 sm:justify-center">
                 <div class="mt-2 relative">
                   <div class="absolute -inset-0.5 bg-indigo-300 rounded-md blur"></div>
-                  <a href="#" class="relative inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
+                  <a href="/auth" class="relative inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
                 Get started
                 <span class="text-indigo-200" aria-hidden="true">&rarr;</span>
                   </a>
