@@ -109,33 +109,35 @@
                 </div>
               </div>
 
-              <template x-if="!first">
-                <div>
-                  <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Log in</button>
-                  {# <span class="text-center">
+              <div>
+                <template x-if="!first">
+                  <div>
+                    <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Log in</button>
+                    {# <span class="text-center">
                     <button @click="first = !first" class="text-xs leading-7">First visit? Sign up!</button>
                   </span> #}
-                </div>
-              </template>
-              <template x-if="first">
-                <div>
-                  <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign up</button>
-                </div>
-              </template>
+                  </div>
+                </template>
+                <template x-if="first">
+                  <div>
+                    <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign up</button>
+                  </div>
+                </template>
 
-              <template x-if="error">
-                <div class="flex items-center py-2 px-3 border border-transparent text-sm font-medium rounded-md text-red-100 bg-red-600 mt-1">
-                  <span class="h-6 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 20 20" fill="currentColor">
-                      <path
+                <template x-if="error">
+                  <div class="flex items-center py-2 px-3 border border-transparent text-sm font-medium rounded-md text-red-100 bg-red-600 mt-1">
+                    <span class="h-6 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewbox="0 0 20 20" fill="currentColor">
+                        <path
                           fill-rule="evenodd"
                           d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                           clip-rule="evenodd"/>
-                    </svg>
-                  </span>
-                  <span class="ml-2" x-text="error"></span>
-                </div>
-              </template>
+                      </svg>
+                    </span>
+                    <span class="ml-2" x-text="error"></span>
+                  </div>
+                </template>
+              </div>
 
             </form>
           </div>
@@ -173,15 +175,19 @@
             .then((message) => {
               if (!message.success) {
                 this.error = message.error
-                this.isFetching = false
               } else {
-                window.location.href = '/home'
+                setTimeout(() => {
+                  window.location.href = '/home'
+                }, 5000)
               }
             })
             .catch((error) => {
+              this.error = error
+            })
+            . finally(() => {
               this.isFetching = false
             })
-          }
+        }
       }
     }
   </script>
