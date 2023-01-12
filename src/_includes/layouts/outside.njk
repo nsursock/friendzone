@@ -10,7 +10,6 @@
 </head>
 
 <body class="{{ 'debug-screens' if env.devMode }}" x-data="global()">
-  {% include 'header.njk' %}
   {% block body %}
     {{ content | safe }}
   {% endblock %}

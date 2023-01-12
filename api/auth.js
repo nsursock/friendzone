@@ -71,7 +71,7 @@ export default async function handler(request, response) {
               const { data, error } = await supabase.from(storageName).insert({
                 email,
                 password: hash,
-              })
+              }).select('*')
 
               if (error) throw new Error(error)
               const token = jwt.sign(

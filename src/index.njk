@@ -1,5 +1,5 @@
 {% set title = 'Welcome' %}
-{% extends "layout.njk" %}
+{% extends "layouts/outside.njk" %}
 
 {% block body %}
   <!-- This example requires Tailwind CSS v3.0+ -->
@@ -110,13 +110,13 @@
               </div>
             </div>
             <div>
-              <h1 class="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">All your socials in one place</h1>
-              <p class="mt-6 text-lg leading-8 text-gray-600 sm:text-center">Tired of navigating from one network to the other? Sick of not having the same following everywhere? Friendzone can be used any way you like!</p>
+              <h1 class="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Friendzone</h1>
+              <p class="mt-6 text-lg leading-8 text-gray-600 sm:text-center">Tired of navigating from one network to the other? Sick of not having the same following everywhere? All your socials in one place!</p>
               <div class="mt-8 flex gap-x-4 sm:justify-center">
                 <div class="mt-2 relative">
                   <div class="absolute -inset-0.5 bg-indigo-300 rounded-md blur"></div>
-                  <a href="/auth" class="relative inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
-                Get started
+                  <a x-data="{ href: ('friendzone_token' in localStorage) ? '/home' : '/auth' }" :href="href" class="relative inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
+                Get started 
                 <span class="text-indigo-200" aria-hidden="true">&rarr;</span>
                   </a>
                 </div>
