@@ -2,28 +2,6 @@
 {% extends "layout.njk" %}
 
 {% block body %}
-  <!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
-  <!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
   <div class="flex min-h-screen" x-data="data()">
 
     <div class="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -176,9 +154,11 @@
               if (!message.success) {
                 this.error = message.error
               } else {
-                setTimeout(() => {
-                  window.location.href = '/home'
-                }, 5000)
+                localStorage.setItem('friendzone_token', message.user.token);
+                Alpine
+                  .store('auth')
+                  .setUser(message.user)
+                window.location.href = '/settings'
               }
             })
             .catch((error) => {
