@@ -17,28 +17,31 @@ async function handler(req, res) {
     // eslint-disable-next-line
     return new Promise((resolve, reject) => {
       form.parse(req, async function (err, fields, files) {
-        let filepath = `public/${
-          files.picture.newFilename
-        }.${files.picture.mimetype.split('/').pop()}`
-        // filepath = filepath.replace(/\s/g, '-') // IN CASE YOU NEED TO REPLACE SPACE OF THE IMAGE NAME
-        const rawData = fs.readFileSync(files.picture.filepath)
-        const { data, error } = await supabase.storage
-          .from(storageName)
-          .upload(filepath, rawData, {
-            contentType: files.picture.mimetype,
-          })
+        var cols = {}
+        if (files.picture) {
+          let filepath = `public/${files.picture.newFilename
+            }.${files.picture.mimetype.split('/').pop()}`
+          // filepath = filepath.replace(/\s/g, '-') // IN CASE YOU NEED TO REPLACE SPACE OF THE IMAGE NAME
+          const rawData = fs.readFileSync(files.picture.filepath)
+          const { data, error } = await supabase.storage
+            .from(storageName)
+            .upload(filepath, rawData, {
+              contentType: files.picture.mimetype,
+            })
 
-        if (error || err) {
-          console.error(error || err);
-          return reject({ success: false })
+          if (error || err) {
+            console.error(error || err);
+            return reject({ success: false })
+          }
+
+          cols.avatar_url = `https://jdlejcgjpmmdtfhqomgy.supabase.co/storage/v1/object/public/${storageName}/${filepath}`
         }
         // YOU DO NOT NEED BELOW UNLESS YOU WANT TO SAVE PUBLIC URL OF THE IMAGE TO THE DATABASE
-        var cols = {}
         for (const [key, value] of Object.entries(fields)) {
           if (key !== 'path' || key !== 'email')
             cols[key] = value
         }
-        cols.avatar_url = `https://jdlejcgjpmmdtfhqomgy.supabase.co/storage/v1/object/public/${storageName}/${filepath}`,
+
         await supabase.from(storageName).update(cols).eq('email', fields.email)
         resolve({ success: true })
       })
