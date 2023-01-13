@@ -2,6 +2,8 @@ import { format, formatRelative, formatDistance } from 'date-fns'
 
 export default () => ({
 
+  notifications: [],
+
   formatDate(date, dateFormat) {
     if (dateFormat === 'relative')
       return formatRelative(date, new Date())

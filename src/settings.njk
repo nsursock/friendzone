@@ -452,10 +452,25 @@
           fetch('/api/settings?panel=account', {
             method: 'POST',
             body: data
-          }).catch((error) => {
-            console.error(error)
           })
-        }
+            .then((response) => response.json())
+            .then((message) => {
+              if (message.success) 
+                this
+                  .notifications
+                  .push({show: true, success: true, title: 'Successfully saved!', description: 'Basic information are now visible.'})
+              else 
+                this
+                  .notifications
+                  .push({show: true, success: false, title: 'Update failed...', description: 'There was an error saving your information.'})
+              })
+            .catch((error) => {
+              console.error(error)
+              this
+                .notifications
+                .push({show: true, success: false, title: 'Update failed...', description: error})
+            })
+          }
       }
     }
   </script>
