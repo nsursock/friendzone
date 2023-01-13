@@ -3,7 +3,7 @@
 
 {% block body %}
   <template x-if="$store.auth.user">
-    <div class="flex h-full pt-1">
+    <div class="flex h-full mt-px">
       {# <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
     <div class="relative z-40 lg:hidden" role="dialog" aria-modal="true">
       <!--
@@ -306,7 +306,7 @@
               </nav>
 
               <!-- Main content -->
-              <div class="flex-1 xl:overflow-y-auto">
+              <div class="flex-1 xl:overflow-y-auto bg-gray-50">
 
                 <div class="mx-auto max-w-3xl py-10 px-4 sm:px-6 lg:py-12 lg:px-8" x-data="dataAccount()">
                   <h1 class="text-3xl font-bold tracking-tight text-gray-900">Account</h1>
@@ -331,7 +331,7 @@
                       <div class="sm:col-span-6">
                         <label for="username" class="block text-sm font-medium text-gray-900">Username</label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                          <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">workcation.com/</span>
+                          <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">friendzone.io/</span>
                           <input x-model="userName" type="text" name="username" id="username" autocomplete="username" value="lisamarie" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         </div>
                       </div>
