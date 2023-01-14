@@ -11,13 +11,13 @@
       </div>
 
       <div class="sm:col-span-3">
-        <label for="first-name" class="block text-sm font-medium text-gray-900">First name</label>
-        <input x-model="firstName" type="text" name="first-name" id="first-name" autocomplete="given-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        <label for="first-name-account" class="block text-sm font-medium text-gray-900">First name</label>
+        <input x-model="firstName" type="text" name="first-name" id="first-name-account" autocomplete="given-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
       </div>
 
       <div class="sm:col-span-3">
-        <label for="last-name" class="block text-sm font-medium text-gray-900">Last name</label>
-        <input x-model="lastName" type="text" name="last-name" id="last-name" autocomplete="family-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        <label for="last-name-account" class="block text-sm font-medium text-gray-900">Last name</label>
+        <input x-model="lastName" type="text" name="last-name" id="last-name-account" autocomplete="family-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
       </div>
 
       <div class="sm:col-span-6">
@@ -31,9 +31,11 @@
       <div class="sm:col-span-6">
         <label for="photo" class="block text-sm font-medium text-gray-900">Photo</label>
         <div class="mt-1 flex items-center">
-          {# <img class="inline-block h-12 w-12 rounded-full" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80" alt=""> #}
-          <template x-if="!$store.auth.user.avatar">
-            <svg class="h-10 w-10 rounded-full border dark:border-gray-200 dark:text-gray-300 text-gray-700 border-gray-800" fill="currentColor" viewBox="0 0 24 24">
+          <template x-if="picture">
+            <img x-ref="preview" class="inline-block h-12 w-12 rounded-full" alt="">
+          </template>
+          <template x-if="!picture">
+            <svg class="h-12 w-12 rounded-full border dark:border-gray-200 dark:text-gray-300 text-gray-700 border-gray-800" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
             </svg>
           </template>
@@ -43,9 +45,9 @@
                 <span>Change</span>
                 <span class="sr-only"> user photo</span>
               </label>
-              <input @change="picture = Object.values($event.target.files)" id="user-photo" name="user-photo" type="file" class="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0">
+              <input @change="preview(event)" id="user-photo" name="user-photo" type="file" class="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0">
             </div>
-            <button type="button" class="ml-3 rounded-md border border-transparent bg-transparent py-2 px-3 text-sm font-medium text-gray-900 hover:text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove</button>
+            <button @click="picture = null" type="button" class="ml-3 rounded-md border border-transparent bg-transparent py-2 px-3 text-sm font-medium text-gray-900 hover:text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove</button>
           </div>
         </div>
       </div>
@@ -71,8 +73,8 @@
       </div>
 
       <div class="sm:col-span-3">
-        <label for="email-address" class="block text-sm font-medium text-gray-900">Email address</label>
-        <input :placeholder="email" disabled type="text" name="email-address" id="email-address" autocomplete="email" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        <label for="email-address-account" class="block text-sm font-medium text-gray-900">Email address</label>
+        <input :placeholder="email" disabled type="text" name="email-address" id="email-address-account" autocomplete="email" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
       </div>
 
       <div class="sm:col-span-3">
@@ -81,8 +83,8 @@
       </div>
 
       <div class="sm:col-span-3">
-        <label for="country" class="block text-sm font-medium text-gray-900">Country</label>
-        <select x-model="country" id="country" name="country" autocomplete="country-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        <label for="country-account" class="block text-sm font-medium text-gray-900">Country</label>
+        <select x-model="country" id="country-account" name="country" autocomplete="country-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
           <option></option>
           <option value="AF">Afghanistan</option>
           <option value="AX">Aland Islands</option>
@@ -344,7 +346,7 @@
         <input x-model="language" type="text" name="language" id="language" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
       </div>
 
-      <p class="text-sm text-gray-500 sm:col-span-6">This account was created on <span x-text="formatDate(new Date($store.auth.user?.created_at), 'MMMM e, y, hh:mm:ss aa')"></span>.</p>
+      <p class="text-sm text-gray-500 sm:col-span-6">This account was created on <span x-text="formatDate(new Date($store.auth.user?.created_at), 'MMMM d, y, hh:mm:ss aa')"></span>.</p>
     </div>
 
     <div class="flex justify-end pt-8">
@@ -366,6 +368,16 @@
       phone: '',
       country: '',
       language: '',
+
+      preview(evt) {
+        this.picture = Object.values(evt.target.files)
+
+        var reader = new FileReader();
+        reader.onload = () => {
+          this.$refs.preview.src = reader.result;
+        };
+        reader.readAsDataURL(evt.target.files[0]);
+      },
 
       handleSubmit(evt) {
         const data = new FormData()
