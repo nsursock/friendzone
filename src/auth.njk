@@ -78,7 +78,7 @@
 
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                  <input x-model="rememberMe" id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                   <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
                 </div>
 
@@ -134,6 +134,7 @@
         first: false,
         email: '',
         password: '',
+        rememberMe: false,
         error: '',
         isFetching: false,
         handleSubmit() {
@@ -154,7 +155,10 @@
               if (!message.success) {
                 this.error = message.error
               } else {
-                localStorage.setItem('friendzone_token', message.user.token);
+                if (this.rememberMe)
+                  localStorage.setItem('friendzone_token', message.user.token);
+                else
+                  sessionStorage.setItem('friendzone_token', message.user.token);
                 Alpine
                   .store('auth')
                   .setUser(message.user)

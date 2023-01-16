@@ -36,11 +36,25 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('alpine:initializing', () => {
   Alpine.store('auth', {
     user: null,
+
     setUser(user) {
       this.user = user
     },
+
     init() {
-      const token = localStorage.getItem('friendzone_token')
+      this.getLoggedInUser()
+    },
+
+    getLoggedInUser() {
+      var token = null
+      if ('friendzone_token' in sessionStorage) {
+        token = sessionStorage.getItem('friendzone_token')
+      }
+      else if ('friendzone_token' in localStorage) {
+        token = localStorage.getItem('friendzone_token')
+      }
+      else return token
+
       if (token) {
         fetch('/api/auth', {
           method: 'POST',

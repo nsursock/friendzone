@@ -33,6 +33,7 @@
     { text: 'Home', href: '/home/' },
     { text: 'Directory', href: '/directory/' }
   ], logout() {
+    sessionStorage.removeItem('friendzone_token')
     localStorage.removeItem('friendzone_token')
     $store.auth.user = null
     window.location.href = '/'
@@ -151,7 +152,7 @@ fill="#000000" stroke="none">
         <!-- Profile dropdown -->
         <div class="relative ml-4 flex-shrink-0">
 
-          <template x-if="('friendzone_token' in localStorage)">
+          <template x-if="('friendzone_token' in sessionStorage) || ('friendzone_token' in localStorage)">
             <div>
               <template x-if="!$store.auth.user">
                 <button disabled type="button" class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed" disabled="">

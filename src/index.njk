@@ -104,7 +104,8 @@
               <div class="mt-8 flex gap-x-4 sm:justify-center">
                 <div class="mt-2 relative">
                   {# <div class="absolute -inset-0.5 bg-indigo-300 rounded-md blur"></div> #}
-                  <a x-data="{ href: ('friendzone_token' in localStorage) ? '/home' : '/auth' }" :href="href" class="relative inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
+                  <a x-data="{ href: ( !('friendzone_token' in sessionStorage) && !('friendzone_token' in localStorage) ) ? '/auth' : '/home' }" 
+                    :href="href" class="relative inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">
                 Get started 
                 <span class="text-indigo-200" aria-hidden="true">&rarr;</span>
                   </a>
