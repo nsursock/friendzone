@@ -9,7 +9,8 @@
     <title>{{ title }} | Friendzone</title>
   </head>
 
-  <body class="{{ 'debug-screens' if env.devMode }}" x-data="global()">
+  <body class="{{ 'debug-screens' if env.devMode }}" x-data="global()" 
+    x-effect="getConnects()">
     {% include 'header.njk' %}
     {% block body %}
       {{ content | safe }}
@@ -19,13 +20,20 @@
     <div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
       <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
         <template x-for="notification in notifications">
-          {% include '../notification.njk' %}
+          <div class="w-full">
+            <template x-if="notification.type === 'connect'">
+              {% include '../notifications/connect.njk' %}
+            </template>
+            <template x-if="!notification.type">
+              {% include '../notifications/generic.njk' %}
+            </template>
+          </div>
         </template>
       </div>
     </div>
   </body>
   <script>
-    if ( !('friendzone_token' in sessionStorage) && !('friendzone_token' in localStorage) ) 
+    if (!('friendzone_token' in sessionStorage) && !('friendzone_token' in localStorage)) 
       window.location = new URL('/', window.location)
   </script>
 

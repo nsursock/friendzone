@@ -173,7 +173,7 @@ fill="#000000" stroke="none">
                       </svg>
                     </template>
                     <template x-if="$store.auth.user?.avatar_url">
-                      <img class="h-8 w-8 rounded-full" :src="$store.auth.user.avatar_url" alt="">
+                      <img class="h-8 w-8 rounded-full" :src="$store.auth.user.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="">
                     </template>
                   </button>
                 </div>
