@@ -19,18 +19,18 @@
   <div class="p-4">
     <div class="flex items-start">
       <div class="flex-shrink-0 pt-0.5">
-        <img class="h-10 w-10 rounded-full" :src="notification.avatar_url+'&fit=facearea&facepad=2.2&w=160&h=160&q=80'" alt="">
+        <img class="h-10 w-10 rounded-full" :src="notification.user.avatar_url+'&fit=facearea&facepad=2.2&w=160&h=160&q=80'" alt="">
       </div>
       <div class="ml-3 w-0 flex-1">
-        <p class="text-sm font-medium text-gray-900" x-text="notification.first_name + ' ' + notification.last_name"></p>
+        <p class="text-sm font-medium text-gray-900" x-text="notification.user.first_name + ' ' + notification.user.last_name"></p>
         <p class="mt-1 text-sm text-gray-500">sent you an invite to connect.</p>
         <div class="mt-4 flex">
-          <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Accept</button>
-          <button type="button" class="ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Decline</button>
+          <button @click="fetch(`/api/directory?id=${notification.id}&mode=Accepted`)" type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Accept</button>
+          <button @click="fetch(`/api/directory?id=${notification.id}&mode=Declined`)" type="button" class="ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Decline</button>
         </div>
       </div>
       <div class="ml-4 flex flex-shrink-0">
-        <button type="button" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <button @click="notification.show = !notification.show" type="button" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
           <span class="sr-only">Close</span>
           <!-- Heroicon name: mini/x-mark -->
           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

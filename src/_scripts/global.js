@@ -3,6 +3,7 @@ import { format, formatRelative, formatDistance } from 'date-fns'
 export default () => ({
 
   notifications: [],
+  showNotifications: false,
 
   async getConnects() {
     const invites = (await (await fetch('/api/directory?mode=invite', {
@@ -16,10 +17,12 @@ export default () => ({
     })).json()).data
 
     invites.map((invite) => {
-      const { first_name, last_name, avatar_url } = invite.user1
-      this
-        .notifications
-        .push({ type: 'connect', show: true, success: false, first_name, last_name, avatar_url })
+      const { id, created_at, user1 } = invite
+      const isAlreadyNotified = this.notifications.findIndex((notif) => notif.id === id) !== -1
+      if (!isAlreadyNotified)
+        this
+          .notifications
+          .push({ id, created_at, type: 'connect', show: true, success: false, user: user1 })
     })
 
   },

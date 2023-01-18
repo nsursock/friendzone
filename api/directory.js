@@ -31,8 +31,21 @@ export default async function handler(request, response) {
           : 'relationships'
 
         var data = (await supabase.from(table)
-          .select(`user1 (first_name, last_name, avatar_url)`).eq('user2', email).eq('status', 'Pending')).data
+          .select(`id, created_at, user1 (first_name, last_name, avatar_url)`)
+          .eq('user2', email).eq('status', 'Pending')).data
         response.status(200).json({ data })
+        break
+
+      case 'Accepted':
+      case 'Declined':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'relationships.dev'
+          : 'relationships'
+
+        await supabase.from(table).update({
+          status: request.query.mode
+        }).eq('id', request.query.id)
+        response.status(200).json({ success: true })
         break
 
       default:
@@ -40,7 +53,11 @@ export default async function handler(request, response) {
           ? 'users.dev'
           : 'users'
 
-        var data = (await supabase.from(table).select()).data
+        var data = (await supabase.from(table).select())
+          .data.map((o) => o = {
+          ...o,
+          full_name: o.last_name + ' ' + o.first_name
+        })
         response.status(200).json({ data })
         break
 
