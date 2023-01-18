@@ -42,7 +42,7 @@
             </a>
           </nav>
 
-          <article :class="isFetching && 'blur-lg'">
+          <article :class="isFetching && 'blur-lg'" x-data="{ current: 'Profile' }">
             <!-- Profile header -->
             <div>
               <template x-if="!selected.cover_url">
@@ -73,30 +73,32 @@
                         <span x-text="selected.first_name + ' ' + selected.last_name"></span>
                       </h1>
                     </div>
-                    <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                      <button type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <!-- Heroicon name: mini/envelope -->
-                        <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
-                          <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"/>
-                        </svg>
-                        <span>Message</span>
-                      </button>
-                      <button type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <!-- Heroicon name: mini/phone -->
-                        <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd"/>
-                        </svg>
-                        <span>Call</span>
-                      </button>
-                      <button @click="handleConnect()" type="button" class="sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <!-- Heroicon name: mini/user-plus -->
-                        <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                        </svg>
-                        <span>Connect</span>
-                      </button>
-                    </div>
+                    <template x-if="$store.auth.user?.email !== selected.email">
+                      <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                        <button type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                          <!-- Heroicon name: mini/envelope -->
+                          <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
+                            <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"/>
+                          </svg>
+                          <span>Message</span>
+                        </button>
+                        <button type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                          <!-- Heroicon name: mini/phone -->
+                          <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd"/>
+                          </svg>
+                          <span>Call</span>
+                        </button>
+                        <button @click="handleConnect()" type="button" class="sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                          <!-- Heroicon name: mini/user-plus -->
+                          <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                          </svg>
+                          <span>Connect</span>
+                        </button>
+                      </div>
+                    </template>
                     <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                       <button @click="handleConnect()" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <!-- Heroicon name: mini/user-plus -->
@@ -141,18 +143,67 @@
                 <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                   <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                     <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
-                    <a href="#" class="border-indigo-500 text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" aria-current="page">Profile</a>
+                    <button @click="current = 'Profile'" class="border-indigo-500 text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" aria-current="page">Profile</button>
 
-                    <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Calendar</a>
+                    <button @click="current = 'Friends'" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Friends</button>
 
-                    <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Recognition</a>
+                    <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Feed</a>
                   </nav>
                 </div>
               </div>
             </div>
 
+            <div class="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8" x-show="current === 'Friends'" 
+              x-data="{ friends: [] }" x-effect="friends = (await (await fetch(`/api/directory?mode=friends&email=${selected?.email}`)).json()).data; console.log(friends)">
+              <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <template x-for="connection in friends" :key="connection.friend.id">
+                  <li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
+                    <div class="flex flex-1 flex-col p-8">
+                      <img class="mx-auto h-32 w-32 flex-shrink-0 rounded-full" :src="connection.friend.avatar_url.includes('unsplash') ? connection.friend.avatar_url+'&fit=facearea&facepad=4&w=256&h=256&q=60' : connection.friend.avatar_url" alt="">
+                      <h3 class="mt-6 text-sm font-medium text-gray-900">
+                        <span x-text="connection.friend.first_name + ' ' + connection.friend.last_name"></span></h3>
+                      <dl class="mt-1 flex flex-grow flex-col justify-between">
+                        <dt class="sr-only">Title</dt>
+                        <dd class="text-sm text-gray-500" x-text="connection.friend.title"></dd>
+                        <dt class="sr-only">Role</dt>
+                        <dd class="mt-3">
+                          <span class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800" x-text="connection.friend.city"></span>
+                        </dd>
+                      </dl>
+                    </div>
+                    <div>
+                      <div class="-mt-px flex divide-x divide-gray-200">
+                        <div class="flex w-0 flex-1">
+                          <a :href="`mailto:${connection.friend.email}`" class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500">
+                            <!-- Heroicon name: mini/envelope -->
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
+                              <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"/>
+                            </svg>
+                            <span class="ml-3">Email</span>
+                          </a>
+                        </div>
+                        <div class="-ml-px flex w-0 flex-1">
+                          <a :href="`tel:${connection.friend.phone_number}`" class="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500">
+                            <!-- Heroicon name: mini/phone -->
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="ml-3">Call</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </template>
+
+                <!-- More people... -->
+              </ul>
+
+            </div>
+
             <!-- Description list -->
-            <div class="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8" x-show="current === 'Profile'">
               <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                 <div class="sm:col-span-1">
                   <dt class="text-sm font-medium text-gray-500">Phone</dt>
@@ -299,7 +350,7 @@
                   <h3 x-text="letter"></h3>
                 </div>
                 <ul role="list" class="relative z-0 divide-y divide-gray-200">
-                  <template x-for="user in book[letter].sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="user.id">
+                  <template x-for="user in book[letter]" :key="user.id">
                     <li @click="selected = user">
                       <div class="relative flex items-center space-x-3 px-6 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 hover:bg-gray-50">
                         <template x-if="!user.avatar_url">
@@ -345,6 +396,7 @@
           this.users = (await(await fetch('/api/directory')).json())
             .data
             .filter(user => user.last_name !== null)
+            .sort((a, b) => a.full_name.localeCompare(b.full_name))
             .map((o) => o = {
               ...o,
               key: o.last_name[0]
@@ -355,7 +407,12 @@
               ...hash,
               [obj['key']]: (hash[obj['key']] || []).concat(obj)
             }), {})
-          this.selected = this.users[0]
+          this.selected = this.book['A'][0]
+          /* this
+            .users
+            .find(
+              (u) => u.email === Alpine.store('auth').user
+              ?.email) */
           this.isFetching = false
         },
 

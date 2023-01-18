@@ -48,6 +48,25 @@ export default async function handler(request, response) {
         response.status(200).json({ success: true })
         break
 
+      case 'friends':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'relationships.dev'
+          : 'relationships'
+
+        var data1 = (await supabase.from(table)
+          .select(`user1 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
+          .eq('user2', request.query.email).eq('status', 'Accepted')).data
+        data1 = JSON.parse(JSON.stringify(data1).split('"user1":').join('"friend":'))
+
+        var data2 = (await supabase.from(table)
+          .select(`user2 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
+          .eq('user1', request.query.email).eq('status', 'Accepted')).data
+        data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
+
+        var data = data1.concat(data2)
+        response.status(200).json({ data })
+        break
+
       default:
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'users.dev'
@@ -55,9 +74,9 @@ export default async function handler(request, response) {
 
         var data = (await supabase.from(table).select())
           .data.map((o) => o = {
-          ...o,
-          full_name: o.last_name + ' ' + o.first_name
-        })
+            ...o,
+            full_name: o.last_name + ' ' + o.first_name
+          })
         response.status(200).json({ data })
         break
 
