@@ -20,6 +20,17 @@
         <input :placeholder="lastName" x-model="lastName" type="text" name="last-name" id="last-name-account" autocomplete="family-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
       </div>
 
+      <div class="sm:col-span-3">
+        <label for="title" class="block text-sm font-medium text-gray-900">Title</label>
+        <input :placeholder="title" x-model="title" type="text" name="title" id="title" autocomplete="title" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+      </div>
+
+      <div class="sm:col-span-3">
+        <label for="last-name-account" class="block text-sm font-medium text-gray-900">Birthday</label>
+        {# <input :placeholder="lastName" x-model="lastName" type="text" name="last-name" id="last-name-account" autocomplete="family-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"> #}
+        <input x-model="birthday" type="datetime-local" id="birthdate" name="birthdate" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+      </div>
+
       <div class="sm:col-span-6">
         <label for="username" class="block text-sm font-medium text-gray-900">Username</label>
         <div class="mt-1 flex rounded-md shadow-sm">
@@ -32,7 +43,7 @@
         <label for="photo" class="block text-sm font-medium text-gray-900">Photo</label>
         <div class="mt-1 flex items-center">
           <template x-if="$store.auth.user?.avatar_url">
-            <img class="inline-block h-12 w-12 rounded-full mr-2" :src="$store.auth.user.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="">
+            <img class="inline-block h-12 w-12 rounded-full mr-2" :src="$store.auth.user?.avatar_url.includes('unsplash') ? $store.auth.user?.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : $store.auth.user?.avatar_url" alt="">
           </template>
           <template x-if="picture">
             <img x-ref="preview" class="inline-block h-12 w-12 rounded-full" alt="">
@@ -388,6 +399,8 @@
     return {
       firstName: '',
       lastName: '',
+      title: '',
+      birthday: null,
       userName: '',
       picture: null,
       description: '',
@@ -436,6 +449,8 @@
         const data = new FormData()
         this.firstName && data.append('first_name', this.firstName)
         this.lastName && data.append('last_name', this.lastName)
+        this.title && data.append('title', this.title)
+        this.birthday && data.append('birthday', this.birthday)
         this.userName && data.append('user_name', this.userName)
         this.picture && data.append('picture', evt.target[3].files[0])
         this.description && data.append('description', this.description)
