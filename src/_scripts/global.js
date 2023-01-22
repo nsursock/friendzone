@@ -5,6 +5,8 @@ export default () => ({
   notifications: [],
   showNotifications: false,
 
+  openNewPost: false,
+
   async getConnects() {
     const invites = (await (await fetch('/api/directory?mode=invite', {
       method: 'POST',
@@ -34,5 +36,21 @@ export default () => ({
       return formatDistance(date, new Date(), { addSuffix: true })
     else return format(date, dateFormat)
   },
+
+  isMobile() {
+    const toMatch = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      // /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i
+    ];
+
+    return toMatch.some((toMatchItem) => {
+      return navigator.userAgent.match(toMatchItem);
+    });
+  }
 
 })

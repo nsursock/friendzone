@@ -13,29 +13,38 @@ async function handler(req, res) {
     ? 'users.dev'
     : 'users'
 
-  const uploadFile = async () => {
+  const uploadFile = async (files) => {
+    for (const [key, value] of Object.entries(files)) {
+      if (files[key]) {
+        let filepath = `public/${files[key].newFilename
+          }.${files[key].mimetype.split('/').pop()}`
+        // filepath = filepath.replace(/\s/g, '-') // IN CASE YOU NEED TO REPLACE SPACE OF THE IMAGE NAME
+        const rawData = fs.readFileSync(files[key].filepath)
+        const { data, error } = await supabase.storage
+          .from(storageName)
+          .upload(filepath, rawData, {
+            contentType: files[key].mimetype,
+          })
+
+        if (error || err) {
+          console.error(error || err);
+          return reject({ success: false })
+        }
+
+        cols[key+'_url'] = `https://jdlejcgjpmmdtfhqomgy.supabase.co/storage/v1/object/public/${storageName}/${key}/${filepath}`
+        console.log(cols[key+'_url']);
+      }
+    }
+  }
+
+  const insertRecord = async () => {
     // eslint-disable-next-line
     return new Promise((resolve, reject) => {
       form.parse(req, async function (err, fields, files) {
         var cols = {}
-        if (files.picture) {
-          let filepath = `public/${files.picture.newFilename
-            }.${files.picture.mimetype.split('/').pop()}`
-          // filepath = filepath.replace(/\s/g, '-') // IN CASE YOU NEED TO REPLACE SPACE OF THE IMAGE NAME
-          const rawData = fs.readFileSync(files.picture.filepath)
-          const { data, error } = await supabase.storage
-            .from(storageName)
-            .upload(filepath, rawData, {
-              contentType: files.picture.mimetype,
-            })
 
-          if (error || err) {
-            console.error(error || err);
-            return reject({ success: false })
-          }
+        uploadFile(files)
 
-          cols.avatar_url = `https://jdlejcgjpmmdtfhqomgy.supabase.co/storage/v1/object/public/${storageName}/${filepath}`
-        }
         // YOU DO NOT NEED BELOW UNLESS YOU WANT TO SAVE PUBLIC URL OF THE IMAGE TO THE DATABASE
         for (const [key, value] of Object.entries(fields)) {
           if (key !== 'path' || key !== 'email')
@@ -49,7 +58,7 @@ async function handler(req, res) {
   }
 
   try {
-    await uploadFile()
+    await insertRecord()
     res.status(200).send({ success: true })
   } catch (err) {
     res.status(400).send({ success: false })

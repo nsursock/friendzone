@@ -18,8 +18,17 @@
     x-transition:leave-end="opacity-0">
   <div class="p-4">
     <div class="flex items-start">
+      <template x-if="!notification.user.avatar_url">
+        <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+          <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </span>
+      </template>
       <div class="flex-shrink-0 pt-0.5">
-        <img class="h-10 w-10 rounded-full" :src="notification.user.avatar_url.includes('unsplash') ? notification.user.avatar_url+'&fit=facearea&facepad=2.2&w=160&h=160&q=80' : notification.user.avatar_url" alt="">
+        <template x-if="notification.user.avatar_url">
+          <img class="h-10 w-10 rounded-full" :src="notification.user.avatar_url.includes('unsplash') ? notification.user.avatar_url+'&fit=facearea&facepad=2.2&w=160&h=160&q=80' : notification.user.avatar_url" alt="">
+        </template>
       </div>
       <div class="ml-3 w-0 flex-1">
         <p class="text-sm font-medium text-gray-900" x-text="notification.user.first_name + ' ' + notification.user.last_name"></p>

@@ -17,18 +17,6 @@
     display: none;
   }
 </style>
-{# <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
-  <symbol id="icon-logo" fill="none" viewBox="0 0 256 256" stroke="currentColor" stroke-width="2">
-    <g>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M1489 2121 c-137 -68 -240 -142 -350 -251 -138 -137 -228 -272 -299 -447 l-33 -82 43 -65 43 -66 38 66 c134 229 417 469 695 590 35 16 64 33 64 39 0 9 -98 254 -104 262 -1 1 -45 -19 -97 -46z"/>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M1435 1740 c-33 -22 -60 -43 -60 -49 0 -5 27 -27 60 -49 201 -135 386 -355 513 -612 31 -63 58 -117 59 -119 5 -9 263 103 263 115 0 21 -80 171 -135 253 -89 133 -252 291 -390 378 -45 29 -237 124 -246 122 -2 0 -31 -18 -64 -39z"/>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M528 1508 l-126 -51 24 -56 c125 -283 388 -546 669 -669 160 -70 155 -69 228 -26 l63 38 -75 46 c-251 151 -468 400 -601 693 -19 42 -39 76 -45 76 -5 0 -67 -23 -137 -51z"/>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M1327 1366 c-51 -19 -76 -42 -99 -95 -30 -66 -18 -123 36 -177 72 -72 160 -72 232 0 54 54 66 111 36 177 -10 24 -28 52 -40 62 -22 20 -86 46 -112 46 -8 0 -32 -6 -53 -13z"/>
-      <path stroke-linecap="round" stroke-linejoin="round" d="M1805 1102 c-62 -88 -240 -260 -345 -335 -52 -37 -153 -97 -225 -133 -71 -36 -130 -69 -130 -73 0 -10 96 -245 104 -253 11 -12 145 56 251 127 197 132 350 306 459 522 l21 43 -41 72 c-22 40 -44 76 -47 80 -4 4 -25 -19 -47 -50z"/>
-    </g>
-  </symbol>
-</svg> #}
-
 <nav x-data="{ open: false, links: [
     { text: 'Home', href: '/home/' },
     { text: 'Directory', href: '/directory/' }
@@ -42,38 +30,17 @@
   <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
     <div class="flex h-16 justify-between">
       <div class="flex px-2 lg:px-0">
-        <div class="flex flex-shrink-0 items-center">
-          <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="270.000000pt" height="260.000000pt" viewBox="0 0 270.000000 260.000000"
- preserveAspectRatio="xMidYMid meet" class="h-8 w-8 text-indigo-600">
-
-            <g transform="translate(0.000000,260.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-              <path d="M1489 2121 c-137 -68 -240 -142 -350 -251 -138 -137 -228 -272 -299
--447 l-33 -82 43 -65 43 -66 38 66 c134 229 417 469 695 590 35 16 64 33 64
-39 0 9 -98 254 -104 262 -1 1 -45 -19 -97 -46z"/>
-              <path d="M1435 1740 c-33 -22 -60 -43 -60 -49 0 -5 27 -27 60 -49 201 -135
-386 -355 513 -612 31 -63 58 -117 59 -119 5 -9 263 103 263 115 0 21 -80 171
--135 253 -89 133 -252 291 -390 378 -45 29 -237 124 -246 122 -2 0 -31 -18
--64 -39z"/>
-              <path d="M528 1508 l-126 -51 24 -56 c125 -283 388 -546 669 -669 160 -70 155
--69 228 -26 l63 38 -75 46 c-251 151 -468 400 -601 693 -19 42 -39 76 -45 76
--5 0 -67 -23 -137 -51z"/>
-              <path d="M1327 1366 c-51 -19 -76 -42 -99 -95 -30 -66 -18 -123 36 -177 72
--72 160 -72 232 0 54 54 66 111 36 177 -10 24 -28 52 -40 62 -22 20 -86 46
--112 46 -8 0 -32 -6 -53 -13z"/>
-              <path d="M1805 1102 c-62 -88 -240 -260 -345 -335 -52 -37 -153 -97 -225 -133
--71 -36 -130 -69 -130 -73 0 -10 96 -245 104 -253 11 -12 145 56 251 127 197
-132 350 306 459 522 l21 43 -41 72 c-22 40 -44 76 -47 80 -4 4 -25 -19 -47
--50z"/>
+        <a href="/" class="flex flex-shrink-0 items-center">
+          <svg class="h-10 w-auto text-indigo-600 fill-current" viewBox="0 0 24 24">
+            <g>
+              <path  d="M 13.214844 4.421875 C 12 5.050781 11.085938 5.730469 10.109375 6.738281 C 8.882812 8.003906 8.085938 9.25 7.457031 10.863281 L 7.164062 11.621094 L 7.542969 12.222656 L 7.925781 12.832031 L 8.261719 12.222656 C 9.453125 10.109375 11.964844 7.890625 14.433594 6.773438 C 14.742188 6.628906 15 6.472656 15 6.414062 C 15 6.332031 14.128906 4.070312 14.078125 3.996094 C 14.066406 3.988281 13.675781 4.171875 13.214844 4.421875 Z M 13.214844 4.421875 "/>
+              <path  d="M 12.738281 7.9375 C 12.445312 8.140625 12.203125 8.335938 12.203125 8.390625 C 12.203125 8.4375 12.445312 8.640625 12.738281 8.84375 C 14.519531 10.089844 16.164062 12.121094 17.289062 14.492188 C 17.566406 15.074219 17.804688 15.574219 17.8125 15.589844 C 17.859375 15.675781 20.148438 14.640625 20.148438 14.527344 C 20.148438 14.335938 19.4375 12.949219 18.949219 12.195312 C 18.160156 10.964844 16.714844 9.507812 15.488281 8.703125 C 15.089844 8.4375 13.382812 7.558594 13.304688 7.578125 C 13.285156 7.578125 13.03125 7.746094 12.738281 7.9375 Z M 12.738281 7.9375 "/>
+              <path  d="M 4.6875 10.078125 L 3.566406 10.550781 L 3.78125 11.066406 C 4.890625 13.679688 7.226562 16.109375 9.71875 17.242188 C 11.140625 17.890625 11.09375 17.878906 11.742188 17.484375 L 12.300781 17.132812 L 11.636719 16.707031 C 9.410156 15.3125 7.480469 13.015625 6.300781 10.3125 C 6.132812 9.921875 5.957031 9.609375 5.902344 9.609375 C 5.859375 9.609375 5.308594 9.820312 4.6875 10.078125 Z M 4.6875 10.078125 "/>
+              <path  d="M 11.777344 11.390625 C 11.324219 11.566406 11.105469 11.777344 10.898438 12.269531 C 10.632812 12.875 10.738281 13.402344 11.21875 13.902344 C 11.859375 14.566406 12.640625 14.566406 13.277344 13.902344 C 13.757812 13.402344 13.863281 12.875 13.597656 12.269531 C 13.507812 12.046875 13.347656 11.789062 13.242188 11.695312 C 13.046875 11.511719 12.480469 11.269531 12.25 11.269531 C 12.175781 11.269531 11.964844 11.324219 11.777344 11.390625 Z M 11.777344 11.390625 "/>
+              <path  d="M 16.019531 13.828125 C 15.46875 14.640625 13.890625 16.226562 12.957031 16.921875 C 12.496094 17.261719 11.601562 17.816406 10.960938 18.148438 C 10.332031 18.480469 9.808594 18.785156 9.808594 18.820312 C 9.808594 18.914062 10.660156 21.082031 10.730469 21.15625 C 10.828125 21.269531 12.019531 20.640625 12.957031 19.984375 C 14.707031 18.765625 16.066406 17.160156 17.03125 15.167969 L 17.21875 14.769531 L 16.855469 14.105469 C 16.660156 13.734375 16.464844 13.402344 16.4375 13.367188 C 16.402344 13.328125 16.214844 13.542969 16.019531 13.828125 Z M 16.019531 13.828125 "/>
             </g>
           </svg>
-          {# <svg class="icon icon-logo flex-shrink-0 h-8 w-8 text-indigo-600" aria-hidden="true" focusable="false" role="presentation">
-            <use href="#icon-logo"/>
-          </svg> #}
-          {# <img class="block h-8 w-auto lg:hidden" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-          <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company"> #}
-        </div>
+        </a>
         <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
           <template x-for="link in links" :key="link.href">
             <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
@@ -99,7 +66,7 @@ fill="#000000" stroke="none">
         </div>
       </div>
       <div class="flex items-center lg:hidden">
-        <template x-if="!$store.auth.user">
+        {# <template x-if="!$store.auth.user">
           <button disabled type="button" class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed" disabled="">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -107,7 +74,7 @@ fill="#000000" stroke="none">
             </svg>
                 Please wait...
               </button>
-        </template>
+        </template> #}
         <template x-if="$store.auth.user">
           <!-- Mobile menu button -->
           <button @click="open = !open" type="button" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
@@ -154,7 +121,7 @@ fill="#000000" stroke="none">
 
           <template x-if="('friendzone_token' in sessionStorage) || ('friendzone_token' in localStorage)">
             <div>
-              <template x-if="!$store.auth.user">
+              {# <template x-if="!$store.auth.user">
                 <button disabled type="button" class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed" disabled="">
                   <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -162,15 +129,17 @@ fill="#000000" stroke="none">
                   </svg>
                 Please wait...
               </button>
-              </template>
+              </template> #}
               <template x-if="$store.auth.user">
                 <div>
                   <button @click="open = !open" type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                     <span class="sr-only">Open user menu</span>
                     <template x-if="!$store.auth.user?.avatar_url">
-                      <svg class="h-10 w-10 rounded-full border dark:border-gray-200 dark:text-gray-300 text-gray-700 border-gray-800" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
-                      </svg>
+                      <span class="h-8 w-8 overflow-hidden rounded-full bg-gray-100">
+                        <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                      </span>
                     </template>
                     <template x-if="$store.auth.user?.avatar_url">
                       <img class="h-8 w-8 rounded-full" :src="$store.auth.user?.avatar_url.includes('unsplash') ? $store.auth.user?.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : $store.auth.user?.avatar_url" alt="">
@@ -194,7 +163,7 @@ fill="#000000" stroke="none">
           <div @click.outside="open = !open" x-show="open" 
             class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             <!-- Active: "bg-gray-100", Not Active: "" -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+            <a href="/profile" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
             <a href="/settings" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
             <button @click="logout()" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</button>
           </div>
@@ -218,9 +187,11 @@ fill="#000000" stroke="none">
       <div class="flex items-center px-4">
         <div class="flex-shrink-0">
           <template x-if="!$store.auth.user?.avatar_url">
-            <svg class="h-10 w-10 rounded-full border dark:border-gray-200 dark:text-gray-300 text-gray-700 border-gray-800" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
+            <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+              <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </span>
           </template>
           <template x-if="$store.auth.user?.avatar_url">
             <img class="h-10 w-10 rounded-full" :src="$store.auth.user?.avatar_url.includes('unsplash') ? $store.auth.user?.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : $store.auth.user?.avatar_url" alt="">
@@ -242,7 +213,7 @@ fill="#000000" stroke="none">
         </button>
       </div>
       <div class="mt-3 space-y-1">
-        <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Your Profile</a>
+        <a href="/profile" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Profile</a>
         <a href="/settings" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Settings</a>
         <button @click="logout()" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Log out</button>
       </div>

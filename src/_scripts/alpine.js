@@ -53,7 +53,6 @@ window.addEventListener('alpine:initializing', () => {
       else if ('friendzone_token' in localStorage) {
         token = localStorage.getItem('friendzone_token')
       }
-      else return token
 
       if (token) {
         fetch('/api/auth', {
