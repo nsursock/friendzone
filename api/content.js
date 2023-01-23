@@ -26,12 +26,30 @@ export default async function handler(request, response) {
         break
 
       case 'display':
-        var { data, error } = (await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content')
-          .eq('author', request.query.email))
 
+        var tableRel = process.env.NODE_ENV.startsWith('dev')
+          ? 'relationships.dev'
+          : 'relationships'
+
+        var data1 = (await supabase.from(tableRel)
+          .select(`user1 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
+          .eq('user2', request.query.email).eq('status', 'Accepted')).data
+        data1 = JSON.parse(JSON.stringify(data1).split('"user1":').join('"friend":'))
+
+        var data2 = (await supabase.from(tableRel)
+          .select(`user2 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
+          .eq('user1', request.query.email).eq('status', 'Accepted')).data
+        data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
+
+        var emails = data1.concat(data2)
+        emails = emails.map((item) => item.friend.email)
+        emails.push(request.query.email)
+
+        var { data, error } = (await supabase.from(table)
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
+          .in('author', emails))
         if (error) console.log(error)
-        
+
         response.status(200).json({ data })
         break
     }
