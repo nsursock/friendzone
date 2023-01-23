@@ -1,6 +1,9 @@
 import Alpine from 'alpinejs'
-import global from './global.js'
 
+import intersect from '@alpinejs/intersect' 
+Alpine.plugin(intersect)
+
+import global from './global.js'
 Alpine.data('global', global)
 
 Alpine.directive(

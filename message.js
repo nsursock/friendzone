@@ -19,10 +19,11 @@ console.log('starting up');
 
 
     const num = 1000
-    for (let index = 0; index < num; index++) {
+    const ids = [1297,918,1327,1596]
+    for (let index = 0; index < 12; index++) {
 
       var { data, error } = await supabase.from(table).insert({
-        related_id: null,
+        related_id: ids[index%ids.length],
         created_at: faker.date.recent(10),
         author: emails[index % emails.length],
         content: faker.lorem.text(),

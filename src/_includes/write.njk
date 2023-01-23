@@ -144,7 +144,7 @@
               .user
               .email,
             content: this.comment,
-            relatedId: null,
+            relatedId: this.postId,
           })
         })
           .then((response) => response.json())

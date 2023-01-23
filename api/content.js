@@ -25,6 +25,15 @@ export default async function handler(request, response) {
         response.status(200).json({ success: true })
         break
 
+      case 'comments':
+        var { data, error } = (await supabase.from(table)
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
+          .eq('related_id', request.query.id))
+        if (error) console.log(error)
+
+        response.status(200).json({ data })
+        break
+
       case 'display':
 
         var tableRel = process.env.NODE_ENV.startsWith('dev')
@@ -47,7 +56,7 @@ export default async function handler(request, response) {
 
         var { data, error } = (await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
-          .in('author', emails))
+          .in('author', emails).is('related_id', null))
         if (error) console.log(error)
 
         response.status(200).json({ data })

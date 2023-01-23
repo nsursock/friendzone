@@ -111,7 +111,7 @@
             </div>
           </nav>
         </div>
-        <main class="lg:col-span-9 xl:col-span-6">
+        <main class="lg:col-span-9 xl:col-span-6" x-data="{ postId: null }">
           {% include 'write.njk' %}
 
           <div class="px-4 sm:px-0">
@@ -149,9 +149,10 @@
             <div class="mt-4">
               <h1 class="sr-only">Recent questions</h1>
               <ul role="list" class="space-y-4" x-data="{ posts: [] }" 
-              x-init="posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data">
-                <template x-for="post in posts" :key="post.id">
-                  <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6">
+                x-init="posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data">
+                <template x-for="post in posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" :key="post.id">
+                  <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6" x-data="{ comments: [], openCommentSection: false }"
+                    x-intersect.threshold.05.once="comments = (await (await fetch(`/api/content?mode=comments&id=${post.id}`)).json()).data">
                     <article aria-labelledby="question-title-81614">
                       <div>
                         <div class="flex ">
@@ -205,12 +206,18 @@
                             class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
                                 <div class="py-1" role="none">
                                   <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                  <button @click="open = !open; openNewPost = !openNewPost; postId = post.id" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
+                                    <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                      <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902 1.168.188 2.352.327 3.55.414.28.02.521.18.642.413l1.713 3.293a.75.75 0 001.33 0l1.713-3.293a.783.783 0 01.642-.413 41.102 41.102 0 003.55-.414c1.437-.231 2.43-1.49 2.43-2.902V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zM6.75 6a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 2.5a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Comment</span>
+                                  </button>
                                   <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
                                     <!-- Heroicon name: mini/star -->
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                       <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"/>
                                     </svg>
-                                    <span>Add to favorites</span>
+                                    <span>Bookmark</span>
                                   </a>
                                   <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
                                     <!-- Heroicon name: mini/code-bracket -->
@@ -224,7 +231,7 @@
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                       <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
                                     </svg>
-                                    <span>Report content</span>
+                                    <span>Report</span>
                                   </a>
                                 </div>
                               </div>
@@ -233,8 +240,7 @@
                         </div>
                         {# <h2 id="question-title-81614" class="mt-4 text-base font-medium text-gray-900">What would you have done differently if you ran Jurassic Park?</h2> #}
                       </div>
-                      <div x-html="marked.parse(post.content)" class="prose mt-2 space-y-4 text-sm text-gray-700">
-                      </div>
+                      <div x-html="marked.parse(post.content)" class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
                       <div class="mt-6 flex justify-between space-x-8">
                         <div class="flex space-x-6">
                           <span class="inline-flex items-center text-sm">
@@ -248,12 +254,12 @@
                             </button>
                           </span>
                           <span class="inline-flex items-center text-sm">
-                            <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+                            <button @click="openCommentSection = !openCommentSection" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
                               <!-- Heroicon name: mini/chat-bubble-left-ellipsis -->
                               <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
                               </svg>
-                              <span class="font-medium text-gray-900" x-text="Math.floor(Math.random() * 10)"></span>
+                              <span class="font-medium text-gray-900" x-text="comments.length"></span>
                               <span class="sr-only">replies</span>
                             </button>
                           </span>
@@ -282,6 +288,69 @@
                         </div>
                       </div>
                     </article>
+
+                    <!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  const colors = require('tailwindcss/colors')
+  
+  module.exports = {
+    // ...
+    theme: {
+      extend: {
+        colors: {
+          rose: colors.rose,
+        },
+      },
+    },
+  }
+  ```
+-->
+                    <div class="flow-root mt-8" x-show="comments.length > 0 && openCommentSection">
+                      <ul role="list" class="-mb-8">
+                        <template x-for="(comment, index) in comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" :key="comment.id">
+                          <li>
+                            <div class="relative pb-8">
+                              <span x-show="index + 1 < comments.length" class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                              <div class="relative flex items-start">
+                                <template x-if="!comment.author.avatar_url">
+                                  <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100 mr-3">
+                                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                    </svg>
+                                  </span>
+                                </template>
+                                <div class="relative">
+                                  <template x-if="comment.author.avatar_url">
+                                    <img class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 ring-8 ring-white" :src="comment.author.avatar_url.includes('unsplash') ? comment.author.avatar_url+'&fit=facearea&facepad=8&w=256&h=256&q=80' : comment.author.avatar_url" alt="">
+                                  </template>
+                                  {# <span class="absolute -bottom-0.5 -right-1 rounded-tl bg-white px-0.5 py-px">
+                                    <!-- Heroicon name: mini/chat-bubble-left-ellipsis -->
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                      <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                    </svg>
+                                  </span> #}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                  <div>
+                                    <div class="text-sm">
+                                      <a href="#" class="font-medium text-gray-900" x-text="comment.author.first_name + ' ' + comment.author.last_name"></a>
+                                    </div>
+                                    <p class="mt-0.5 text-sm text-gray-500" x-text="`Commented ${formatDate(new Date(comment.created_at), 'distance')}`"></p>
+                                  </div>
+                                  <div class="mt-2 text-sm text-gray-700">
+                                    <p x-html="marked.parse(comment.content)"></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </template>
+
                   </li>
                 </template>
 
@@ -482,5 +551,5 @@
     </div>
 
   </div>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 {% endblock %}
