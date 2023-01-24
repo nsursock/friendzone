@@ -111,49 +111,60 @@
             </div>
           </nav>
         </div>
-        <main class="lg:col-span-9 xl:col-span-6" x-data="{ postId: null }">
-          {% include 'write.njk' %}
+        <template x-if="$store.auth.user">
+          <main class="lg:col-span-9 xl:col-span-6" x-data="{ postId: null, posts: [] }"
+            x-init="posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data">
+            {% include 'write.njk' %}
 
-          <div class="px-4 sm:px-0">
-            <div class="sm:hidden">
-              <label for="question-tabs" class="sr-only">Select a tab</label>
-              <select id="question-tabs" class="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option selected>Recent</option>
+            <div class="px-4 sm:px-0" x-data="{ tab: 'Most Recent' }">
+              <div class="sm:hidden">
+                <label for="question-tabs" class="sr-only">Select a tab</label>
+                <select id="question-tabs" class="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                  <option selected>Most Recent</option>
 
-                <option>Most Liked</option>
+                  <option>Most Liked</option>
 
-                <option>Most Answers</option>
-              </select>
+                  <option>Most Comments</option>
+                </select>
+              </div>
+              <div class="hidden sm:block">
+                <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
+                  <!-- Current: "text-gray-900", Default: "text-gray-500 hover:text-gray-700" -->
+                  <button @click="tab = 'Most Recent'; posts = posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" 
+                    aria-current="page" :class="tab === 'Most Recent' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
+                    class="rounded-l-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
+                    <span>Most Recent</span>
+                    <span aria-hidden="true" :class="tab === 'Most Recent' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
+                  </button>
+
+                  <button @click="tab = 'Most Liked'; posts = posts.sort((a, b) => { 
+                      if (b.num_like - a.num_like === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
+                      else return b.num_like - a.num_like })"
+                    :class="tab === 'Most Liked' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
+                    class="group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
+                    <span>Most Liked</span>
+                    <span aria-hidden="true" :class="tab === 'Most Liked' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
+                  </button>
+
+                  <button @click="tab = 'Most Comments'; posts = posts.sort((a, b) => { 
+                      if (b.num_ans - a.num_ans === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
+                      else return b.num_ans - a.num_ans })"
+                    :class="tab === 'Most Comments' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
+                    class="rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
+                    <span>Most Comments</span>
+                    <span aria-hidden="true" :class="tab === 'Most Comments' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
+                  </button>
+                </nav>
+              </div>
             </div>
-            <div class="hidden sm:block">
-              <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
-                <!-- Current: "text-gray-900", Default: "text-gray-500 hover:text-gray-700" -->
-                <a href="#" aria-current="page" class="text-gray-900 rounded-l-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
-                  <span>Recent</span>
-                  <span aria-hidden="true" class="bg-indigo-500 absolute inset-x-0 bottom-0 h-0.5"></span>
-                </a>
 
-                <a href="#" class="text-gray-500 hover:text-gray-700 group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
-                  <span>Most Liked</span>
-                  <span aria-hidden="true" class="bg-transparent absolute inset-x-0 bottom-0 h-0.5"></span>
-                </a>
-
-                <a href="#" class="text-gray-500 hover:text-gray-700 rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
-                  <span>Most Answers</span>
-                  <span aria-hidden="true" class="bg-transparent absolute inset-x-0 bottom-0 h-0.5"></span>
-                </a>
-              </nav>
-            </div>
-          </div>
-          <template x-if="$store.auth.user">
             <div class="mt-4">
               <h1 class="sr-only">Recent questions</h1>
-              <ul role="list" class="space-y-4" x-data="{ posts: [] }" 
-                x-init="posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data">
-                <template x-for="post in posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" :key="post.id">
+              <ul role="list" class="space-y-4">
+                <template x-for="post in posts" :key="post.id">
                   <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6" x-data="{ comments: [], openCommentSection: false }"
-                    x-intersect.threshold.05.once="comments = (await (await fetch(`/api/content?mode=comments&id=${post.id}`)).json()).data">
-                    <article aria-labelledby="question-title-81614">
+                    x-intersect="comments = (await (await fetch(`/api/content?mode=comments&id=${post.id}`)).json()).data">
+                    <article :aria-labelledby="`post-id-${post.id}`">
                       <div>
                         <div class="flex ">
                           {# <div> #}
@@ -259,7 +270,7 @@
                               <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
                               </svg>
-                              <span class="font-medium text-gray-900" x-text="comments.length"></span>
+                              <span class="font-medium text-gray-900" x-text="post.num_ans"></span>
                               <span class="sr-only">replies</span>
                             </button>
                           </span>
@@ -357,8 +368,9 @@
                 <!-- More questions... -->
               </ul>
             </div>
-          </template>
-        </main>
+
+          </main>
+        </template>
         <aside class="hidden xl:col-span-4 xl:block">
           <div class="sticky top-4 space-y-4">
             <div class="flex">

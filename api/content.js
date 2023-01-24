@@ -54,12 +54,18 @@ export default async function handler(request, response) {
         emails = emails.map((item) => item.friend.email)
         emails.push(request.query.email)
 
-        var { data, error } = (await supabase.from(table)
+        var { data, error } = await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
-          .in('author', emails).is('related_id', null))
+          .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 
-        response.status(200).json({ data })
+        var data2 = await Promise.all(data.map(async (item) => {
+          var { data, error } = await supabase.from(table).select('id').eq('related_id', item.id)
+          if (error) console.log(error)
+          return {...item, num_ans: data.length }
+        }))
+
+        response.status(200).json({ data: data2 })
         break
     }
 
