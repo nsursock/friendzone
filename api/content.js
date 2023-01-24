@@ -14,6 +14,25 @@ export default async function handler(request, response) {
 
     switch (request.query.mode) {
 
+      case 'increment':
+        const field = 'num_' + request.query.field
+        var { data, error } = await supabase.from(table)
+          .select(field).eq('id', request.query.id)
+        if (error) console.log(error)
+
+        // console.log(data[0][field]) // http://localhost:8888/api/content?mode=increment&field=like&id=1
+        var data2 = { }
+        if (request.query.field === 'like') 
+          data2 = { num_like: data[0][field] === null ? 1 : data[0][field] + 1 }
+        else if (request.query.field === 'impr') 
+          data2 = { num_impr: data[0][field] === null ? 1 : data[0][field] + 1 }
+        else throw new Error('Invalid incremented field: ' + request.query.field)
+
+        var { error } = await supabase.from(table).update(data2).eq('id', request.query.id)
+        if (error) console.log(error)
+        response.status(200).json({ success: true })
+        break
+
       case 'post':
         const { author, content, relatedId } = request.body
 
@@ -62,7 +81,7 @@ export default async function handler(request, response) {
         var data2 = await Promise.all(data.map(async (item) => {
           var { data, error } = await supabase.from(table).select('id').eq('related_id', item.id)
           if (error) console.log(error)
-          return {...item, num_ans: data.length }
+          return { ...item, num_ans: data.length }
         }))
 
         response.status(200).json({ data: data2 })
