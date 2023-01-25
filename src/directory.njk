@@ -42,7 +42,7 @@
             </button>
           </nav>
 
-          <article :class="isFetching && 'blur-lg'" x-show="isMobile() && showProfile || !isMobile()">
+          <article :class="isFetching && 'blur-lg animate-pulse'" x-show="isMobile() && showProfile || !isMobile()">
             <!-- Profile header -->
             <div>
               <template x-if="!selected.cover_url">
@@ -468,7 +468,7 @@
         showListing: true,
         showProfile: false,
 
-        getBook: function (search) {
+        getBook(search) {
           const book = this
             .users
             .filter((u) => u.last_name.toLowerCase().includes(search.toLowerCase()) || u.first_name.toLowerCase().includes(search.toLowerCase()) || u.title.toLowerCase().includes(search.toLowerCase()))
@@ -509,43 +509,6 @@
               ?.email) */
           this.isFetching = false
         },
-
-        handleConnect(email) {
-          fetch('/api/directory?mode=connect', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              user1: Alpine
-                .store('auth')
-                .user
-                .email,
-              user2: email,
-              status: 'Pending'
-            })
-          })
-            .then((response) => response.json())
-            .then((message) => {
-              if (!message.success) {
-                this
-                  .notifications
-                  .push({show: true, success: false, title: 'Invitation not sent', description: 'There was an error inviting this person.'})
-              } else {
-                this
-                  .notifications
-                  .push({show: true, success: true, title: 'Invite sent!', description: 'Please wait for the confirmation.'})
-              }
-            })
-            .catch((error) => {
-              this
-                .notifications
-                .push({show: true, success: false, title: 'Invitation not sent', description: 'There was an error inviting this person.'})
-            })
-            . finally(() => {
-              this.showNotifications = true
-            })
-        }
       }
     }
   </script>

@@ -29,6 +29,43 @@ export default () => ({
 
   },
 
+  handleConnect(email) {
+    fetch('/api/directory?mode=connect', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user1: Alpine
+          .store('auth')
+          .user
+          .email,
+        user2: email,
+        status: 'Pending'
+      })
+    })
+      .then((response) => response.json())
+      .then((message) => {
+        if (!message.success) {
+          this
+            .notifications
+            .push({ show: true, success: false, title: 'Invitation not sent', description: 'There was an error inviting this person.' })
+        } else {
+          this
+            .notifications
+            .push({ show: true, success: true, title: 'Invite sent!', description: 'Please wait for the confirmation.' })
+        }
+      })
+      .catch((error) => {
+        this
+          .notifications
+          .push({ show: true, success: false, title: 'Invitation not sent', description: 'There was an error inviting this person.' })
+      })
+      .finally(() => {
+        this.showNotifications = true
+      })
+  },
+
   formatDate(date, dateFormat) {
     if (dateFormat === 'relative')
       return formatRelative(date, new Date())

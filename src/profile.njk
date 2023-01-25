@@ -2,7 +2,7 @@
 {% extends "layouts/inside.njk" %}
 
 {% block body %}
-  <article x-data="{ current: 'Profile', numFriends: 0 }" :class="!$store.auth.user && 'blur'">
+  <article x-data="{ current: 'Profile', numFriends: 0 }" :class="!$store.auth.user && 'blur-lg animate-pulse'">
     <!-- Profile header -->
     <div>
       <template x-if="!$store.auth.user || !$store.auth.user.cover_url">
@@ -44,7 +44,7 @@
               </button>
             </div>
             <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <button @click="handleConnect($store.auth.user.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <button type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                 <!-- Heroicon name: mini/user-minus -->
                 <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>

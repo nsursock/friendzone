@@ -34,8 +34,8 @@
         <p class="text-sm font-medium text-gray-900" x-text="notification.user.first_name + ' ' + notification.user.last_name"></p>
         <p class="mt-1 text-sm text-gray-500">sent you an invite to connect.</p>
         <div class="mt-4 flex">
-          <button @click="fetch(`/api/directory?id=${notification.id}&mode=Accepted`)" type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Accept</button>
-          <button @click="fetch(`/api/directory?id=${notification.id}&mode=Declined`)" type="button" class="ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Decline</button>
+          <button @click="fetch(`/api/directory?id=${notification.id}&mode=Accepted`); notification.show = false" type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Accept</button>
+          <button @click="fetch(`/api/directory?id=${notification.id}&mode=Declined`); notification.show = false" type="button" class="ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Decline</button>
         </div>
       </div>
       <div class="ml-4 flex flex-shrink-0">

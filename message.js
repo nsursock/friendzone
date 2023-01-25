@@ -16,11 +16,11 @@ console.log('starting up');
     const table = 'messages.dev'
 
     var emails = (await supabase.from('users.dev').select('email')).data.map((item) => item.email)
-
+    var ids = (await supabase.from('messages.dev').select('id')).data.map((item) => item.id).sort(() => 0.5 - Math.random()).slice(0, 5)
 
     const num = 1000
-    const ids = [1297,918,1327,1596]
-    for (let index = 0; index < 12; index++) {
+    // const ids = [1297,918,1327,1596]
+    for (let index = 0; index < num; index++) {
 
       var { data, error } = await supabase.from(table).insert({
         related_id: ids[index%ids.length],

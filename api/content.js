@@ -14,6 +14,23 @@ export default async function handler(request, response) {
 
     switch (request.query.mode) {
 
+      case 'trending':
+        var { data, error } = (await supabase.from(process.env.NODE_ENV.startsWith('dev') ? 'trending.dev' : 'trending')
+          .select('related_id, count'))
+        if (error) console.log(error)
+
+        const counts = data;
+
+        var { data, error } = (await supabase.from(table)
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
+          .in('id', data.slice(0, 3).map(d => d.related_id)))
+        if (error) console.log(error)
+
+        var data2 = data.map((post, index) => { return { ...post, num_ans: counts[index].count } })
+
+        response.status(200).json({ data: data2 })
+        break
+
       case 'increment':
         const field = 'num_' + request.query.field
         var { data, error } = await supabase.from(table)
