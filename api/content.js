@@ -15,6 +15,7 @@ export default async function handler(request, response) {
     switch (request.query.mode) {
 
       case 'trending':
+        const numTrending = 3
         var { data, error } = (await supabase.from(process.env.NODE_ENV.startsWith('dev') ? 'trending.dev' : 'trending')
           .select('related_id, count'))
         if (error) console.log(error)
@@ -23,7 +24,7 @@ export default async function handler(request, response) {
 
         var { data, error } = (await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
-          .in('id', data.slice(0, 3).map(d => d.related_id)))
+          .in('id', data.slice(0, numTrending).map(d => d.related_id)))
         if (error) console.log(error)
 
         var data2 = data.map((post, index) => { return { ...post, num_ans: counts[index].count } })
@@ -63,7 +64,7 @@ export default async function handler(request, response) {
 
       case 'comments':
         var { data, error } = (await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .eq('related_id', request.query.id))
         if (error) console.log(error)
 
@@ -91,7 +92,7 @@ export default async function handler(request, response) {
         emails.push(request.query.email)
 
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 
