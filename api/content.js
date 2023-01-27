@@ -15,21 +15,11 @@ export default async function handler(request, response) {
     switch (request.query.mode) {
 
       case 'trending':
-        const numTrending = 3
-        var { data, error } = (await supabase.from(process.env.NODE_ENV.startsWith('dev') ? 'trending.dev' : 'trending')
-          .select('related_id, count'))
+        var { data, error } = (await supabase.from('trending2.dev')
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
         if (error) console.log(error)
 
-        const counts = data;
-
-        var { data, error } = (await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url ), content, num_like, num_impr')
-          .in('id', data.slice(0, numTrending).map(d => d.related_id)))
-        if (error) console.log(error)
-
-        var data2 = data.map((post, index) => { return { ...post, num_ans: counts[index].count } })
-
-        response.status(200).json({ data: data2 })
+        response.status(200).json({ data })
         break
 
       case 'increment':

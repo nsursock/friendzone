@@ -33,47 +33,47 @@
   <body class="h-full">
   ```
 -->
-  <div class="min-h-screen mt-px bg-gray-50" x-data="{ openActivity: false, openProfile: false, clicked: null }">
+  <div class="min-h-screen mt-px bg-gray-50" x-data="{ openActivity: false, openProfile: false, clicked: null, tab: 'Home' }">
     <div class="py-10">
       <div class="mx-auto max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-8 lg:px-8">
         <div class="hidden lg:col-span-3 lg:block xl:col-span-2">
           <nav aria-label="Sidebar" class="sticky top-4 divide-y divide-gray-300">
             <div class="space-y-1 pb-8">
               <!-- Current: "bg-gray-200 text-gray-900", Default: "text-gray-700 hover:bg-gray-50" -->
-              <a href="#" class="bg-gray-200 text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md" aria-current="page">
+              <button @click="tab = 'Home'" :class="tab === 'Home' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md" aria-current="page">
                 <!-- Heroicon name: outline/home -->
                 <svg class="text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
                 </svg>
                 <span class="truncate">Home</span>
-              </a>
+              </button>
 
-              <a href="#" class="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <button @click="tab = 'Popular'" :class="tab === 'Popular' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                 <!-- Heroicon name: outline/fire -->
                 <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/>
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z"/>
                 </svg>
                 <span class="truncate">Popular</span>
-              </a>
+              </button>
 
-              <a href="#" class="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              {# <a href="#" class="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                 <!-- Heroicon name: outline/user-group -->
                 <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
                 </svg>
                 <span class="truncate">Communities</span>
-              </a>
+              </a> #}
 
-              <a href="#" class="text-gray-700 hover:bg-gray-50 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <button @click="tab = 'Trending'" :class="tab === 'Trending' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                 <!-- Heroicon name: outline/arrow-trending-up -->
                 <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/>
                 </svg>
                 <span class="truncate">Trending</span>
-              </a>
+              </button>
             </div>
-            <div class="pt-10">
+            {# <div class="pt-10">
               <p class="px-3 text-sm font-medium text-gray-500" id="communities-headline">Communities</p>
               <div class="mt-3 space-y-2" aria-labelledby="communities-headline">
                 <a href="#" class="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">
@@ -108,25 +108,17 @@
                   <span class="truncate">Gaming</span>
                 </a>
               </div>
-            </div>
+            </div> #}
           </nav>
         </div>
         <template x-if="$store.auth.user">
-          <main :class="isFetching && 'blur-md animate-pulse'" class="lg:col-span-9 xl:col-span-6" x-data="{ postId: null, posts: [
-            { id: -1, created_at: new Date(), skeleton: true,
-              author: { avatar_url: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixid=MnwzOTk4NzJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzQwNTgxNzA&ixlib=rb-4.0.3' },
-              content: 'Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.' },
-            { id: -2, created_at: new Date(), skeleton: true,
-              author: { avatar_url: 'https://images.unsplash.com/photo-1483818993731-3d76e0c51133?ixid=MnwzOTk4NzJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzQwNTA1NDM&ixlib=rb-4.0.3' },
-              content: 'Man I am glad you asked this question. I\'m a 6 year old golden retriever and while I still have a few years left to experience, I think I\'ve been around long enough to tell you what it\'s really like.' },
-            { id: -3, created_at: new Date(), skeleton: true,
-              author: { avatar_url: 'https://images.unsplash.com/photo-1468488718849-422a2a5efc03?ixid=MnwzOTk4NzJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzQwNTA1Mzg&ixlib=rb-4.0.3' },
-              content: 'Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.' },
-          ], isFetching: false }"
-            x-init="isFetching = true; posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data; isFetching = false">
+          <main :class="isFetching && 'blur-md animate-pulse'" class="lg:col-span-9 xl:col-span-6" x-data="dataFeed()"
+            x-init="isFetching = true; posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data; isFetching = false"
+            x-effect="refreshFeed">
             {% include 'write.njk' %}
 
             <div class="px-4 sm:px-0" x-data="{ tab: 'Most Recent' }">
+              <button @click="openNewPost = !openNewPost" class="md:hidden mb-2 block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button>
               <div class="sm:hidden">
                 <label for="question-tabs" class="sr-only">Select a tab</label>
                 <select @change="tab = event.target.value; 
@@ -368,12 +360,12 @@
                                 <div class="min-w-0 flex-1">
                                   <div>
                                     <div class="text-sm">
-                                      <a href="#" class="font-medium text-gray-900" x-text="comment.author.first_name + ' ' + comment.author.last_name"></a>
+                                      <button @click="clicked = comment.author; openProfile = !openProfile" class="font-medium text-gray-900 hover:underline" x-text="comment.author.first_name + ' ' + comment.author.last_name"></button>
                                     </div>
                                     <p class="mt-0.5 text-sm text-gray-500" x-text="`Commented ${formatDate(new Date(comment.created_at), 'distance')}`"></p>
                                   </div>
                                   <div class="mt-2 text-sm text-gray-700">
-                                    <p class="" x-html="marked.parse(comment.content)"></p>
+                                    <p class="prose prose-sm" x-html="marked.parse(comment.content)"></p>
                                   </div>
                                 </div>
                               </div>
@@ -397,7 +389,7 @@
             <div class="sticky top-4 space-y-4">
               <div class="flex">
                 <button @click="openNewPost = !openNewPost" class="block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button>
-                <button @click="open = !open" class="ml-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View Activity</button>
+                {# <button @click="open = !open" class="ml-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View Activity</button> #}
               </div>
               <section aria-labelledby="who-to-follow-heading" x-data="{ people: [], friends: [], refreshSuggestions: false }" 
               x-init="isFetching = true; people = (await(await fetch('/api/directory')).json()).data.filter(user => user.last_name !== null); isFetching = false"
@@ -439,9 +431,9 @@
                         <!-- More people... -->
                       </ul>
                     </div>
-                    {# <div class="mt-6">
-                    <a href="#" class="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View all</a>
-                  </div> #}
+                    <div class="mt-6">
+                      <button @click="tab = 'Popular'" class="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View all</a>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -452,13 +444,13 @@
                     <h2 id="trending-heading" class="text-base font-medium text-gray-900">Trending</h2>
                     <div class="mt-6 flow-root">
                       <ul role="list" class="-my-4 divide-y divide-gray-200">
-                        <template x-for="post in trendingPosts" :key="post.id">
+                        <template x-for="post in trendingPosts.slice(0, 3)" :key="post.id">
                           <li class="flex space-x-3 py-4">
                             <div class="flex-shrink-0">
                               <img class="h-8 w-8 rounded-full" :src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="Floyd Miles">
                             </div>
                             <div class="min-w-0 flex-1">
-                              <p class="text-sm text-gray-800" x-text="post.content"></p>
+                              <p class="text-sm text-gray-800" x-text="post.content.length > 75 ? post.content.slice(0, 75) + '...' : post.content"></p>
                               <div class="mt-2 flex">
                                 <span class="inline-flex items-center text-sm">
                                   <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
@@ -477,9 +469,9 @@
                         <!-- More posts... -->
                       </ul>
                     </div>
-                    {# <div class="mt-6">
-                    <a href="#" class="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View all</a>
-                  </div> #}
+                    <div class="mt-6">
+                      <button @click="tab = 'Trending'" class="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View all</a>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -602,4 +594,70 @@
 
   </div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    function dataFeed() {
+      return {
+        postId: null,
+        posts: [
+          {
+            id: -1,
+            created_at: new Date(),
+            skeleton: true,
+            author: {
+              avatar_url: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixid=MnwzOTk4NzJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzQwNTgxNzA&ixlib=rb-4.0.3'
+            },
+            content: 'Jurassic Park was an incredible idea and a magnificent feat of engineering, but poor protocols and a disregard for human safety killed what could have otherwise been one of the best businesses of our generation.'
+          }, {
+            id: -2,
+            created_at: new Date(),
+            skeleton: true,
+            author: {
+              avatar_url: 'https://images.unsplash.com/photo-1483818993731-3d76e0c51133?ixid=MnwzOTk4NzJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzQwNTA1NDM&ixlib=rb-4.0.3'
+            },
+            content: 'Man I am glad you asked this question. I\'m a 6 year old golden retriever and while I still have a few years left to experience, I think I\'ve been around long enough to tell you what it\'s really like.'
+          }, {
+            id: -3,
+            created_at: new Date(),
+            skeleton: true,
+            author: {
+              avatar_url: 'https://images.unsplash.com/photo-1468488718849-422a2a5efc03?ixid=MnwzOTk4NzJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzQwNTA1Mzg&ixlib=rb-4.0.3'
+            },
+            content: 'This is something most people wonder about themselves at least 4 or 5 times throughout their life. Everyone ignores you for weeks on end (including your immediate family) and the only person who will talk to you is a little boy you are treating because he thinks he sees dead people.'
+          }
+        ],
+        isFetching: false,
+
+        async refreshFeed() {
+          this.isFetching = true;
+
+          if (this.tab === 'Trending') 
+            this.posts = (await(await fetch('/api/content?mode=trending')).json())
+              .data
+              .sort((a, b) => {
+                if (b.num_ans - a.num_ans === 0) 
+                  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+                else 
+                  return b.num_ans - a.num_ans
+              })
+              .slice(0, 100);
+          else if (this.tab === 'Popular') 
+            this.posts = (await(await fetch('/api/content?mode=trending')).json())
+              .data
+              .sort((a, b) => {
+                if (b.num_like - a.num_like === 0) 
+                  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+                else 
+                  return b.num_like - a.num_like
+              })
+              .slice(0, 100);
+          else 
+            this.posts = (await(await fetch(
+              `/api/content?mode=display&email=${Alpine.store('auth').user
+              ?.email}`)).json()).data;
+          
+          this.isFetching = false
+        }
+      }
+    }
+  </script>
 {% endblock %}

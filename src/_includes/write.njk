@@ -158,6 +158,7 @@
                 .notifications
                 .push({show: true, success: true, title: 'Message posted!', description: 'It can now appear in the feed.'})
               this.openNewPost = !this.openNewPost
+              this.refreshFeed();
             }
           })
           .catch((error) => {
