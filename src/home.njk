@@ -72,6 +72,13 @@
                 </svg>
                 <span class="truncate">Trending</span>
               </button>
+
+              <button @click="tab = 'Favorites'" :class="tab === 'Favorites' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"/>
+                </svg>
+                <span class="truncate">Favorites</span>
+              </button>
             </div>
             {# <div class="pt-10">
               <p class="px-3 text-sm font-medium text-gray-500" id="communities-headline">Communities</p>
@@ -236,13 +243,13 @@
                                     </svg>
                                     <span>Comment</span>
                                   </button>
-                                  <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
+                                  <button @click="open = !open; await (await fetch(`/api/content?mode=bookmark&id=${post.id}&email=${$store.auth.user.email}`))" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
                                     <!-- Heroicon name: mini/star -->
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                       <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>Bookmark</span>
-                                  </a>
+                                  </button>
                                   <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
                                     <!-- Heroicon name: mini/code-bracket -->
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -650,6 +657,14 @@
                   return b.num_like - a.num_like
               })
               .slice(0, 100);
+          else if (this.tab === 'Favorites') 
+            this.posts = (await(await fetch(
+              `/api/content?mode=favorites&email=${Alpine.store('auth').user
+              ?.email}`)).json())
+              .data
+              .sort((a, b) => {
+                return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+              })
           else 
             this.posts = (await(await fetch(
               `/api/content?mode=display&email=${Alpine.store('auth').user

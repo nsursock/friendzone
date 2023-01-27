@@ -14,6 +14,47 @@ export default async function handler(request, response) {
 
     switch (request.query.mode) {
 
+      case 'favorites':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'users.dev'
+          : 'users'
+
+        var { data, error } = await supabase.from(table).select('favorites')
+          .eq('email', request.query.email)
+        if (error) console.log(error)
+
+        var table = process.env.NODE_ENV.startsWith('dev')
+        ? 'trending2.dev'
+        : 'trending2'
+
+        var { data, error } = await supabase.from(table)
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .in('id', data[0].favorites)
+
+        response.status(200).json({ data })
+        break
+
+      case 'bookmark':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'users.dev'
+          : 'users'
+
+        var { data, error } = await supabase.from(table).select('favorites')
+          .eq('email', request.query.email)
+        if (error) console.log(error)
+
+        const favorites = data[0].favorites
+        favorites.push(`${request.query.id}`)
+
+        var { data, error } = await supabase
+          .from(table)
+          .update({ favorites })
+          .eq('email', request.query.email)
+        if (error) console.log(error)
+
+        response.status(200).json({ data })
+        break
+
       case 'trending':
         var { data, error } = (await supabase.from('trending2.dev')
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
@@ -29,10 +70,10 @@ export default async function handler(request, response) {
         if (error) console.log(error)
 
         // console.log(data[0][field]) // http://localhost:8888/api/content?mode=increment&field=like&id=1
-        var data2 = { }
-        if (request.query.field === 'like') 
+        var data2 = {}
+        if (request.query.field === 'like')
           data2 = { num_like: data[0][field] === null ? 1 : data[0][field] + 1 }
-        else if (request.query.field === 'impr') 
+        else if (request.query.field === 'impr')
           data2 = { num_impr: data[0][field] === null ? 1 : data[0][field] + 1 }
         else throw new Error('Invalid incremented field: ' + request.query.field)
 
