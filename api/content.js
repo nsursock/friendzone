@@ -14,6 +14,15 @@ export default async function handler(request, response) {
 
     switch (request.query.mode) {
 
+      case 'shared':
+        var { data, error } = await supabase.from(table)
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .eq('id', request.query.id)
+        if (error) console.log(error)
+
+        response.status(200).json({ data: data[0] })
+        break
+
       case 'favorites':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'users.dev'
@@ -24,8 +33,8 @@ export default async function handler(request, response) {
         if (error) console.log(error)
 
         var table = process.env.NODE_ENV.startsWith('dev')
-        ? 'trending2.dev'
-        : 'trending2'
+          ? 'trending2.dev'
+          : 'trending2'
 
         var { data, error } = await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
@@ -85,9 +94,15 @@ export default async function handler(request, response) {
       case 'post':
         const { author, content, relatedId } = request.body
 
-        var { data, error } = await supabase.from(table).insert({
+        let object = {}
+        if (content !== null) object = {
           author, content, related_id: relatedId
-        }).select('*')
+        }
+        else object = {
+          author, share_id: relatedId
+        }
+
+        var { data, error } = await supabase.from(table).insert(object).select('*')
 
         if (error) throw new Error(error)
         response.status(200).json({ success: true })
@@ -123,7 +138,7 @@ export default async function handler(request, response) {
         emails.push(request.query.email)
 
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .select('id, created_at, related_id, share_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 
