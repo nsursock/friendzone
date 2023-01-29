@@ -103,6 +103,8 @@
                 <div>
                   <textarea x-model.debounce.750ms="comment" rows="5" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Add your text..."></textarea>
                 </div>
+                <p class="mt-3 text-sm text-gray-500"><a target="_blank" class="hover:underline" href="https://www.markdownguide.org/cheat-sheet/">You can use markdown to format your text.</a>
+                </p>
               </div>
               <div x-show="tab === 'preview'" id="preview" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-2" role="tabpanel" tabindex="0">
                 <div class="border-b">
@@ -144,7 +146,7 @@
               .user
               .email,
             content: this.comment,
-            relatedId: this.postId,
+            relatedId: this.postId
           })
         })
           .then((response) => response.json())
@@ -157,8 +159,10 @@
               this
                 .notifications
                 .push({show: true, success: true, title: 'Message posted!', description: 'It can now appear in the feed.'})
-              this.openNewPost = !this.openNewPost
-              this.refreshFeed();
+              this.openNewPost = !this
+                .openNewPost
+                this
+                .refreshFeed();
             }
           })
           .catch((error) => {

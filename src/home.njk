@@ -347,15 +347,17 @@
                         </span>
                       </div>
                       <div class="flex text-sm">
-                        <span class="inline-flex items-center text-sm">
-                          <button @click="postId = post.id; handleShare()" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                            <!-- Heroicon name: mini/share -->
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M13 4.5a2.5 2.5 0 11.702 1.737L6.97 9.604a2.518 2.518 0 010 .792l6.733 3.367a2.5 2.5 0 11-.671 1.341l-6.733-3.367a2.5 2.5 0 110-3.475l6.733-3.366A2.52 2.52 0 0113 4.5z"/>
-                            </svg>
-                            <span class="font-medium text-gray-900">Share</span>
-                          </button>
-                        </span>
+                        <template x-if="!shared">
+                          <span class="inline-flex items-center text-sm">
+                            <button @click="postId = post.id; handleShare()" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+                              <!-- Heroicon name: mini/share -->
+                              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M13 4.5a2.5 2.5 0 11.702 1.737L6.97 9.604a2.518 2.518 0 010 .792l6.733 3.367a2.5 2.5 0 11-.671 1.341l-6.733-3.367a2.5 2.5 0 110-3.475l6.733-3.366A2.52 2.52 0 0113 4.5z"/>
+                              </svg>
+                              <span class="font-medium text-gray-900">Share</span>
+                            </button>
+                          </span>
+                        </template>
                       </div>
                     </div>
                   </article>
@@ -438,7 +440,26 @@
               <button @click="openNewPost = !openNewPost" class="block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button>
               {# <button @click="open = !open" class="ml-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View Activity</button> #}
             </div>
-            <section aria-labelledby="who-to-follow-heading" x-data="{ people: [], friends: [], refreshSuggestions: false }" 
+            <section aria-labelledby="who-to-follow-heading" x-data="{ people: [
+                {
+                  id: -1,
+                  avatar_url: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                  first_name: 'Leonard',
+                  last_name: 'Krasner'
+                },
+                {
+                  id: -2,
+                  avatar_url: 'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                  first_name: 'Eddie',
+                  last_name: 'Floyd'
+                },
+                {
+                  id: -3,
+                  avatar_url: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                  first_name: 'Maggie',
+                  last_name: 'Liezner'
+                }
+              ], friends: [], refreshSuggestions: false }" 
               x-init="isFetching = true; people = (await(await fetch('/api/directory')).json()).data.filter(user => user.last_name !== null); isFetching = false"
               x-effect="friends = (await (await fetch(`/api/directory?mode=friends&email=${$store.auth.user?.email}`)).json()).data">
               <div class="rounded-lg bg-white shadow">
@@ -446,12 +467,21 @@
                   <h2 id="who-to-follow-heading" class="text-base font-medium text-gray-900">Suggestions</h2>
                   <div class="mt-6 flow-root">
                     <ul role="list" class="-my-4 divide-y divide-gray-200">
-                      <template x-for="person in people.filter((p) => !friends.map((f) => f.email).includes(p.email) && p.avatar_url !== null)
+                      <template x-for="person in people.filter((p) => !friends.map((f) => f.email).includes(p.email))
                             .sort(() => 0.5 - Math.random()).slice(0, 3)" :key="person.id">
                         <li class="flex items-center space-x-3 py-4">
-                          <div class="flex-shrink-0">
-                            <img class="h-8 w-8 rounded-full" :src="person.avatar_url.includes('unsplash') ? person.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : person.avatar_url" alt="">
-                          </div>
+                          <template x-if="!person.avatar_url">
+                            <span class="h-8 w-8 overflow-hidden rounded-full bg-gray-100">
+                              <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                              </svg>
+                            </span>
+                          </template>
+                          <template x-if="person.avatar_url">
+                            <div class="flex-shrink-0">
+                              <img class="h-8 w-8 rounded-full" :src="person.avatar_url.includes('unsplash') ? person.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : person.avatar_url" alt="">
+                            </div>
+                          </template>
                           <div class="min-w-0 flex-1">
                             <p class="text-sm font-medium text-gray-900">
                               <button class="hover:underline" @click="clicked = person; openProfile = !openProfile"  x-text="person.first_name + ' ' + person.last_name"></button>
@@ -484,7 +514,14 @@
                 </div>
               </div>
             </section>
-            <section aria-labelledby="trending-heading" x-data="{ trendingPosts: [] }" 
+            <section aria-labelledby="trending-heading" x-data="{ trendingPosts: [
+              { id: -1, author: { avatar_url: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80' },
+                content: 'Magnam unde eligendi provident dolorum occaecati id unde asperiores ea. Excepturi soluta quibusdam.', num_ans: 201 },
+              { id: -2, author: { avatar_url: 'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80' },
+                content: 'Deserunt ullam nulla consequuntur animi. Similique occaecati animi corporis cumque quas magnam illo ab officiis.', num_ans: 187 },
+              { id: -3, author: { avatar_url: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80' },
+                content: 'Modi reiciendis incidunt fugiat eos ullam dicta. Nobis in laudantium pariatur saepe dolores voluptatem repellendus incidunt optio.', num_ans: 112 },
+            ] }" 
               x-init="trendingPosts = (await(await fetch('/api/content?mode=trending')).json()).data">
               <div class="rounded-lg bg-white shadow">
                 <div class="p-6">
@@ -493,9 +530,18 @@
                     <ul role="list" class="-my-4 divide-y divide-gray-200">
                       <template x-for="post in trendingPosts.slice(0, 3)" :key="post.id">
                         <li class="flex space-x-3 py-4">
-                          <div class="flex-shrink-0">
-                            <img class="h-8 w-8 rounded-full" :src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="Floyd Miles">
-                          </div>
+                          <template x-if="!post.author.avatar_url">
+                            <span class="h-8 w-8 overflow-hidden rounded-full bg-gray-100">
+                              <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                              </svg>
+                            </span>
+                          </template>
+                          <template x-if="post.author.avatar_url">
+                            <div class="flex-shrink-0">
+                              <img class="h-8 w-8 rounded-full" :src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="Floyd Miles">
+                            </div>
+                          </template>
                           <div class="min-w-0 flex-1">
                             <p class="text-sm text-gray-800" x-text="post.content.length > 75 ? post.content.slice(0, 75) + '...' : post.content"></p>
                             <div class="mt-2 flex">
@@ -528,9 +574,9 @@
     </div>
   </div>
 
-  <template x-if="clicked">
+  <div x-show="clicked">
     {% include 'profile.njk' %}
-  </template>
+  </div>
 
   {# <div x-show="open" class="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
       <!--
@@ -645,6 +691,7 @@
   function dataFeed() {
     return {
       postId: null,
+
       posts: [
         {
           id: -1,
