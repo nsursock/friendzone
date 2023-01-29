@@ -59,14 +59,14 @@
             <div>
               <div class="pb-1 sm:pb-6">
                 <div>
-                  <template x-if="!clicked.avatar_url">
+                  <template x-if="!clicked?.avatar_url">
                     <span class="h-40 sm:h-56 overflow-hidden rounded-full bg-gray-100">
                       <svg class="mx-auto h-full w-1/2 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
                       </svg>
                     </span>
                   </template>
-                  <template x-if="clicked.avatar_url">
+                  <template x-if="clicked?.avatar_url">
                     <div class="relative h-40 sm:h-56">
                       <img class="absolute h-full w-full object-cover" :src="clicked?.avatar_url.includes('unsplash') ? clicked.avatar_url+'&fit=facearea&facepad=8&auto=format&fit=crop&w=800&h=600&q=80' : clicked.avatar_url" alt="">
                     </div>
@@ -75,12 +75,12 @@
                     <div class="sm:flex-1">
                       <div>
                         <div class="flex items-center">
-                          <h3 class="text-xl font-bold text-gray-900 sm:text-2xl" x-text="clicked.first_name + ' ' + clicked.last_name"></h3>
+                          <h3 class="text-xl font-bold text-gray-900 sm:text-2xl" x-text="clicked?.first_name + ' ' + clicked?.last_name"></h3>
                           <span class="ml-2.5 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-green-400">
                             <span class="sr-only">Online</span>
                           </span>
                         </div>
-                        <p class="text-sm text-gray-500" x-text="`@${clicked.user_name}`"></p>
+                        <p class="text-sm text-gray-500" x-text="`@${clicked?.user_name}`"></p>
                       </div>
                       <div class="mt-5 flex flex-wrap space-y-3 sm:space-y-0 sm:space-x-3" x-data="{ open: false }">
                         <button type="button" class="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:flex-1">Message</button>
@@ -124,21 +124,21 @@
                   <div>
                     <dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Bio</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
-                      <p x-text="clicked.description"></p>
+                      <p x-text="clicked?.description"></p>
                     </dd>
                   </div>
                   <div>
                     <dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Location</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2" x-text="`${clicked.city}, ${clicked.country}`"></dd>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2" x-text="`${clicked?.city}, ${clicked?.country}`"></dd>
                   </div>
                   <div>
                     <dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Website</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2" x-text="clicked.website"></dd>
+                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2" x-text="clicked?.website"></dd>
                   </div>
                   <div>
                     <dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Birthday</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
-                      <span x-text="formatDate(new Date(clicked?.birthday), 'MMMM d, y')"></span>
+                      <span x-text="clicked?.birthday && formatDate(new Date(clicked?.birthday), 'MMMM d, y')"></span>
                     </dd>
                   </div>
                 </dl>
