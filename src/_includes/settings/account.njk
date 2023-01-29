@@ -60,7 +60,7 @@
                 <span>Change</span>
                 <span class="sr-only"> user photo</span>
               </label>
-              <input @change="preview(event, 'avatar')" id="input-avatar" name="input-avatar" type="file" class="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0">
+              <input @change="preview(event, 'avatar')" x-ref="avatar" id="input-avatar" name="input-avatar" type="file" class="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0">
             </div>
             <button @click="avatar = cover = null" type="button" class="ml-3 rounded-md border border-transparent bg-transparent py-2 px-3 text-sm font-medium text-gray-900 hover:text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove</button>
           </div>
@@ -74,21 +74,19 @@
             <template x-if="cover">
               <img x-ref="cover" id="cover" class="h-24 w-full object-cover lg:h-32" alt="">
             </template>
-            <template x-if="!cover">
-              <div class="space-y-1 text-center">
-                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div class="flex text-sm text-gray-600">
-                  <label for="input-cover" class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500">
-                    <span>Upload a file</span>
-                    <input @change="preview(event, 'cover')" id="input-cover" name="input-cover" type="file" class="sr-only">
-                  </label>
-                  <p class="pl-1">or drag and drop</p>
-                </div>
-                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+            <div class="space-y-1 text-center" :class="cover && 'hidden'">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="flex text-sm text-gray-600">
+                <label for="input-cover" class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500">
+                  <span>Upload a file</span>
+                  <input @change="preview(event, 'cover')" x-ref="cover" id="input-cover" name="input-cover" type="file" class="sr-only">
+                </label>
+                <p class="pl-1">or drag and drop</p>
               </div>
-            </template>
+              <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+            </div>
           </div>
         </div>
       </div>
@@ -445,30 +443,25 @@
 
       async preview(evt, type) {
         this[type] = Object.values(evt.target.files)
-        //await this.$nextTick()
         var reader = new FileReader();
         reader.onload = () => {
-          //this.$refs[type].src = reader.result;
-          document.getElementById(type).src = reader.result
+          this.$refs[type].src = reader.result;
+/*          document
+            .getElementById(type)
+            .src = reader.result*/
         }
         reader.readAsDataURL(evt.target.files[0]);
       },
 
       handleSubmit(evt) {
-        /*for (var i = 0; i < evt.target.length; i++) {
-          console.log(evt.target[i])
-        }*/
-        console.log(document.getElementById('input-avatar'))
-        console.log(document.getElementById('input-cover'))
-        
         const data = new FormData()
         this.firstName && data.append('first_name', this.firstName)
         this.lastName && data.append('last_name', this.lastName)
         this.title && data.append('title', this.title)
         this.birthday && data.append('birthday', this.birthday)
         this.userName && data.append('user_name', this.userName)
-        this.avatar && data.append('avatar', document.getElementById('input-avatar').files[0])
-        this.cover && data.append('cover', document.getElementById('input-cover').files[0])
+        this.avatar && data.append('avatar', evt.target[5].files[0])
+        this.cover && data.append('cover', evt.target[7].files[0])
         this.description && data.append('description', this.description)
         this.website && data.append('website', this.website)
         this.email && data.append('email', this.email)

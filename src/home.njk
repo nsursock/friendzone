@@ -119,7 +119,7 @@
           </nav>
         </div>
         <template x-if="$store.auth.user">
-          <main :class="isFetching && 'blur-md animate-pulse'" class="lg:col-span-9 xl:col-span-6" x-data="dataFeed()"
+          <main :class="isFetching && 'blur animate-pulse'" class="lg:col-span-9 xl:col-span-6" x-data="dataFeed()"
             x-init="isFetching = true; posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data; isFetching = false"
             x-effect="refreshFeed">
             {% include 'write.njk' %}
@@ -434,7 +434,7 @@
         </main>
       </template>
       <template x-if="$store.auth.user">
-        <aside class="hidden xl:col-span-4 xl:block" :class="isFetching && 'blur-sm animate-pulse'" x-data="{ isFetching: false }">
+        <aside class="hidden xl:col-span-4 xl:block" :class="isFetching && 'blur animate-pulse'" x-data="{ isFetching: false }">
           <div class="sticky top-4 space-y-4">
             <div class="flex">
               <button @click="openNewPost = !openNewPost" class="block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button>

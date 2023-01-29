@@ -13,29 +13,11 @@ async function handler(req, res) {
     ? 'users.dev'
     : 'users'
 
-  const uploadFile = async (files) => {
-    for (const [key, value] of Object.entries(files)) {
-      if (files[key]) {
-        let filepath = `public/${files[key].newFilename
-          }.${files[key].mimetype.split('/').pop()}`
-        // filepath = filepath.replace(/\s/g, '-') // IN CASE YOU NEED TO REPLACE SPACE OF THE IMAGE NAME
-        const rawData = fs.readFileSync(files[key].filepath)
-        const { data, error } = await supabase.storage
-          .from(storageName)
-          .upload(filepath, rawData, {
-            contentType: files[key].mimetype,
-          })
+  // const uploadFile = async (files, err) => {
+  //   let cols = {}
 
-        if (error || err) {
-          console.error(error || err);
-          return reject({ success: false })
-        }
-
-        cols[key+'_url'] = `https://jdlejcgjpmmdtfhqomgy.supabase.co/storage/v1/object/public/${storageName}/${key}/${filepath}`
-        console.log(cols[key+'_url']);
-      }
-    }
-  }
+  //   return cols
+  // }
 
   const insertRecord = async () => {
     // eslint-disable-next-line
@@ -43,7 +25,29 @@ async function handler(req, res) {
       form.parse(req, async function (err, fields, files) {
         var cols = {}
 
-        uploadFile(files)
+        for (const [key, value] of Object.entries(files)) {
+          if (files[key]) {
+            let filepath = `${key}/${files[key].newFilename}.${files[key].mimetype.split('/').pop()}`
+            // filepath = filepath.replace(/\s/g, '-') // IN CASE YOU NEED TO REPLACE SPACE OF THE IMAGE NAME
+            const rawData = fs.readFileSync(files[key].filepath)
+            const { data, error } = await supabase.storage
+              .from(storageName)
+              .upload(filepath, rawData, {
+                contentType: files[key].mimetype,
+              })
+
+            if (error || err) {
+              console.error(error || err);
+              return reject({ success: false })
+            }
+
+            const field = key + '_url'
+            cols[field] = `https://jdlejcgjpmmdtfhqomgy.supabase.co/storage/v1/object/public/${storageName}/${filepath}`
+            // <img src="[supabase_url]/storage/v1/object/public/[bucket name]/[path to your image]" />
+          }
+        }
+
+        // console.log(cols);
 
         // YOU DO NOT NEED BELOW UNLESS YOU WANT TO SAVE PUBLIC URL OF THE IMAGE TO THE DATABASE
         for (const [key, value] of Object.entries(fields)) {
