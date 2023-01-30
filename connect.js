@@ -28,7 +28,7 @@ function permute(arr) {
 
     var data = (await supabase.from(tableUser).select('email')).data.map((item) => item.email)
 
-    var perm = permute(data)
+    var perm = permute(data) //.filter((rel) => rel.user1.includes('ursock') || rel.user2.includes('ursock'))
     // console.table(perm)
 
     const num = 1000
@@ -36,7 +36,7 @@ function permute(arr) {
       const el = perm[Math.floor(Math.random() * (perm.length))];
       
       var { data, error } = await supabase.from(tableRel).insert({
-        user1: el.user1, user2: el.user2, status: 'Accepted',
+        user1: el.user1, user2: el.user2, status: 'Pending',
       }).select('*')
 
       console.log({ index,

@@ -54,16 +54,25 @@ export default async function handler(request, response) {
           : 'relationships'
 
         var data1 = (await supabase.from(table)
-          .select(`user1 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
+          .select(`user1 (id, first_name, last_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
           .eq('user2', request.query.email).eq('status', 'Accepted')).data
         data1 = JSON.parse(JSON.stringify(data1).split('"user1":').join('"friend":'))
 
         var data2 = (await supabase.from(table)
-          .select(`user2 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
+          .select(`user2 (id, first_name, last_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
           .eq('user1', request.query.email).eq('status', 'Accepted')).data
         data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
 
         var data = data1.concat(data2)
+        // console.log(data);
+
+        const check = data.reduce((sums, entry) => {
+          sums[entry.friend.email] = (sums[entry.friend.email] || 0) + 1;
+          return sums;
+       },{})
+       console.log(check);
+       
+
         response.status(200).json({ data })
         break
 

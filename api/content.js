@@ -16,7 +16,7 @@ export default async function handler(request, response) {
 
       case 'shared':
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .eq('id', request.query.id)
         if (error) console.log(error)
 
@@ -37,7 +37,7 @@ export default async function handler(request, response) {
           : 'trending2'
 
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
           .in('id', data[0].favorites)
 
         response.status(200).json({ data })
@@ -66,7 +66,7 @@ export default async function handler(request, response) {
 
       case 'trending':
         var { data, error } = (await supabase.from('trending2.dev')
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
         if (error) console.log(error)
 
         response.status(200).json({ data })
@@ -110,7 +110,7 @@ export default async function handler(request, response) {
 
       case 'comments':
         var { data, error } = (await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .eq('related_id', request.query.id))
         if (error) console.log(error)
 
