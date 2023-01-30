@@ -138,7 +138,7 @@ export default async function handler(request, response) {
         emails.push(request.query.email)
 
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, share_id, author ( first_name, last_name, avatar_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .select('id, created_at, related_id, share_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 
