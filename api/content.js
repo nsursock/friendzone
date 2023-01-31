@@ -33,8 +33,8 @@ export default async function handler(request, response) {
         if (error) console.log(error)
 
         var table = process.env.NODE_ENV.startsWith('dev')
-          ? 'trending2.dev'
-          : 'trending2'
+          ? 'trending.dev'
+          : 'trending'
 
         var { data, error } = await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
@@ -65,7 +65,7 @@ export default async function handler(request, response) {
         break
 
       case 'trending':
-        var { data, error } = (await supabase.from('trending2.dev')
+        var { data, error } = (await supabase.from('trending.dev')
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
         if (error) console.log(error)
 
@@ -137,18 +137,23 @@ export default async function handler(request, response) {
         emails = emails.map((item) => item.friend.email)
         emails.push(request.query.email)
 
-        var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, share_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+        var tableTr = process.env.NODE_ENV.startsWith('dev')
+          ? 'trending.dev'
+          : 'trending'
+
+        var { data, error } = await supabase.from(tableTr)
+          .select('id, created_at, share_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 
-        var data2 = await Promise.all(data.map(async (item) => {
-          var { data, error } = await supabase.from(table).select('id').eq('related_id', item.id)
-          if (error) console.log(error)
-          return { ...item, num_ans: data.length }
-        }))
+        // var data2 = await Promise.all(data.map(async (item) => {
+        //   var { data, error } = await supabase.from(table).select('id').eq('related_id', item.id)
+        //   if (error) console.log(error)
+        //   console.log(">>>", { id: item.id, data });
+        //   return { ...item, num_ans: data?.length ?? 0 }
+        // }))
 
-        response.status(200).json({ data: data2 })
+        response.status(200).json({ data })
         break
     }
 

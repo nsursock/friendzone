@@ -755,7 +755,7 @@
         else 
           this.posts = (await(await fetch(
             `/api/content?mode=display&email=${Alpine.store('auth').user
-            ?.email}`)).json()).data;
+            ?.email}`)).json()).data.slice(0, 100);
         
         this.isFetching = false
       },

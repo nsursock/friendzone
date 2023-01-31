@@ -64,14 +64,19 @@ export default async function handler(request, response) {
         data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
 
         var data = data1.concat(data2)
-        // console.log(data);
 
-        const check = data.reduce((sums, entry) => {
-          sums[entry.friend.email] = (sums[entry.friend.email] || 0) + 1;
-          return sums;
-       },{})
-       console.log(check);
-       
+        // const check = data.reduce((sums, entry) => {
+        //   sums[entry.friend.email] = (sums[entry.friend.email] || 0) + 1;
+        //   return sums;
+        // }, {})
+        // var arr = []
+        // for (const [key, value] of Object.entries(check)) {
+        //   if (value > 1) {
+        //     console.log(`${key}: ${value}`)
+        //     arr.push(key)
+        //   }
+        // }
+        // console.log(arr);
 
         response.status(200).json({ data })
         break
