@@ -53,17 +53,24 @@ export default async function handler(request, response) {
           ? 'relationships.dev'
           : 'relationships'
 
+        let statuses = []
+        if (request.query.minimum === 'pending')
+          statuses = ['Pending', 'Accepted']
+        else if (!request.query.minimum || request.query.minimum === 'accepted')
+          statuses = ['Accepted']
+
         var data1 = (await supabase.from(table)
           .select(`user1 (id, first_name, last_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
-          .eq('user2', request.query.email).eq('status', 'Accepted')).data
+          .eq('user2', request.query.email).in('status', statuses)).data
         data1 = JSON.parse(JSON.stringify(data1).split('"user1":').join('"friend":'))
 
         var data2 = (await supabase.from(table)
           .select(`user2 (id, first_name, last_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
-          .eq('user1', request.query.email).eq('status', 'Accepted')).data
+          .eq('user1', request.query.email).in('status', statuses)).data
         data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
 
         var data = data1.concat(data2)
+        // console.log(data.map(x => x.friend.email));
 
         // const check = data.reduce((sums, entry) => {
         //   sums[entry.friend.email] = (sums[entry.friend.email] || 0) + 1;

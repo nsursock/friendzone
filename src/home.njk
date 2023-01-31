@@ -176,55 +176,159 @@
             </div>
 
             <div class="mt-4">
-              <h1 class="sr-only">Recent questions</h1>
-              <ul role="list" class="space-y-4">
-                <template x-for="post in posts" :key="post.id">
-                  <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6" x-data="{ shared: null, comments: [], openCommentSection: false }"
+              {# <template x-if="posts.length === 0">
+                <!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+                <div class="mx-auto max-w-lg mx-4">
+                  <div>
+                    <div class="text-center">
+                      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                      </svg>
+                      <h2 class="mt-2 text-lg font-medium text-gray-900">Add team members</h2>
+                      <p class="mt-1 text-sm text-gray-500">You haven’t added any team members to your project yet. As the owner of this project, you can manage team member permissions.</p>
+                    </div>
+                    <form action="#" class="mt-6 flex">
+                      <label for="email" class="sr-only">Email address</label>
+                      <input type="email" name="email" id="email" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter an email">
+                      <button type="submit" class="ml-4 flex-shrink-0 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Send invite</button>
+                    </form>
+                  </div>
+                  <div class="mt-10">
+                    <h3 class="text-sm font-medium text-gray-500">Team members previously added to projects</h3>
+                    <ul role="list" class="mt-4 divide-y divide-gray-200 border-t border-b border-gray-200">
+                      <li class="flex items-center justify-between space-x-3 py-4">
+                        <div class="flex min-w-0 flex-1 items-center space-x-3">
+                          <div class="flex-shrink-0">
+                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-medium text-gray-900">Lindsay Walton</p>
+                            <p class="truncate text-sm font-medium text-gray-500">Front-end Developer</p>
+                          </div>
+                        </div>
+                        <div class="flex-shrink-0">
+                          <button type="button" class="inline-flex items-center rounded-full border border-transparent bg-gray-100 py-2 px-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <!-- Heroicon name: mini/plus -->
+                            <svg class="-ml-1 mr-0.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900"> Invite <span class="sr-only">Lindsay Walton</span>
+                            </span>
+                          </button>
+                        </div>
+                      </li>
+
+                      <li class="flex items-center justify-between space-x-3 py-4">
+                        <div class="flex min-w-0 flex-1 items-center space-x-3">
+                          <div class="flex-shrink-0">
+                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-medium text-gray-900">Courtney Henry</p>
+                            <p class="truncate text-sm font-medium text-gray-500">Designer</p>
+                          </div>
+                        </div>
+                        <div class="flex-shrink-0">
+                          <button type="button" class="inline-flex items-center rounded-full border border-transparent bg-gray-100 py-2 px-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <!-- Heroicon name: mini/plus -->
+                            <svg class="-ml-1 mr-0.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900"> Invite <span class="sr-only">Courtney Henry</span>
+                            </span>
+                          </button>
+                        </div>
+                      </li>
+
+                      <li class="flex items-center justify-between space-x-3 py-4">
+                        <div class="flex min-w-0 flex-1 items-center space-x-3">
+                          <div class="flex-shrink-0">
+                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-medium text-gray-900">Tom Cook</p>
+                            <p class="truncate text-sm font-medium text-gray-500">Director, Product Development</p>
+                          </div>
+                        </div>
+                        <div class="flex-shrink-0">
+                          <button type="button" class="inline-flex items-center rounded-full border border-transparent bg-gray-100 py-2 px-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <!-- Heroicon name: mini/plus -->
+                            <svg class="-ml-1 mr-0.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900"> Invite <span class="sr-only">Tom Cook</span>
+                            </span>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+              </template> #}
+              {# <template x-if="posts.length > 0"> #}
+                <h1 class="sr-only">Recent questions</h1>
+                <ul role="list" class="space-y-4">
+                  <template x-for="post in posts" :key="post.id">
+                    <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6" x-data="{ shared: null, comments: [], openCommentSection: false }"
                     x-init="getShared(post)"
                     x-intersect.once="
                       comments = (await (await fetch(`/api/content?mode=comments&id=${post.id}`)).json()).data;
                       if (post.id > 0) await fetch(`/api/content?mode=increment&field=impr&id=${post.id}`);
                     ">
-                    <article :aria-labelledby="`post-id-${post.id}`">
-                      <div>
-                        <div class="flex justify-between">
-                          <div class="flex">
-                            <template x-if="!post.author.avatar_url">
-                              <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
-                                <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                </svg>
-                              </span>
-                            </template>
-                            <template x-if="post.author.avatar_url">
-                              <div class="flex-shrink-0">
-                                <img class="h-10 w-10 rounded-full" :src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="">
-                              </div>
-                            </template>
-                            <div class="min-w-0 flex-1 ml-3">
-                              <p class="text-sm font-medium text-gray-900">
-                                <button @click="clicked = post.author; openProfile = !openProfile" class="hover:underline" x-text="post.author.first_name + ' ' + post.author.last_name"></button>
-                              </p>
-                              <p class="text-sm text-gray-500">
-                                <a href="#" class="hover:underline">
-                                  <span x-text="formatDate(new Date(post.created_at), 'MMMM d') + ' at ' + formatDate(new Date(post.created_at), 'hh:mm aa')"></time>
-                                </a>
-                              </p>
-                            </div>
-                          </div>
-                          <div class="flex flex-shrink-0 self-center" x-data="{ open: false }">
-                            <div class="relative inline-block text-left">
-                              <div>
-                                <button @click="open = !open" type="button" class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600" id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
-                                  <span class="sr-only">Open options</span>
-                                  <!-- Heroicon name: mini/ellipsis-vertical -->
-                                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z"/>
+                      <article :aria-labelledby="`post-id-${post.id}`">
+                        <div>
+                          <div class="flex justify-between">
+                            <div class="flex">
+                              <template x-if="!post.author.avatar_url">
+                                <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+                                  <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
                                   </svg>
-                                </button>
+                                </span>
+                              </template>
+                              <template x-if="post.author.avatar_url">
+                                <div class="flex-shrink-0">
+                                  <img class="h-10 w-10 rounded-full" :src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="">
+                                </div>
+                              </template>
+                              <div class="min-w-0 flex-1 ml-3">
+                                <p class="text-sm font-medium text-gray-900">
+                                  <button @click="clicked = post.author; openProfile = !openProfile" class="hover:underline" x-text="post.author.first_name + ' ' + post.author.last_name"></button>
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                  <a href="#" class="hover:underline">
+                                    <span x-text="formatDate(new Date(post.created_at), 'MMMM d') + ' at ' + formatDate(new Date(post.created_at), 'hh:mm aa')"></time>
+                                  </a>
+                                </p>
                               </div>
+                            </div>
+                            <div class="flex flex-shrink-0 self-center" x-data="{ open: false }">
+                              <div class="relative inline-block text-left">
+                                <div>
+                                  <button @click="open = !open" type="button" class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600" id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
+                                    <span class="sr-only">Open options</span>
+                                    <!-- Heroicon name: mini/ellipsis-vertical -->
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                      <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z"/>
+                                    </svg>
+                                  </button>
+                                </div>
 
-                              <!--
+                                <!--
                           Dropdown menu, show/hide based on menu state.
 
                           Entering: "transition ease-out duration-100"
@@ -234,135 +338,135 @@
                             From: "transform opacity-100 scale-100"
                             To: "transform opacity-0 scale-95"
                         -->
-                              <div @click.outside="open = !open" x-show="open" 
+                                <div @click.outside="open = !open" x-show="open" 
                             class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
-                                <div class="py-1" role="none">
-                                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                                  <button @click="open = !open; openNewPost = !openNewPost; postId = post.id" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
-                                    <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                                      <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902 1.168.188 2.352.327 3.55.414.28.02.521.18.642.413l1.713 3.293a.75.75 0 001.33 0l1.713-3.293a.783.783 0 01.642-.413 41.102 41.102 0 003.55-.414c1.437-.231 2.43-1.49 2.43-2.902V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zM6.75 6a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 2.5a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span>Comment</span>
-                                  </button>
-                                  <button @click="open = !open; await (await fetch(`/api/content?mode=bookmark&id=${post.id}&email=${$store.auth.user.email}`))" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
-                                    <!-- Heroicon name: mini/star -->
-                                    <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span>Bookmark</span>
-                                  </button>
-                                  <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
-                                    <!-- Heroicon name: mini/code-bracket -->
-                                    <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                      <path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span>Embed</span>
-                                  </a>
-                                  <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
-                                    <!-- Heroicon name: mini/flag -->
-                                    <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                      <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
-                                    </svg>
-                                    <span>Report</span>
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        {# <h2 id="question-title-81614" class="mt-4 text-base font-medium text-gray-900">What would you have done differently if you ran Jurassic Park?</h2> #}
-                      </div>
-                      <template x-if="shared">
-
-                        <article class="bg-gray-50 mt-3 px-4 py-6 shadow sm:rounded-lg sm:p-6" :aria-labelledby="`post-id-${post.id}`">
-                          <div>
-                            <div class="flex justify-between">
-                              <div class="flex">
-                                <template x-if="!shared.author.avatar_url">
-                                  <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
-                                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                    </svg>
-                                  </span>
-                                </template>
-                                <template x-if="shared.author.avatar_url">
-                                  <div class="flex-shrink-0">
-                                    <img class="h-10 w-10 rounded-full" :src="shared.author.avatar_url.includes('unsplash') ? shared.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : shared.author.avatar_url" alt="">
-                                  </div>
-                                </template>
-                                <div class="min-w-0 flex-1 ml-3">
-                                  <p class="text-sm font-medium text-gray-900">
-                                    <button @click="clicked = shared.author; openProfile = !openProfile" class="hover:underline" x-text="shared.author.first_name + ' ' + shared.author.last_name"></button>
-                                  </p>
-                                  <p class="text-sm text-gray-500">
-                                    <a href="#" class="hover:underline">
-                                      <span x-text="formatDate(new Date(shared.created_at), 'MMMM d') + ' at ' + formatDate(new Date(shared.created_at), 'hh:mm aa')"></time>
+                                  <div class="py-1" role="none">
+                                    <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                    <button @click="open = !open; openNewPost = !openNewPost; postId = post.id" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
+                                      <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                        <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902 1.168.188 2.352.327 3.55.414.28.02.521.18.642.413l1.713 3.293a.75.75 0 001.33 0l1.713-3.293a.783.783 0 01.642-.413 41.102 41.102 0 003.55-.414c1.437-.231 2.43-1.49 2.43-2.902V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zM6.75 6a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 2.5a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z" clip-rule="evenodd"/>
+                                      </svg>
+                                      <span>Comment</span>
+                                    </button>
+                                    <button @click="open = !open; await (await fetch(`/api/content?mode=bookmark&id=${post.id}&email=${$store.auth.user.email}`))" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
+                                      <!-- Heroicon name: mini/star -->
+                                      <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"/>
+                                      </svg>
+                                      <span>Bookmark</span>
+                                    </button>
+                                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
+                                      <!-- Heroicon name: mini/code-bracket -->
+                                      <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z" clip-rule="evenodd"/>
+                                      </svg>
+                                      <span>Embed</span>
                                     </a>
-                                  </p>
+                                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
+                                      <!-- Heroicon name: mini/flag -->
+                                      <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
+                                      </svg>
+                                      <span>Report</span>
+                                    </a>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div x-html="marked.parse(shared.content)" class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
+                          {# <h2 id="question-title-81614" class="mt-4 text-base font-medium text-gray-900">What would you have done differently if you ran Jurassic Park?</h2> #}
                         </div>
-                      </article>
+                        <template x-if="shared">
 
-                    </template>
-                    <template x-if="!shared">
-                      <div x-data="{ content: null }" x-effect="if (post.content) content = marked.parse(post.content)" x-html="content" 
+                          <article class="bg-gray-50 mt-3 px-4 py-6 shadow sm:rounded-lg sm:p-6" :aria-labelledby="`post-id-${post.id}`">
+                            <div>
+                              <div class="flex justify-between">
+                                <div class="flex">
+                                  <template x-if="!shared.author.avatar_url">
+                                    <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+                                      <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                      </svg>
+                                    </span>
+                                  </template>
+                                  <template x-if="shared.author.avatar_url">
+                                    <div class="flex-shrink-0">
+                                      <img class="h-10 w-10 rounded-full" :src="shared.author.avatar_url.includes('unsplash') ? shared.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : shared.author.avatar_url" alt="">
+                                    </div>
+                                  </template>
+                                  <div class="min-w-0 flex-1 ml-3">
+                                    <p class="text-sm font-medium text-gray-900">
+                                      <button @click="clicked = shared.author; openProfile = !openProfile" class="hover:underline" x-text="shared.author.first_name + ' ' + shared.author.last_name"></button>
+                                    </p>
+                                    <p class="text-sm text-gray-500">
+                                      <a href="#" class="hover:underline">
+                                        <span x-text="formatDate(new Date(shared.created_at), 'MMMM d') + ' at ' + formatDate(new Date(shared.created_at), 'hh:mm aa')"></time>
+                                      </a>
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div x-html="marked.parse(shared.content)" class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
+                          </div>
+                        </article>
+
+                      </template>
+                      <template x-if="!shared">
+                        <div x-data="{ content: null }" x-effect="if (post.content) content = marked.parse(post.content)" x-html="content" 
                         class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
-                    </template>
-                    <div class="mt-6 flex justify-between space-x-8">
-                      <div class="flex space-x-6">
-                        <span class="inline-flex items-center text-sm">
-                          <button @click="await fetch(`/api/content?mode=increment&field=like&id=${post.id}`)" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                            <!-- Heroicon name: mini/hand-thumb-up -->
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M1 8.25a1.25 1.25 0 112.5 0v7.5a1.25 1.25 0 11-2.5 0v-7.5zM11 3V1.7c0-.268.14-.526.395-.607A2 2 0 0114 3c0 .995-.182 1.948-.514 2.826-.204.54.166 1.174.744 1.174h2.52c1.243 0 2.261 1.01 2.146 2.247a23.864 23.864 0 01-1.341 5.974C17.153 16.323 16.072 17 14.9 17h-3.192a3 3 0 01-1.341-.317l-2.734-1.366A3 3 0 006.292 15H5V8h.963c.685 0 1.258-.483 1.612-1.068a4.011 4.011 0 012.166-1.73c.432-.143.853-.386 1.011-.814.16-.432.248-.9.248-1.388z"/>
-                            </svg>
-                            <span class="font-medium text-gray-900" x-text="post.num_like ?? 0"></span>
-                            <span class="sr-only">likes</span>
-                          </button>
-                        </span>
-                        <span class="inline-flex items-center text-sm">
-                          <button @click="openCommentSection = !openCommentSection" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                            <!-- Heroicon name: mini/chat-bubble-left-ellipsis -->
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="font-medium text-gray-900" x-text="post.num_ans"></span>
-                            <span class="sr-only">replies</span>
-                          </button>
-                        </span>
-                        <span class="inline-flex items-center text-sm">
-                          <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                            <!-- Heroicon name: mini/eye -->
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/>
-                              <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="font-medium text-gray-900" x-text="post.num_impr ?? 0"></span>
-                            <span class="sr-only">views</span>
-                          </button>
-                        </span>
-                      </div>
-                      <div class="flex text-sm">
-                        <template x-if="!shared">
-                          <span class="inline-flex items-center text-sm">
-                            <button @click="postId = post.id; handleShare()" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                              <!-- Heroicon name: mini/share -->
-                              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path d="M13 4.5a2.5 2.5 0 11.702 1.737L6.97 9.604a2.518 2.518 0 010 .792l6.733 3.367a2.5 2.5 0 11-.671 1.341l-6.733-3.367a2.5 2.5 0 110-3.475l6.733-3.366A2.52 2.52 0 0113 4.5z"/>
+                      </template>
+                      <div class="mt-6 flex justify-between space-x-8">
+                        <div class="flex space-x-6">
+                          <span class="inline-flex items-center text-sm" x-data="{ clicked: false }">
+                            <button @click="clicked = true; await fetch(`/api/content?mode=increment&field=like&id=${post.id}`); clicked = false" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+                              <!-- Heroicon name: mini/hand-thumb-up -->
+                              <svg :class="clicked && 'animate-ping'" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M1 8.25a1.25 1.25 0 112.5 0v7.5a1.25 1.25 0 11-2.5 0v-7.5zM11 3V1.7c0-.268.14-.526.395-.607A2 2 0 0114 3c0 .995-.182 1.948-.514 2.826-.204.54.166 1.174.744 1.174h2.52c1.243 0 2.261 1.01 2.146 2.247a23.864 23.864 0 01-1.341 5.974C17.153 16.323 16.072 17 14.9 17h-3.192a3 3 0 01-1.341-.317l-2.734-1.366A3 3 0 006.292 15H5V8h.963c.685 0 1.258-.483 1.612-1.068a4.011 4.011 0 012.166-1.73c.432-.143.853-.386 1.011-.814.16-.432.248-.9.248-1.388z"/>
                               </svg>
-                              <span class="font-medium text-gray-900">Share</span>
+                              <span class="font-medium text-gray-900" x-text="post.num_like ?? 0"></span>
+                              <span class="sr-only">likes</span>
                             </button>
                           </span>
-                        </template>
+                          <span class="inline-flex items-center text-sm">
+                            <button @click="openCommentSection = !openCommentSection" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+                              <!-- Heroicon name: mini/chat-bubble-left-ellipsis -->
+                              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                              </svg>
+                              <span class="font-medium text-gray-900" x-text="post.num_ans"></span>
+                              <span class="sr-only">replies</span>
+                            </button>
+                          </span>
+                          <span class="inline-flex items-center text-sm">
+                            <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+                              <!-- Heroicon name: mini/eye -->
+                              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/>
+                                <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                              </svg>
+                              <span class="font-medium text-gray-900" x-text="post.num_impr ?? 0"></span>
+                              <span class="sr-only">views</span>
+                            </button>
+                          </span>
+                        </div>
+                        <div class="flex text-sm">
+                          <template x-if="!shared">
+                            <span class="inline-flex items-center text-sm">
+                              <button @click="postId = post.id; handleShare()" type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+                                <!-- Heroicon name: mini/share -->
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path d="M13 4.5a2.5 2.5 0 11.702 1.737L6.97 9.604a2.518 2.518 0 010 .792l6.733 3.367a2.5 2.5 0 11-.671 1.341l-6.733-3.367a2.5 2.5 0 110-3.475l6.733-3.366A2.52 2.52 0 0113 4.5z"/>
+                                </svg>
+                                <span class="font-medium text-gray-900">Share</span>
+                              </button>
+                            </span>
+                          </template>
+                        </div>
                       </div>
-                    </div>
-                  </article>
+                    </article>
 
-                  <!--
+                    <!--
   This example requires some changes to your config:
   
   ```
@@ -381,54 +485,55 @@
   }
   ```
 -->
-                  <div class="flow-root mt-8" x-show="comments.length > 0 && openCommentSection">
-                    <ul role="list" class="-mb-8">
-                      <template x-for="(comment, index) in comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" :key="comment.id">
-                        <li>
-                          <div class="relative pb-8">
-                            <span x-show="index + 1 < comments.length" class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
-                            <div class="relative flex items-start">
-                              <template x-if="!comment.author.avatar_url">
-                                <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100 mr-3">
-                                  <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                  </svg>
-                                </span>
-                              </template>
-                              <div class="relative">
-                                <template x-if="comment.author.avatar_url">
-                                  <img class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 ring-8 ring-white" :src="comment.author.avatar_url.includes('unsplash') ? comment.author.avatar_url+'&fit=facearea&facepad=8&w=256&h=256&q=80' : comment.author.avatar_url" alt="">
+                    <div class="flow-root mt-8" x-show="comments.length > 0 && openCommentSection">
+                      <ul role="list" class="-mb-8">
+                        <template x-for="(comment, index) in comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" :key="comment.id">
+                          <li>
+                            <div class="relative pb-8">
+                              <span x-show="index + 1 < comments.length" class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                              <div class="relative flex items-start">
+                                <template x-if="!comment.author.avatar_url">
+                                  <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100 mr-3">
+                                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                    </svg>
+                                  </span>
                                 </template>
-                                {# <span class="absolute -bottom-0.5 -right-1 rounded-tl bg-white px-0.5 py-px">
+                                <div class="relative">
+                                  <template x-if="comment.author.avatar_url">
+                                    <img class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 ring-8 ring-white" :src="comment.author.avatar_url.includes('unsplash') ? comment.author.avatar_url+'&fit=facearea&facepad=8&w=256&h=256&q=80' : comment.author.avatar_url" alt="">
+                                  </template>
+                                  {# <span class="absolute -bottom-0.5 -right-1 rounded-tl bg-white px-0.5 py-px">
                                     <!-- Heroicon name: mini/chat-bubble-left-ellipsis -->
                                     <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                       <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
                                     </svg>
                                   </span> #}
-                              </div>
-                              <div class="min-w-0 flex-1">
-                                <div>
-                                  <div class="text-sm">
-                                    <button @click="clicked = comment.author; openProfile = !openProfile" class="font-medium text-gray-900 hover:underline" x-text="comment.author.first_name + ' ' + comment.author.last_name"></button>
-                                  </div>
-                                  <p class="mt-0.5 text-sm text-gray-500" x-text="`Commented ${formatDate(new Date(comment.created_at), 'distance')}`"></p>
                                 </div>
-                                <div class="mt-2 text-sm text-gray-700">
-                                  <p class="prose prose-sm" x-html="marked.parse(comment.content)"></p>
+                                <div class="min-w-0 flex-1">
+                                  <div>
+                                    <div class="text-sm">
+                                      <button @click="clicked = comment.author; openProfile = !openProfile" class="font-medium text-gray-900 hover:underline" x-text="comment.author.first_name + ' ' + comment.author.last_name"></button>
+                                    </div>
+                                    <p class="mt-0.5 text-sm text-gray-500" x-text="`Commented ${formatDate(new Date(comment.created_at), 'distance')}`"></p>
+                                  </div>
+                                  <div class="mt-2 text-sm text-gray-700">
+                                    <p class="prose prose-sm" x-html="marked.parse(comment.content)"></p>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </template>
+                          </li>
+                        </ul>
+                      </div>
+                    </template>
 
-                </li>
-              </template>
+                  </li>
+                </template>
 
-              <!-- More questions... -->
-            </ul>
+                <!-- More questions... -->
+              </ul>
+            {# </template> #}
           </div>
 
         </main>
@@ -461,7 +566,7 @@
                 }
               ], friends: [], refreshSuggestions: false }" 
               x-init="isFetching = true; people = (await(await fetch('/api/directory')).json()).data.filter(user => user.last_name !== null); isFetching = false"
-              x-effect="friends = (await (await fetch(`/api/directory?mode=friends&email=${$store.auth.user?.email}`)).json()).data">
+              x-effect="friends = (await (await fetch(`/api/directory?mode=friends&minimum=pending&email=${$store.auth.user?.email}`)).json()).data">
               <div class="rounded-lg bg-white shadow">
                 <div class="p-6">
                   <h2 id="who-to-follow-heading" class="text-base font-medium text-gray-900">Suggestions</h2>
@@ -755,7 +860,9 @@
         else 
           this.posts = (await(await fetch(
             `/api/content?mode=display&email=${Alpine.store('auth').user
-            ?.email}`)).json()).data.slice(0, 100);
+            ?.email}`)).json())
+            .data
+            .slice(0, 100);
         
         this.isFetching = false
       },
