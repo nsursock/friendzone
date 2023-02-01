@@ -70,7 +70,7 @@ async function ensureUnique(email, supabase) {
 
     var data = (await supabase.from(tableUser).select('email')).data.map((item) => item.email)
 
-    var perm = permute(data).filter((rel) => rel.user1.includes('coppens') || rel.user2.includes('coppens'))
+    var perm = permute(data) //.filter((rel) => rel.user1.includes('coppens') || rel.user2.includes('coppens'))
     // console.table(perm)
 
     const num = 1000

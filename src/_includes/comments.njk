@@ -31,7 +31,7 @@
                 <p class="mt-0.5 text-sm text-gray-500" x-text="`Commented ${formatDate(new Date(comment.created_at), 'distance')}`"></p>
               </div>
               <div class="mt-2 text-sm text-gray-700">
-                <p class="prose prose-sm" x-html="marked.parse(comment.content)"></p>
+                <p class="prose prose-sm prose-p:leading-snug" x-html="marked.parse(comment.content)"></p>
               </div>
 
               <div class="flex space-x-6 mt-2">

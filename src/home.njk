@@ -310,7 +310,7 @@
                       </template>
                       <template x-if="!shared">
                         <div x-data="{ content: null }" x-effect="if (post.content) content = marked.parse(post.content)" x-html="content" 
-                        class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
+                        class="prose mt-2 space-y-4 text-sm text-gray-700 prose-p:leading-snug"></div>
                       </template>
                       <div class="mt-6 flex justify-between space-x-8">
                         <div class="flex space-x-6">
@@ -475,7 +475,7 @@
                                   </div>
 
                                   <div class="mt-2 text-sm text-gray-700">
-                                    <p class="prose prose-sm" x-html="marked.parse(comment.content)"></p>
+                                    <p class="prose prose-sm prose-p:leading-snug" x-html="marked.parse(comment.content)"></p>
                                   </div>
 
                                   <div class="flex space-x-6 mt-2">
