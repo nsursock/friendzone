@@ -1,5 +1,5 @@
-<div class="flow-root mt-8">
-  <ul role="list" class="-mb-8" x-data="{ commentsLevel2: [] }" x-intersect.once="commentsLevel2 = (await (await fetch(`/api/content?mode=comments&id=${comment.id}`)).json()).data">
+<div class="flow-root" :class="commentsLevel2.length > 0 && 'mt-8'" x-data="{ commentsLevel2: [] }">
+  <ul role="list" class="-mb-8"  x-intersect.once="commentsLevel2 = (await (await fetch(`/api/content?mode=comments&id=${comment.id}`)).json()).data">
     <template x-for="(comment, index) in commentsLevel2.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" :key="comment.id">
       <li x-intersect.once="await fetch(`/api/content?mode=increment&field=impr&id=${comment.id}`)">
         <div class="relative pb-8">
