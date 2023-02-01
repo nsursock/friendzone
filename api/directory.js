@@ -70,7 +70,7 @@ export default async function handler(request, response) {
         data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
 
         var data = data1.concat(data2)
-        // console.log(data.map(x => x.friend.email));
+        // console.log(data.map(x => x.friend.email).filter((email) => email.includes('coppens')));
 
         // const check = data.reduce((sums, entry) => {
         //   sums[entry.friend.email] = (sums[entry.friend.email] || 0) + 1;

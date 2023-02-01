@@ -19,7 +19,8 @@
 </style>
 <nav x-data="{ open: false, links: [
     { text: 'Home', href: '/home/' },
-    { text: 'Directory', href: '/directory/' }
+    { text: 'Directory', href: '/directory/' },
+    { text: 'Calendar', href: '/birthdays/' }
   ], logout() {
     sessionStorage.removeItem('friendzone_token')
     localStorage.removeItem('friendzone_token')
