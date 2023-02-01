@@ -48,11 +48,11 @@ console.log('starting up');
     // var ids = (await supabase.from('messages.dev').select('id')).data.map((item) => item.id).sort(() => 0.5 - Math.random()).slice(0, 5)
 
     const num = 1000
-    const ids = [4278]
+    const ids = [4630]
     for (let index = 0; index < num; index++) {
 
       var { data, error } = await supabase.from(table).insert({
-        related_id: null,//ids[index%ids.length],
+        related_id: ids[index%ids.length],
         created_at: faker.date.recent(10),
         author: emails[index % emails.length],
         content: faker.lorem.text(),
@@ -61,7 +61,7 @@ console.log('starting up');
       }).select('*')
 
       console.log({
-        index,
+        index, data
       });
     }
 
