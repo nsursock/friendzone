@@ -182,8 +182,8 @@
                         </span>
                       </template>
                       <template x-if="connection.friend.avatar_url">
-                        <img class="h-14 w-14 flex-shrink-0 rounded-full bg-gray-300" 
-                        :src="connection.friend.avatar_url.includes('unsplash') ? connection.friend.avatar_url+'&fit=facearea&facepad=4&w=256&h=256&q=60' : connection.friend.avatar_url" alt="">
+                        <img x-intersect.once="$el.src = $el.dataset.src" class="h-14 w-14 flex-shrink-0 rounded-full bg-gray-300" 
+                        :data-src="connection.friend.avatar_url.includes('unsplash') ? connection.friend.avatar_url+'&fit=facearea&facepad=4&w=256&h=256&q=60' : connection.friend.avatar_url" alt="">
                       </template>
                     </div>
                     <div>
@@ -227,7 +227,7 @@
                         </span>
                       </template>
                       <template x-if="connection.friend.avatar_url">
-                        <img class="mx-auto h-32 w-32 flex-shrink-0 rounded-full" :src="connection.friend.avatar_url.includes('unsplash') ? connection.friend.avatar_url+'&fit=facearea&facepad=4&w=256&h=256&q=60' : connection.friend.avatar_url" alt="">
+                        <img x-intersect.once="$el.src = $el.dataset.src" class="mx-auto h-32 w-32 flex-shrink-0 rounded-full" :data-src="connection.friend.avatar_url.includes('unsplash') ? connection.friend.avatar_url+'&fit=facearea&facepad=4&w=256&h=256&q=60' : connection.friend.avatar_url" alt="">
                       </template>
                       <h3 class="mt-6 text-sm font-medium text-gray-900">
                         <span x-text="connection.friend.first_name + ' ' + connection.friend.last_name"></span></h3>
@@ -431,7 +431,7 @@
                         </template>
                         <template x-if="user.avatar_url">
                           <div class="flex-shrink-0" x-data="{ thumbUrl: user.avatar_url.includes('unsplash') ? user.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : user.avatar_url }">
-                            <img class="h-10 w-10 rounded-full" :src="thumbUrl" alt="">
+                            <img x-intersect.once="$el.src = $el.dataset.src" class="h-10 w-10 rounded-full" :data-src="thumbUrl" alt="">
                           </div>
                         </template>
                         <div class="min-w-0 flex-1">

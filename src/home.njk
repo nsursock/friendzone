@@ -199,7 +199,7 @@
                             </template>
                             <template x-if="post.author.avatar_url">
                               <div class="flex-shrink-0">
-                                <img class="h-10 w-10 rounded-full" :src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="">
+                                <img x-intersect.once="$el.src = $el.dataset.src" class="h-10 w-10 rounded-full" :data-src="post.author.avatar_url.includes('unsplash') ? post.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : post.author.avatar_url" alt="">
                               </div>
                             </template>
                             <div class="min-w-0 flex-1 ml-3">
@@ -288,7 +288,7 @@
                                 </template>
                                 <template x-if="shared.author.avatar_url">
                                   <div class="flex-shrink-0">
-                                    <img class="h-10 w-10 rounded-full" :src="shared.author.avatar_url.includes('unsplash') ? shared.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : shared.author.avatar_url" alt="">
+                                    <img x-intersect.once="$el.src = $el.dataset.src" class="h-10 w-10 rounded-full" :data-src="shared.author.avatar_url.includes('unsplash') ? shared.author.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : shared.author.avatar_url" alt="">
                                   </div>
                                 </template>
                                 <div class="min-w-0 flex-1 ml-3">
@@ -397,7 +397,7 @@
                                 </template>
                                 <div class="relative">
                                   <template x-if="comment.author.avatar_url">
-                                    <img class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 ring-8 ring-white" :src="comment.author.avatar_url.includes('unsplash') ? comment.author.avatar_url+'&fit=facearea&facepad=8&w=256&h=256&q=80' : comment.author.avatar_url" alt="">
+                                    <img x-intersect.once="$el.src = $el.dataset.src" class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 ring-8 ring-white" :data-src="comment.author.avatar_url.includes('unsplash') ? comment.author.avatar_url+'&fit=facearea&facepad=8&w=256&h=256&q=80' : comment.author.avatar_url" alt="">
                                   </template>
                                   {# <span class="absolute -bottom-0.5 -right-1 rounded-tl bg-white px-0.5 py-px">
                                     <!-- Heroicon name: mini/chat-bubble-left-ellipsis -->
@@ -854,7 +854,7 @@
               `/api/content?mode=display&email=${Alpine.store('auth').user
               ?.email}`)).json())
               .data
-              .slice(0, 100);
+              .slice(0, 25);
           
           this.isFetching = false
         },
