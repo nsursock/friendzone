@@ -38,7 +38,8 @@ export default async function handler(request, response) {
 
         var { data, error } = await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
-          .in('id', data[0].favorites)
+          .in('id', data[0].favorites ?? [])
+        if (error) console.log(error)
 
         response.status(200).json({ data })
         break
@@ -52,7 +53,7 @@ export default async function handler(request, response) {
           .eq('email', request.query.email)
         if (error) console.log(error)
 
-        const favorites = data[0].favorites
+        const favorites = data[0].favorites ?? []
         favorites.push(`${request.query.id}`)
 
         var { data, error } = await supabase
@@ -141,8 +142,20 @@ export default async function handler(request, response) {
           ? 'trending.dev'
           : 'trending'
 
+        // const date = new Date(request.query.date)
+        // console.log(date);
+        // const dateString = date.toISOString().split('T').shift()
+        // const date1 = new Date(dateString);
+        // const date2 = new Date(dateString);
+        // // date1.setDate(date1.getDate() - 1)
+        // date2.setDate(date2.getDate() + 1)
+        // const dateString1 = date1.toISOString().split('T').shift()
+        // const dateString2 = date2.toISOString().split('T').shift()
+
         var { data, error } = await supabase.from(tableTr)
           .select('id, created_at, share_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          // .lt('created_at', dateString2)
+          // .gt('created_at', dateString1)
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 

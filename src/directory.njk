@@ -388,7 +388,7 @@
         <aside x-show="isMobile() && showListing || !isMobile()" class="w-full md:w-72 lg:w-96 flex-shrink-0 border-r border-gray-200 md:order-first md:flex md:flex-col">
           <div class="px-6 pt-6 pb-4">
             <h2 class="text-lg font-medium text-gray-900">Directory</h2>
-            <p class="mt-1 text-sm text-gray-600" x-text="`Search directory of ${users.length} members`"></p>
+            <p x-show="users.length" class="mt-1 text-sm text-gray-600" x-text="`Search directory of ${users.length} members`"></p>
             <form @submit.prevent="query = search" class="mt-6 flex space-x-4">
               <div class="min-w-0 flex-1">
                 <label for="search" class="sr-only">Search</label>
