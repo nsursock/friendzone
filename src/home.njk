@@ -840,7 +840,7 @@
                   return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
                 else 
                   return b.num_ans - a.num_ans
-              })
+              }).slice(0, 100)
           else if (this.tab === 'Popular') 
             this.posts = (await(await fetch('/api/content?mode=trending')).json())
               .data
@@ -849,7 +849,7 @@
                   return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
                 else 
                   return b.num_like - a.num_like
-              })
+              }).slice(0, 100)
           else if (this.tab === 'Favorites') {
             const posts = (await(await fetch(
               `/api/content?mode=favorites&email=${Alpine.store('auth').user
@@ -858,11 +858,11 @@
               ? []
               : posts.sort((a, b) => {
                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-              })
+              }).slice(0, 100)
           } else {
             this.posts = (await(await fetch(
               `/api/content?mode=display&email=${Alpine.store('auth').user
-              ?.email}`)).json()).data
+              ?.email}`)).json()).data.slice(0, 100)
           }
 
           this.isFetching = false
