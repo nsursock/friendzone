@@ -33,7 +33,8 @@
   <body class="h-full">
   ```
 -->
-  <div class="min-h-screen mt-px bg-gray-50" x-data="{ openActivity: false, openProfile: false, clicked: null, tab: 'Home' }">
+  <div class="min-h-screen mt-px bg-gray-50"
+    x-data="{ openActivity: false, openProfile: false, clicked: null, tab: new URLSearchParams(location.search).get('tab') || 'Home' }">
     <div class="py-10">
       <div class="mx-auto max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-8 lg:px-8">
         <div class="hidden lg:col-span-3 lg:block xl:col-span-2">
@@ -120,7 +121,7 @@
         </div>
         <template x-if="$store.auth.user">
           <main :class="isFetching && 'blur animate-pulse'" class="lg:col-span-9 xl:col-span-6" x-data="dataFeed()"
-            x-init="isFetching = true; posts = (await (await fetch(`/api/content?mode=display&email=${$store.auth.user?.email}`)).json()).data; isFetching = false"
+            x-init="isFetching = true; refreshFeed(); isFetching = false"
             x-effect="refreshFeed">
             {% include 'write.njk' %}
 
@@ -829,7 +830,7 @@
 
         async refreshFeed() {
           this.isFetching = true;
-          //          console.log(this.day)
+          //console.log(this.day)
 
           if (this.tab === 'Trending') 
             this.posts = (await(await fetch('/api/content?mode=trending')).json())
@@ -858,10 +859,11 @@
               : posts.sort((a, b) => {
                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
               })
-          } else 
+          } else {
             this.posts = (await(await fetch(
               `/api/content?mode=display&email=${Alpine.store('auth').user
               ?.email}`)).json()).data
+          }
 
           this.isFetching = false
         },

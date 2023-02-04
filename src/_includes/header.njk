@@ -177,11 +177,19 @@
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
-  <div x-show="open" class="lg:hidden" id="mobile-menu">
+  <div x-show="open" class="lg:hidden" id="mobile-menu" x-effect="if (open) links = [
+        { text: 'Home', href: '/home/' },
+        { text: 'Popular', href: '/home/?tab=Popular' },
+        { text: 'Trending', href: '/home/?tab=Trending' },
+        { text: 'Favorites', href: '/home/?tab=Favorites' },
+        { text: 'Directory', href: '/directory/' },
+        { text: 'Calendar', href: '/birthdays/' }
+      ]">
     <div class="space-y-1 pt-2 pb-3">
       <template x-for="link in links" :key="link.href">
         <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800" -->
-        <a :href="link.href" :class="window.location.pathname === link.href && 'bg-indigo-50 border-indigo-500 text-indigo-700'"
+        <a :href="link.href" :class="window.location.pathname === link.href || new URLSearchParams(location.search).get('tab') === link.text
+          && 'bg-indigo-50 border-indigo-500 text-indigo-700'"
           class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
           <span x-text="link.text"></span>
         </a>
