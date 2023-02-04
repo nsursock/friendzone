@@ -14,7 +14,7 @@ export default async function handler(request, response) {
         const { user1, user2, status } = request.body
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
-          : 'relationships'
+          : 'relationships.dev'
 
         var { data, error } = await supabase.from(table).insert({
           user1, user2, status
@@ -28,7 +28,7 @@ export default async function handler(request, response) {
         const { email } = request.body
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
-          : 'relationships'
+          : 'relationships.dev'
 
         var data = (await supabase.from(table)
           .select(`id, created_at, user1 (first_name, last_name, avatar_url)`)
@@ -40,7 +40,7 @@ export default async function handler(request, response) {
       case 'Declined':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
-          : 'relationships'
+          : 'relationships.dev'
 
         await supabase.from(table).update({
           status: request.query.mode
@@ -51,7 +51,7 @@ export default async function handler(request, response) {
       case 'friends':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
-          : 'relationships'
+          : 'relationships.dev'
 
         let statuses = []
         if (request.query.minimum === 'pending')
@@ -77,7 +77,7 @@ export default async function handler(request, response) {
       default:
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'users.dev'
-          : 'users'
+          : 'users.dev'
 
         var data = (await supabase.from(table).select())
           .data.map((o) => o = {

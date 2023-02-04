@@ -9,7 +9,7 @@ export default async function handler(request, response) {
   )
   const storageName = process.env.NODE_ENV.startsWith('dev')
     ? 'users.dev'
-    : 'users'
+    : 'users.dev'
 
   try {
     switch (request.query.mode) {

@@ -11,7 +11,7 @@ async function handler(req, res) {
 
   const storageName = process.env.NODE_ENV.startsWith('dev')
     ? 'users.dev'
-    : 'users'
+    : 'users.dev'
 
   // const uploadFile = async (files, err) => {
   //   let cols = {}

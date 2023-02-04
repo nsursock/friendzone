@@ -10,7 +10,7 @@ export default async function handler(request, response) {
 
     var table = process.env.NODE_ENV.startsWith('dev')
       ? 'messages.dev'
-      : 'messages'
+      : 'messages.dev'
 
     switch (request.query.mode) {
 
@@ -26,7 +26,7 @@ export default async function handler(request, response) {
       case 'favorites':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'users.dev'
-          : 'users'
+          : 'users.dev'
 
         var { data, error } = await supabase.from(table).select('favorites')
           .eq('email', request.query.email)
@@ -34,7 +34,7 @@ export default async function handler(request, response) {
 
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'trending.dev'
-          : 'trending'
+          : 'trending.dev'
 
         var { data, error } = await supabase.from(table)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
@@ -47,7 +47,7 @@ export default async function handler(request, response) {
       case 'bookmark':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'users.dev'
-          : 'users'
+          : 'users.dev'
 
         var { data, error } = await supabase.from(table).select('favorites')
           .eq('email', request.query.email)
@@ -66,7 +66,11 @@ export default async function handler(request, response) {
         break
 
       case 'trending':
-        var { data, error } = (await supabase.from('trending.dev')
+        var tableTr = process.env.NODE_ENV.startsWith('dev')
+          ? 'trending.dev'
+          : 'trending.dev'
+          
+        var { data, error } = (await supabase.from(tableTr)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
         if (error) console.log(error)
 
@@ -122,7 +126,7 @@ export default async function handler(request, response) {
 
         var tableRel = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
-          : 'relationships'
+          : 'relationships.dev'
 
         var data1 = (await supabase.from(tableRel)
           .select(`user1 (id, first_name, last_name, avatar_url, title, city, email, phone_number)`)
@@ -140,7 +144,7 @@ export default async function handler(request, response) {
 
         var tableTr = process.env.NODE_ENV.startsWith('dev')
           ? 'trending.dev'
-          : 'trending'
+          : 'trending.dev'
 
         // const date = new Date(request.query.date)
         // console.log(date);

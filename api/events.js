@@ -8,7 +8,7 @@ export default async function handler(request, response) {
     )
     const storageName = process.env.NODE_ENV.startsWith('dev')
       ? 'users.dev'
-      : 'users'
+      : 'users.dev'
 
     const dateString = new Date().toISOString().split('T').shift()
     const date1 = new Date();
