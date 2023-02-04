@@ -9,7 +9,7 @@
     "js": "esbuild src/_scripts/_main.js --outfile=dist/assets/main.bundle.js --bundle"
   },
   "scripts": {
-    "build": "NODE_ENV=production npm-run-all clean -p build:*",
+    "build": "NODE_ENV=development npm-run-all clean -p build:*",
     "build:11ty": "$npm_package_config_11ty",
     "build:css": "$npm_package_config_css --minify",
     "build:js": "$npm_package_config_js --minify",
