@@ -163,6 +163,8 @@ export default async function handler(request, response) {
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
 
+        // console.log(data.slice(0, 10))
+
         // var data2 = await Promise.all(data.map(async (item) => {
         //   var { data, error } = await supabase.from(table).select('id').eq('related_id', item.id)
         //   if (error) console.log(error)

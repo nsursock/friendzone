@@ -825,7 +825,9 @@
         filteredPosts() {
           return this
             .posts
-            .filter((post) => post.content?.toLowerCase().includes(this.searchText.toLowerCase()))
+            .filter((post) => 
+              post.content?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+              this.posts.find((original) => post.share_id === original.id)?.content?.toLowerCase().includes(this.searchText.toLowerCase()))
         },
 
         async refreshFeed() {
