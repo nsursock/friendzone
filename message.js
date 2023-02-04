@@ -16,7 +16,7 @@ console.log('starting up');
     const table = 'messages.dev'
 
     var emails = (await supabase.from('users.dev').select('email')).data.map((item) => item.email).sort(() => 0.5 - Math.random())
-    var ids = (await supabase.from('messages.dev').select('id')).data.map((item) => item.id).sort(() => 0.5 - Math.random())
+    var ids = (await supabase.from('messages.dev').select('id').not( "related_id", "is", null )).data.map((item) => item.id).sort(() => 0.5 - Math.random())
 
     const num = 1000
     // const ids = [4673,4674,4675,4676,4677]
