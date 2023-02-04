@@ -125,7 +125,7 @@
             {% include 'write.njk' %}
 
             <div class="px-4 sm:px-0" x-data="{ tab: 'Most Recent' }">
-              <button @click="openNewPost = !openNewPost" class="md:hidden mb-2 block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button>
+              {# <button @click="openNewPost = !openNewPost" class="md:hidden mb-2 block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button> #}
 
               <div class="sm:hidden">
                 <label for="question-tabs" class="sr-only">Select a tab</label>
@@ -180,7 +180,7 @@
 
               <h1 class="sr-only">Recent questions</h1>
               <ul role="list" class="space-y-4">
-                <template x-for="post in posts" :key="post.id">
+                <template x-for="post in filteredPosts" :key="post.id">
                   <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6" x-data="{ shared: null, comments: [], openCommentSection: false }"
                     x-init="getShared(post)"
                     x-intersect.once="!isFetching && await fetch(`/api/content?mode=increment&field=impr&id=${post.id}`)">
@@ -531,14 +531,14 @@
         <template x-if="$store.auth.user">
           <aside class="hidden xl:col-span-4 xl:block" :class="isFetching && 'blur animate-pulse'" x-data="{ isFetching: false }">
             <div class="sticky top-4 space-y-4">
-              <div class="flex">
-                <button @click="openNewPost = !openNewPost" class="block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button>
-                {# <button @click="open = !open" class="ml-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View Activity</button> #}
-                {# <div class="ml-2 ">
+              {# <div class="flex"> #}
+              {# <button @click="openNewPost = !openNewPost" class="block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button> #}
+              {# <button @click="open = !open" class="ml-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">View Activity</button> #}
+              {# <div class="ml-2 ">
                   <label for="day" class="block text-sm font-medium text-gray-900">Day</label>
                   <input x-model="day" type="date" id="day" name="day" class="block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div> #}
-              </div>
+              {# </div> #}
               <section aria-labelledby="who-to-follow-heading" x-data="{ people: [
                 {
                   id: -1,
@@ -821,6 +821,12 @@
         ],
         isFetching: false,
 
+        filteredPosts() {
+          return this
+            .posts
+            .filter((post) => post.content.toLowerCase().includes(this.searchText.toLowerCase()))
+        },
+
         async refreshFeed() {
           this.isFetching = true;
           //          console.log(this.day)
@@ -834,7 +840,6 @@
                 else 
                   return b.num_ans - a.num_ans
               })
-              .slice(0, 100);
           else if (this.tab === 'Popular') 
             this.posts = (await(await fetch('/api/content?mode=trending')).json())
               .data
@@ -844,7 +849,6 @@
                 else 
                   return b.num_like - a.num_like
               })
-              .slice(0, 100);
           else if (this.tab === 'Favorites') {
             const posts = (await(await fetch(
               `/api/content?mode=favorites&email=${Alpine.store('auth').user
@@ -857,10 +861,8 @@
           } else 
             this.posts = (await(await fetch(
               `/api/content?mode=display&email=${Alpine.store('auth').user
-              ?.email}`)).json())
-              .data
-              .slice(0, 100);
-          
+              ?.email}`)).json()).data
+
           this.isFetching = false
         },
 

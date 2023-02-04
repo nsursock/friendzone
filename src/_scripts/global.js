@@ -6,6 +6,7 @@ export default () => ({
   showNotifications: false,
 
   openNewPost: false,
+  searchText: '',
 
   async getConnects() {
     const invites = (await (await fetch('/api/directory?mode=invite', {
