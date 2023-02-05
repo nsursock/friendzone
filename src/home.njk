@@ -177,11 +177,11 @@
               </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4" x-data="{ page: 1, size: 10 }">
 
               <h1 class="sr-only">Recent questions</h1>
               <ul role="list" class="space-y-4">
-                <template x-for="post in filteredPosts" :key="post.id">
+                <template x-for="post in filteredPosts().slice(0, page * size)" :key="post.id">
                   <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6" x-data="{ shared: null, comments: [], openCommentSection: false }"
                     x-init="getShared(post)"
                     x-intersect.once="!isFetching && await fetch(`/api/content?mode=increment&field=impr&id=${post.id}`)">
@@ -525,6 +525,7 @@
 
                 <!-- More questions... -->
               </ul>
+              <div class="" x-intersect="page++"></div>
             </div>
 
           </main>
@@ -842,7 +843,7 @@
                   return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
                 else 
                   return b.num_ans - a.num_ans
-              }).slice(0, 100)
+              })
           else if (this.tab === 'Popular') 
             this.posts = (await(await fetch('/api/content?mode=trending')).json())
               .data
@@ -851,7 +852,7 @@
                   return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
                 else 
                   return b.num_like - a.num_like
-              }).slice(0, 100)
+              })
           else if (this.tab === 'Favorites') {
             const posts = (await(await fetch(
               `/api/content?mode=favorites&email=${Alpine.store('auth').user
@@ -860,11 +861,11 @@
               ? []
               : posts.sort((a, b) => {
                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-              }).slice(0, 100)
+              })
           } else {
             this.posts = (await(await fetch(
               `/api/content?mode=display&email=${Alpine.store('auth').user
-              ?.email}`)).json()).data.slice(0, 100)
+              ?.email}`)).json()).data
           }
 
           this.isFetching = false
