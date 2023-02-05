@@ -14,9 +14,27 @@ export default async function handler(request, response) {
 
     switch (request.query.mode) {
 
+      case 'delete':
+        var { data, error } = await supabase.from(table).delete().eq('id', request.query.id)
+        if (error) console.log(error)
+
+        if (request.query.level === 'one') {
+          var { data, error } = await supabase.from(table).delete().eq('related_id', request.query.id).select('*')
+          if (error) console.log(error)
+        }
+
+        if (request.query.level === 'zero' || request.query.level === 'one') {
+          const ids = data.map((rec) => rec.id)
+          var { data, error } = await supabase.from(table).delete().in('related_id', ids)
+          if (error) console.log(error)
+        }
+
+        response.status(200).json({ success: true })
+        break
+
       case 'shared':
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .select('id, created_at, related_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .eq('id', request.query.id)
         if (error) console.log(error)
 
@@ -37,7 +55,7 @@ export default async function handler(request, response) {
           : 'trending.dev'
 
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .select('id, created_at, related_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
           .in('id', data[0].favorites ?? [])
         if (error) console.log(error)
 
@@ -69,7 +87,7 @@ export default async function handler(request, response) {
         var tableTr = process.env.NODE_ENV.startsWith('dev')
           ? 'trending.dev'
           : 'trending.dev'
-          
+
         var { data, error } = (await supabase.from(tableTr)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
         if (error) console.log(error)
@@ -115,7 +133,7 @@ export default async function handler(request, response) {
 
       case 'comments':
         var { data, error } = (await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
+          .select('id, created_at, related_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr')
           .eq('related_id', request.query.id))
         if (error) console.log(error)
 
@@ -157,7 +175,7 @@ export default async function handler(request, response) {
         // const dateString2 = date2.toISOString().split('T').shift()
 
         var { data, error } = await supabase.from(tableTr)
-          .select('id, created_at, share_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .select('id, created_at, share_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
           // .lt('created_at', dateString2)
           // .gt('created_at', dateString1)
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
