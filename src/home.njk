@@ -34,14 +34,14 @@
   ```
 -->
   <div class="min-h-screen mt-px bg-gray-50"
-    x-data="{ openActivity: false, openProfile: false, clicked: null, tab: new URLSearchParams(location.search).get('tab') || 'Home' }">
+    x-data="{ openActivity: false, openProfile: false, clicked: null, innerTab: 'Most Recent', tab: new URLSearchParams(location.search).get('tab') || 'Home' }">
     <div class="py-10">
       <div class="mx-auto max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-8 lg:px-8">
         <div class="hidden lg:col-span-3 lg:block xl:col-span-2">
           <nav aria-label="Sidebar" class="sticky top-4 divide-y divide-gray-300">
             <div class="space-y-1 pb-8">
               <!-- Current: "bg-gray-200 text-gray-900", Default: "text-gray-700 hover:bg-gray-50" -->
-              <button @click="tab = 'Home'" :class="tab === 'Home' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md" aria-current="page">
+              <button @click="tab = 'Home'; innerTab = 'Most Recent'" :class="tab === 'Home' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md" aria-current="page">
                 <!-- Heroicon name: outline/home -->
                 <svg class="text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
@@ -49,7 +49,7 @@
                 <span class="truncate">Home</span>
               </button>
 
-              <button @click="tab = 'Popular'" :class="tab === 'Popular' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <button @click="tab = 'Popular'; innerTab = 'Most Recent'" :class="tab === 'Popular' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                 <!-- Heroicon name: outline/fire -->
                 <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/>
@@ -66,7 +66,7 @@
                 <span class="truncate">Communities</span>
               </a> #}
 
-              <button @click="tab = 'Trending'" :class="tab === 'Trending' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <button @click="tab = 'Trending'; innerTab = 'Most Recent'" :class="tab === 'Trending' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                 <!-- Heroicon name: outline/arrow-trending-up -->
                 <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/>
@@ -74,7 +74,7 @@
                 <span class="truncate">Trending</span>
               </button>
 
-              <button @click="tab = 'Favorites'" :class="tab === 'Favorites' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <button @click="tab = 'Favorites'; innerTab = 'Most Recent'" :class="tab === 'Favorites' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-50'" class="w-full group flex items-center px-3 py-2 text-sm font-medium rounded-md">
                 <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"/>
                 </svg>
@@ -125,17 +125,17 @@
             x-effect="refreshFeed">
             {% include 'write.njk' %}
 
-            <div class="px-4 sm:px-0" x-data="{ tab: 'Most Recent' }">
+            <div class="px-4 sm:px-0">
               {# <button @click="openNewPost = !openNewPost" class="md:hidden mb-2 block w-full rounded-md border border-indigo-300 bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-indigo-100 shadow-sm hover:bg-indigo-700">New Post</button> #}
 
               <div class="sm:hidden">
                 <label for="question-tabs" class="sr-only">Select a tab</label>
-                <select @change="tab = event.target.value; 
-                  if (tab.includes('Recent')) posts = posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                <select @change="innerTab = event.target.value; 
+                  if (innerTab.includes('Recent')) posts = posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                   else if (tab.includes('Liked')) posts = posts.sort((a, b) => { 
                       if (b.num_like - a.num_like === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
                       else return b.num_like - a.num_like })
-                  else if (tab.includes('Comments')) posts = posts.sort((a, b) => { 
+                  else if (innerTab.includes('Comments')) posts = posts.sort((a, b) => { 
                       if (b.num_ans - a.num_ans === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
                       else return b.num_ans - a.num_ans })"
                   id="question-tabs" class="block w-full rounded-md border-gray-300 text-base font-medium text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -149,29 +149,29 @@
               <div class="hidden sm:block">
                 <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
                   <!-- Current: "text-gray-900", Default: "text-gray-500 hover:text-gray-700" -->
-                  <button @click="page = 1; tab = 'Most Recent'; posts = posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" 
-                    aria-current="page" :class="tab === 'Most Recent' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
+                  <button @click="page = 1; innerTab = 'Most Recent'; posts = posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())" 
+                    aria-current="page" :class="innerTab === 'Most Recent' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
                     class="rounded-l-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
                     <span>Most Recent</span>
-                    <span aria-hidden="true" :class="tab === 'Most Recent' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
+                    <span aria-hidden="true" :class="innerTab === 'Most Recent' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
                   </button>
 
-                  <button @click="page = 1; tab = 'Most Liked'; posts = posts.sort((a, b) => { 
+                  <button @click="page = 1; innerTab = 'Most Liked'; posts = posts.sort((a, b) => { 
                       if (b.num_like - a.num_like === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
                       else return b.num_like - a.num_like })"
-                    :class="tab === 'Most Liked' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
+                    :class="innerTab === 'Most Liked' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
                     class="group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
                     <span>Most Liked</span>
-                    <span aria-hidden="true" :class="tab === 'Most Liked' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
+                    <span aria-hidden="true" :class="innerTab === 'Most Liked' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
                   </button>
 
-                  <button @click="page = 1; tab = 'Most Comments'; posts = posts.sort((a, b) => { 
+                  <button @click="page = 1; innerTab = 'Most Comments'; posts = posts.sort((a, b) => { 
                       if (b.num_ans - a.num_ans === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
                       else return b.num_ans - a.num_ans })"
-                    :class="tab === 'Most Comments' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
+                    :class="innerTab === 'Most Comments' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'" 
                     class="rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
                     <span>Most Comments</span>
-                    <span aria-hidden="true" :class="tab === 'Most Comments' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
+                    <span aria-hidden="true" :class="innerTab === 'Most Comments' ? 'bg-indigo-500' : 'bg-transparent'" class="absolute inset-x-0 bottom-0 h-0.5"></span>
                   </button>
                 </nav>
               </div>

@@ -184,7 +184,7 @@
       </div>
       <ol class="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8" x-data="{ events: [] }"
       x-init="events = (await (await fetch(`/api/directory`)).json()).data.map((event) => {
-          return { avatar_url: event.avatar_url, full_name: event.full_name, date: event.birthday, key: event.last_name }
+          return { label: event.first_name + ' ' + event.last_name, avatar_url: event.avatar_url, date: event.birthday, key: event.full_name }
       }).filter((event) => {
         const today = new Date().toLocaleDateString().split('T')[0].split('/').slice(0,2).join('/')
         const birthday = new Date(event.date).toLocaleDateString().split('T')[0].split('/').slice(0,2).join('/')
@@ -194,7 +194,7 @@
           <li class="relative flex space-x-6 py-6 xl:static">
             <img :src="event.avatar_url + '&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="" class="h-14 w-14 flex-none rounded-full">
             <div class="flex-auto">
-              <h3 class="pr-10 font-semibold text-gray-900 xl:pr-0" x-text="event.full_name"></h3>
+              <h3 class="pr-10 font-semibold text-gray-900 xl:pr-0" x-text="event.label"></h3>
               <dl class="mt-2 flex flex-col text-gray-500 xl:flex-row">
                 <div class="flex items-start space-x-3">
                   <dt class="mt-0.5">
