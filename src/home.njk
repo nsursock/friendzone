@@ -122,7 +122,7 @@
         <template x-if="$store.auth.user">
           <main :class="isFetching && 'blur animate-pulse'" class="lg:col-span-9 xl:col-span-6" x-data="dataFeed()"
             x-init="isFetching = true; refreshFeed(); isFetching = false"
-            x-effect="refreshFeed">
+            x-effect="refreshFeed(); highlightAll()">
             {% include 'write.njk' %}
 
             <div class="px-4 sm:px-0">
@@ -238,27 +238,27 @@
                             class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
                                 <div class="py-1" role="none">
                                   <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                                  <button @click="open = !open; openNewPost = !openNewPost; postId = post.id" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
+                                  <button @click="open = !open; openNewPost = !openNewPost; postId = post.id" class="w-full hover:bg-gray-100 text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                       <path fill-rule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902 1.168.188 2.352.327 3.55.414.28.02.521.18.642.413l1.713 3.293a.75.75 0 001.33 0l1.713-3.293a.783.783 0 01.642-.413 41.102 41.102 0 003.55-.414c1.437-.231 2.43-1.49 2.43-2.902V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zM6.75 6a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 2.5a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>Comment</span>
                                   </button>
-                                  <button @click="open = !open; await (await fetch(`/api/content?mode=bookmark&id=${post.id}&email=${$store.auth.user.email}`))" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
+                                  <button @click="open = !open; await (await fetch(`/api/content?mode=bookmark&id=${post.id}&email=${$store.auth.user.email}`))" class="w-full hover:bg-gray-100 text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
                                     <!-- Heroicon name: mini/star -->
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                       <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>Bookmark</span>
                                   </button>
-                                  <button x-show="post.author.email === $store.auth.user?.email" @click="open = !open; await (await fetch(`/api/content?mode=delete&level=zero&id=${post.id}`)); refreshFeed()" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
+                                  <button x-show="post.author.email === $store.auth.user?.email" @click="open = !open; await (await fetch(`/api/content?mode=delete&level=zero&id=${post.id}`)); refreshFeed()" class="w-full hover:bg-gray-100 text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
                                     <!-- Heroicon name: mini/trash -->
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                       <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>Delete</span>
                                   </button>
-                                  <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
+                                  <a href="#" class="w-full hover:bg-gray-100 text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
                                     <!-- Heroicon name: mini/flag -->
                                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                       <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
@@ -575,7 +575,7 @@
                     <h2 id="who-to-follow-heading" class="text-base font-medium text-gray-900">Suggestions</h2>
                     <div class="mt-6 flow-root">
                       <ul role="list" class="-my-4 divide-y divide-gray-200">
-                        <template x-for="person in people.filter((p) => !friends.map((f) => f.friend.email).concat($store.auth.user?.email).includes(p.email))
+                        <template x-for="person in people.filter((p) => !friends.map((f) => f.email).concat($store.auth.user?.email).includes(p.email))
                             .sort(() => 0.5 - Math.random()).slice(0, 3)" :key="person.id">
                           <li class="flex items-center space-x-3 py-4">
                             <template x-if="!person.avatar_url">
@@ -925,4 +925,5 @@
       }
     }
   </script>
+  
 {% endblock %}

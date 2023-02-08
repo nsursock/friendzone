@@ -1,4 +1,5 @@
 import { format, formatRelative, formatDistance } from 'date-fns'
+import hljs from 'highlight.js';
 
 export default () => ({
 
@@ -6,7 +7,12 @@ export default () => ({
   showNotifications: false,
 
   openNewPost: false,
+  openContacts: false,
   searchText: '',
+
+  highlightAll() {
+    hljs.highlightAll()
+  },
 
   async getConnects() {
     const invites = (await (await fetch('/api/directory?mode=invite', {

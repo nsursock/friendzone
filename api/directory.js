@@ -48,6 +48,15 @@ export default async function handler(request, response) {
         response.status(200).json({ success: true })
         break
 
+      case 'profile':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'users.dev'
+          : 'users.dev'
+
+        var data = (await supabase.from(table).select().eq('email', request.query.email)).data[0]
+        response.status(200).json({ data })
+        break
+
       case 'friends':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
@@ -59,17 +68,22 @@ export default async function handler(request, response) {
         else if (!request.query.minimum || request.query.minimum === 'accepted')
           statuses = ['Accepted']
 
-        var data1 = (await supabase.from(table)
-          .select(`user1 (id, first_name, last_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
-          .eq('user2', request.query.email).in('status', statuses)).data
-        data1 = JSON.parse(JSON.stringify(data1).split('"user1":').join('"friend":'))
+        var { data, error } = (await supabase.from(table)
+          .select(`user1 (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
+          .eq('user2', request.query.email).in('status', statuses))
+        const data1 = JSON.parse(JSON.stringify(data).split('"user1":').join('"friend":'))
+        if (error) throw new Error(error)
 
-        var data2 = (await supabase.from(table)
-          .select(`user2 (id, first_name, last_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
-          .eq('user1', request.query.email).in('status', statuses)).data
-        data2 = JSON.parse(JSON.stringify(data2).split('"user2":').join('"friend":'))
+        var { data, error } = (await supabase.from(table)
+          .select(`user2 (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
+          .eq('user1', request.query.email).in('status', statuses))
+        const data2 = JSON.parse(JSON.stringify(data).split('"user2":').join('"friend":'))
+        if (error) throw new Error(error)
 
-        var data = data1.concat(data2)
+        var data = data1.concat(data2)?.map((o) => o = {
+          ...o.friend,
+          full_name: o.friend.last_name + ' ' + o.friend.first_name
+        })
 
         response.status(200).json({ data })
         break

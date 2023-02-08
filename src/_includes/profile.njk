@@ -1,5 +1,4 @@
 <div x-cloak x-show="openProfile" class="relative z-10" role="dialog" aria-modal="true">
-  <!-- Background backdrop, show/hide based on slide-over state. -->
   <!--
     Background backdrop, show/hide based on slide-over state.
 
@@ -17,7 +16,7 @@
         x-transition:leave="ease-in-out duration-500"
         x-transition:leave-start="opacity-100 "
         x-transition:leave-end="opacity-0 "
-      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur"></div>
 
   <div class="fixed inset-0 overflow-hidden">
     <div class="absolute inset-0 overflow-hidden">
@@ -114,7 +113,7 @@
                           <div x-show="open" @click.outside="open = !open" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button" tabindex="-1">
                             <div class="py-1" role="none">
                               <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                              <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-item-0">View profile</a>
+                              <a :href="`/profile/?email=${clicked?.email}`" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-item-0">View profile</a>
                               <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-item-1">Copy profile link</a>
                             </div>
                           </div>

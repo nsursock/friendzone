@@ -1,11 +1,18 @@
 module.exports = {
   content: ['./src/**/*.{js,md,twig,svg,html,njk}'],
+  safelist: [{
+    pattern: /hljs+/,
+  }],
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('tailwindcss-debug-screens'),
+    require('tailwind-highlightjs'),
   ],
   theme: {
+    hljs: {
+      theme: 'night-owl',
+    },
     extend: {
       zIndex: {
         100: 100,
