@@ -83,7 +83,7 @@
                   x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null }">
                       <div class="mx-6 my-3">
                         <template x-if="derivedKey">
-                          <ul role="list" class="divide-y divide-gray-200" x-data="{ messages: [] }"
+                          <ul role="list" class="" x-data="{ messages: [] }"
                       x-effect="messages = (await (await fetch(`/api/contact?mode=conversation&sender=${$store.auth.user?.email}&receiver=${tab.id}`)).json()).data">
                             <template x-for="message in messages" :key="message.id">
                               <li class="py-4">
@@ -293,7 +293,6 @@
       },
 
       async encrypt(text) {
-//        console.log(text.split('').map((c) => console.log({ c, u: c.charCodeAt(0) })));
         const initializationVector = crypto.getRandomValues(new Uint8Array(12));
         const encodedData = new TextEncoder().encode(text);
 
@@ -321,9 +320,10 @@
             iv: initializationVector,
             tagLength: 128
           }, this.derivedKey, _data);
-        const text = new TextDecoder().decode(decryptedData)
-//        console.log(text.split('').map((c) => console.log({ c, u: c.charCodeAt(0) })));
-        return text.slice(1, text.length - 1).replace(/\\n/g, String.fromCharCode(10))
+        let text = new TextDecoder().decode(decryptedData)
+        if (text.includes('\\n'))
+          text = text.slice(1, text.length - 1)
+        return text.replace(/\\n/g, String.fromCharCode(10))
       },
 
       ab2b64(arrayBuffer) {
