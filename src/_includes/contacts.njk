@@ -41,7 +41,7 @@
               x-transition:leave-start="translate-x-0"
               x-transition:leave-end="translate-x-full"
             x-data="{ contactList: [], unreadList: [], selectedTab: 'All' }" 
-            x-init="handleKeys(); contactList = (await (await fetch(`/api/directory?mode=friends&email=${$store.auth.user?.email}`)).json()).data;
+            x-init="contactList = (await (await fetch(`/api/directory?mode=friends&email=${$store.auth.user?.email}`)).json()).data;
               unreadList = (await (await fetch(`/api/contact?mode=unread&email=${$store.auth.user?.email}`)).json()).data"
             class="pointer-events-auto w-screen max-w-md">
             <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
@@ -77,31 +77,33 @@
                 </div>
               </div>
               <template x-for="tab in tabs" :key="tab.id">
-                <div x-show="selectedTab === tab.id && tab.picture" class="">
-
-                  <div class="mx-6 my-3">
-                    <ul role="list" class="divide-y divide-gray-200" x-data="{ messages: [] }"
+                <div>
+                  <template x-if="tab.picture">
+                    <div x-show="selectedTab === tab.id" 
+                  x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null }">
+                      <div class="mx-6 my-3">
+                        <ul role="list" class="divide-y divide-gray-200" x-data="{ messages: [] }"
                       x-effect="messages = (await (await fetch(`/api/contact?mode=conversation&sender=${$store.auth.user?.email}&receiver=${tab.id}`)).json()).data">
-                      <template x-for="message in messages" :key="message.id">
-                        <li class="py-4">
-                          <div class="flex space-x-3">
-                            <img class="h-6 w-6 rounded-full" :src="message.sender.avatar_url.includes('unsplash') ? message.sender.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : message.sender.avatar_url" alt="">
-                            <div class="flex-1 space-y-1">
-                              <div class="flex items-center justify-between">
-                                <h3 class="text-sm font-medium" x-text="message.sender.first_name + ' ' + message.sender.last_name"></h3>
-                                <p class="text-sm text-gray-500" x-text="formatDate(new Date(message.created_at), 'relative')"></p>
+                          <template x-for="message in messages" :key="message.id">
+                            <li class="py-4">
+                              <div class="flex space-x-3">
+                                <img class="h-6 w-6 rounded-full" :src="message.sender.avatar_url.includes('unsplash') ? message.sender.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : message.sender.avatar_url" alt="">
+                                <div class="flex-1 space-y-1">
+                                  <div class="flex items-center justify-between">
+                                    <h3 class="text-sm font-medium" x-text="message.sender.first_name + ' ' + message.sender.last_name"></h3>
+                                    <p class="text-sm text-gray-500" x-text="formatDate(new Date(message.created_at), 'distance')"></p>
+                                  </div>
+                                  <p x-html="marked.parse(await decrypt(message.content))" class="prose text-sm text-gray-500"></p>
+                                </div>
                               </div>
-                              <p x-html="marked.parse(message.content)" class="prose text-sm text-gray-500"></p>
-                            </div>
-                          </div>
-                        </li>
-                      </template>
+                            </li>
+                          </template>
 
-                      <!-- More items... -->
-                    </ul>
-                  </div>
+                          <!-- More items... -->
+                        </ul>
+                      </div>
 
-                  <!--
+                      <!--
   This example requires some changes to your config:
   
   ```
@@ -115,42 +117,44 @@
   }
   ```
 -->
-                  <form x-ref="content"  @submit.prevent="handleSubmit(); $refs.content.reset()" class="mx-6 my-3" 
-                    x-data="{ tab: 'Write', receiver: tab.id, content: '' }">
-                    <div>
-                      <div class="flex items-center" aria-orientation="horizontal" role="tablist">
-                        <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
-                        <button @click="tab = 'Write'" id="tabs-1-tab-1" :class="tab === 'Write' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-1" role="tab" type="button">Write</button>
-                        <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
-                        <button @click="tab = 'Preview'" id="tabs-1-tab-2" :class="tab === 'Preview' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-2" role="tab" type="button">Preview</button>
+                      <form x-ref="content"  @submit.prevent="await handleSubmit(); $refs.content.reset()" class="mx-6 my-3" 
+                    x-data="{ tab: 'Write', content: '' }">
+                        <div>
+                          <div class="flex items-center" aria-orientation="horizontal" role="tablist">
+                            <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
+                            <button @click="tab = 'Write'" id="tabs-1-tab-1" :class="tab === 'Write' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-1" role="tab" type="button">Write</button>
+                            <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
+                            <button @click="tab = 'Preview'" id="tabs-1-tab-2" :class="tab === 'Preview' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-2" role="tab" type="button">Preview</button>
 
-                      </div>
-                      <div class="mt-2">
-                        <div x-show="tab === 'Write'" id="tabs-1-panel-1" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-1" role="tabpanel" tabindex="0">
-                          <label for="comment" class="sr-only">Comment</label>
-                          <div>
-                            <textarea x-model="content" rows="4" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Write your message..."></textarea>
+                          </div>
+                          <div class="mt-2">
+                            <div x-show="tab === 'Write'" id="tabs-1-panel-1" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-1" role="tabpanel" tabindex="0">
+                              <label for="comment" class="sr-only">Comment</label>
+                              <div>
+                                <textarea x-model="content" rows="4" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Write your message..."></textarea>
+                              </div>
+                            </div>
+                            <div x-show="tab === 'Preview'" id="tabs-1-panel-2" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-2" role="tabpanel" tabindex="0">
+                              <div class="border-b">
+                                <div x-html="marked.parse(content)" class="prose mx-px mt-px px-3 pt-2 pb-12 text-sm leading-5 text-gray-800"></div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div x-show="tab === 'Preview'" id="tabs-1-panel-2" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-2" role="tabpanel" tabindex="0">
-                          <div class="border-b">
-                            <div x-html="marked.parse(content)" class="prose mx-px mt-px px-3 pt-2 pb-12 text-sm leading-5 text-gray-800"></div>
-                          </div>
+                        <div class="mt-2 flex justify-end">
+                          <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Post</button>
                         </div>
-                      </div>
-                    </div>
-                    <div class="mt-2 flex justify-end">
-                      <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Post</button>
-                    </div>
-                  </form>
+                      </form>
 
+                    </div>
+                  </template>
                 </div>
               </template>
               <div x-show="selectedTab === 'All' || selectedTab === 'Unread'" 
                 x-data="{ contacts: [] }" x-effect="contacts = selectedTab === 'All' ? contactList : unreadList">
                 <ul role="list" class="flex-1 divide-y divide-gray-200 overflow-y-auto">
                   <template x-for="contact in contacts.filter(contact => contact.last_name !== null)
-                  .sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="contact.id">
+                    .sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="contact.id">
                     <li>
                       <div class="group relative flex items-center py-6 px-5">
                         <a href="#" class="-m-1 block flex-1 p-1">
@@ -216,9 +220,10 @@
 <script>
   function dataContact() {
     return {
+
       publicKey: null,
       privateKey: null,
-      derivedKey: null,
+
       tabs: [
         {
           id: 'All'
@@ -232,24 +237,28 @@
       ],
 
       async handleSubmit() {
+        var plaintext = this.content
+        var ciphertext = await this.encrypt(plaintext);
+
+        const obj = {
+          sender: Alpine
+            .store('auth')
+            .user
+            .email,
+          receiver: this.receiver,
+          content: ciphertext,
+          unread: true
+        }
         fetch('/api/contact?mode=send', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            sender: Alpine
-              .store('auth')
-              .user
-              .email,
-            receiver: this.receiver,
-            content: this.content,
-            unread: true
-          })
+          body: JSON.stringify(obj)
         })
       },
 
-      async hash(string) {
+      /*      async hash(string) {
         const utf8 = new TextEncoder().encode(string);
         const hashBuffer = await crypto
           .subtle
@@ -259,7 +268,7 @@
           .map((bytes) => bytes.toString(16).padStart(2, '0'))
           .join('');
         return hashHex;
-      },
+      }, */
 
       async init() {
         const keyPair = await window
@@ -281,8 +290,47 @@
           .exportKey("jwk", keyPair.privateKey);
       },
 
-      async handleKeys() {
-        fetch(`/api/contact?mode=keys&email=${Alpine.store('auth').user.email}`, {
+      async encrypt(data) {
+        const initializationVector = crypto.getRandomValues(new Uint8Array(12));
+        const encodedData = new TextEncoder().encode(JSON.stringify(data));
+
+        const encryptedBuffer = await crypto
+          .subtle
+          .encrypt({
+            name: "AES-GCM",
+            iv: initializationVector,
+            tagLength: 128
+          }, this.derivedKey, encodedData);
+
+        const encryptedDataBase64 = this.ab2b64(encryptedBuffer);
+        const initializationVectorBase64 = this.ab2b64(initializationVector);
+        return `${encryptedDataBase64}.${initializationVectorBase64}`;
+      },
+
+      async decrypt(encryptedData) {
+        const {0: data, 1: iv} = encryptedData.split(".");
+        const initializationVector = this.b642ab(iv);
+        const _data = this.b642ab(data);
+        const decryptedData = await crypto
+          .subtle
+          .decrypt({
+            name: "AES-GCM",
+            iv: initializationVector,
+            tagLength: 128
+          }, this.derivedKey, _data);
+        return new TextDecoder().decode(decryptedData)
+      },
+
+      ab2b64(arrayBuffer) {
+        return btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+      },
+
+      b642ab(base64string) {
+        return Uint8Array.from(atob(base64string), c => c.charCodeAt(0));
+      },
+
+      async handleKeys(contactEmail) {
+        await fetch(`/api/contact?mode=sender_keys&email=${Alpine.store('auth').user.email}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -313,13 +361,37 @@
                 name: "ECDH",
                 namedCurve: "P-256"
               }, true, ["deriveKey", "deriveBits"]);
+          })
+
+        await fetch(`/api/contact?mode=receiver_keys&email=${contactEmail}`)
+          .then((response) => response.json())
+          .then(async (message) => {
+
+            let publicKey = JSON.parse(message.data.publicKey)
+            let privateKey = JSON.parse(message.data.privateKey)
+
+            publicKey = await window
+              .crypto
+              .subtle
+              .importKey("jwk", publicKey, {
+                name: "ECDH",
+                namedCurve: "P-256"
+              }, true, []);
+
+            privateKey = await window
+              .crypto
+              .subtle
+              .importKey("jwk", privateKey, {
+                name: "ECDH",
+                namedCurve: "P-256"
+              }, true, ["deriveKey", "deriveBits"]);
 
             this.derivedKey = await window
               .crypto
               .subtle
               .deriveKey({
                 name: "ECDH",
-                public: this.publicKey
+                public: publicKey
               }, this.privateKey, {
                 name: "AES-GCM",
                 length: 256

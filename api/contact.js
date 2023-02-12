@@ -62,12 +62,25 @@ export default async function handler(request, response) {
         response.status(200).json({ success: true })
         break
 
-      case 'keys':
+      case 'receiver_keys':
+        var { data, error } = (await supabase.from(storageName).select('password, public_key, private_key').eq('email', request.query.email))
+        if (error) console.error(error)
+
+        if (!data[0].public_key || !data[0].private_key)
+          throw new Error('No keys found yet. Ask user to login.')
+
+        var cryptr = new Cryptr(data[0].password, { pbkdf2Iterations: 10000, saltLength: 10 })
+
+        var data = { publicKey: cryptr.decrypt(data[0].public_key), privateKey: cryptr.decrypt(data[0].private_key) }
+        response.status(200).send({ data })
+        break
+
+      case 'sender_keys':
         const { publicKey, privateKey } = request.body
         var { data, error } = (await supabase.from(storageName).select('password, public_key, private_key').eq('email', request.query.email))
         if (error) console.error(error)
 
-        const cryptr = new Cryptr(data[0].password, { pbkdf2Iterations: 10000, saltLength: 10 })
+        var cryptr = new Cryptr(data[0].password, { pbkdf2Iterations: 10000, saltLength: 10 })
 
         // if first time sending message, encrypt keys and store them in database
         if (!data[0].public_key || !data[0].private_key) {
@@ -78,7 +91,7 @@ export default async function handler(request, response) {
 
           data = { publicKey, privateKey }
         }
-        // in any case, send decrypted keys to client
+        // else send decrypted keys to client
         else {
           data = { publicKey: cryptr.decrypt(data[0].public_key), privateKey: cryptr.decrypt(data[0].private_key) }
         }
