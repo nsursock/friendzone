@@ -40,13 +40,13 @@ const { faker } = require('@faker-js/faker');
     // var emails = (await supabase.from('users.dev').select('email')).data.map((item) => item.email).sort(() => 0.5 - Math.random())
     // var ids = (await supabase.from('messages.dev').select('id').not("related_id", "is", null)).data.map((item) => item.id).sort(() => 0.5 - Math.random())
 
-    const num = 20
-    var ids = [7979, 8024]
+    const num = 1000
+    // var ids = [7979, 8024]
     for (let index = 0; index < num; index++) {
 
       var { data, error } = await supabase.from(table).insert({
-        related_id: ids[index % ids.length],
-        created_at: faker.date.recent(20),
+        related_id: null, //ids[index % ids.length],
+        created_at: faker.date.recent(3),
         author: emails[index % emails.length],
         content: faker.lorem.text(),
         num_like: Math.round(Math.random() * 10),

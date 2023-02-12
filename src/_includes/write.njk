@@ -57,15 +57,15 @@
           <div>
             <div class="flex items-center" aria-orientation="horizontal" role="tablist">
               <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
-              <button x-on:click.prevent="tab = 'write'; showConvertedMarkdown = false" id="write" 
-                :class="{ 'text-gray-900 bg-gray-100 hover:bg-gray-200': tab === 'write', 'text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100': tab !== 'preview' }" 
-                class="rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-1" role="tab" type="button">Write</button>
+              <button @click="tab = 'write'; showConvertedMarkdown = false" id="write" 
+                :class="{ 'text-gray-900 bg-gray-100 hover:bg-gray-200': tab === 'write' }" 
+                class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-1" role="tab" type="button">Write</button>
               <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
-              <button x-on:click.prevent="tab = 'preview'; convertedMarkdown()" id="preview" 
-                :class="{ 'text-gray-900 bg-gray-100 hover:bg-gray-200': tab !== 'write', 'text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100': tab === 'preview' }"
-                class="ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-2" role="tab" type="button">Preview</button>
+              <button @click="tab = 'preview'; convertedMarkdown()" id="preview" 
+                :class="{ 'text-gray-900 bg-gray-100 hover:bg-gray-200': tab === 'preview' }"
+                class="ml-2 text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-2" role="tab" type="button">Preview</button>
 
-              <!-- These buttons are here simply as examples and don't actually do anything. -->
+              {# <!-- These buttons are here simply as examples and don't actually do anything. -->
               <div class="ml-auto flex items-center space-x-5">
                 <div class="flex items-center">
                   <button type="button" class="-m-2.5 inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-400 hover:text-gray-500">
@@ -95,7 +95,7 @@
                     </svg>
                   </button>
                 </div>
-              </div>
+              </div> #}
             </div>
             <div class="mt-2">
               <div x-show="tab === 'write'" id="write" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-1" role="tabpanel" tabindex="0">

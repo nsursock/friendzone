@@ -58,6 +58,7 @@ export default async function handler(request, response) {
         break
 
       case 'friends':
+        // console.log(">>>>>>>>>>>>>>>>>><",request.query.email)
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
           : 'relationships.dev'

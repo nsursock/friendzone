@@ -3,7 +3,8 @@
 
 {% block body %}
   <article x-data="{ user: null, current: 'Profile', numFriends: 0 }" :class="!user && 'blur-lg animate-pulse'"
-    x-effect="user = (await (await fetch(`/api/directory?mode=profile&email=${new URLSearchParams(location.search).get('email') || $store.auth.user?.email}`)).json()).data;">    <!-- Profile header -->
+    x-effect="user = (await (await fetch(`/api/directory?mode=profile&email=${new URLSearchParams(location.search).get('email') || $store.auth.user?.email}`)).json()).data;">
+    <!-- Profile header -->
     <div>
       <template x-if="!user || !user.cover_url">
         <div>
@@ -34,6 +35,7 @@
               <h1 class="truncate text-2xl font-bold text-gray-900">
                 <span x-text="user?.first_name + ' ' + user?.last_name"></span>
               </h1>
+              {# <p class="text-sm text-gray-500" x-text="`@${user?.user_name}`"></p> #}
             </div>
             <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
               <button  type="button" class="sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -76,6 +78,7 @@
             <h1 class="truncate text-2xl font-bold text-gray-900">
               <span x-text="user?.first_name + ' ' + user?.last_name"></span>
             </h1>
+            {# <p class="text-sm text-gray-500" x-text="`@${user?.user_name}`"></p> #}
           </div>
         </template>
       </div>
@@ -94,7 +97,7 @@
             <button @click="current = 'Friends'" 
                       :class="current === 'Friends' ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" 
                       class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-              <span x-text="`Friends (${numFriends})`"></span></button>
+              <span x-text="`Connections (${numFriends})`"></span></button>
 
           </nav>
         </div>
@@ -102,10 +105,10 @@
     </div>
 
     <div class="mb-5 mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8" x-show="current === 'Friends'"
-              x-data="{ friends: [] }" x-effect="friends = (await (await fetch(`/api/directory?mode=friends&email=${user?.email}`)).json()).data; numFriends = friends.length">
+              x-data="{ connections: [] }" x-effect="connections = (await (await fetch(`/api/directory?mode=friends&email=${user?.email}`)).json()).data; numFriends = connections.length">
 
       <ul role="list" class="sm:hidden grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <template x-for="connection in friends" :key="connection.id">
+        <template x-for="connection in connections.sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="connection.id">
           <li class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
             <div class="flex w-full items-center justify-between space-x-6 p-6">
               <div class="flex-1 truncate">
@@ -158,7 +161,7 @@
       </ul>
 
       <ul role="list" class="hidden sm:grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        <template x-for="connection in friends" :key="connection.id">
+        <template x-for="connection in connections" :key="connection.id">
           <li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
             <div class="flex flex-1 flex-col p-8">
               <template x-if="!connection.avatar_url">

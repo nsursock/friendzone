@@ -46,6 +46,7 @@
     "@alpinejs/intersect": "^3.11.1",
     "@supabase/supabase-js": "^2.2.3",
     "alpinejs": "^3.1.0",
+    "cryptr": "^6.1.0",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "highlight.js": "^11.7.0",

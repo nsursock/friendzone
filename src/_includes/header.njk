@@ -164,9 +164,9 @@
           <div @click.outside="open = !open" x-show="open" 
             class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             <!-- Active: "bg-gray-100", Not Active: "" -->
-            <a href="/profile" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
-            <a href="/settings" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-            <button @click="logout()" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</button>
+            <a href="/profile" class="hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
+            <a href="/settings" class="hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+            <button @click="logout()" class="hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</button>
           </div>
           
         </div>
@@ -177,7 +177,7 @@
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
-  <div x-show="open" class="lg:hidden" id="mobile-menu" x-effect="if (open) links = [
+  <div x-cloak x-show="open" class="lg:hidden" id="mobile-menu" x-effect="if (open) links = [
         { text: 'Home', href: '/home/' },
         { text: 'Popular', href: '/home/?tab=Popular' },
         { text: 'Trending', href: '/home/?tab=Trending' },

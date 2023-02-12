@@ -70,7 +70,7 @@ async function ensureUnique(email, supabase) {
 
     var data = (await supabase.from(tableUser).select('email')).data.map((item) => item.email)
 
-    var perm = permute(data) //.filter((rel) => rel.user1.includes('coppens') || rel.user2.includes('coppens'))
+    var perm = permute(data).filter((rel) => rel.user1.includes('sursock') || rel.user2.includes('sursock'))
     // console.table(perm)
 
     const num = 1000
@@ -78,7 +78,7 @@ async function ensureUnique(email, supabase) {
       const el = perm[Math.floor(Math.random() * (perm.length))];
 
       var { data, error } = await supabase.from(tableRel).insert({
-        user1: el.user1, user2: el.user2, status: 'Accepted',
+        user1: el.user1, user2: el.user2, status: 'Pending',
       }).select('*')
 
       await ensureUnique(el.user1, supabase)
@@ -86,7 +86,7 @@ async function ensureUnique(email, supabase) {
 
       console.log({
         index,
-        user1: el.user1, user2: el.user2, status: 'Accepted',
+        user1: el.user1, user2: el.user2, status: 'Pending',
       });
     }
 
