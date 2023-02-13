@@ -195,7 +195,7 @@
                 x-data="{ contacts: [] }" x-effect="contacts = selectedTab === 'All' ? contactList : unreadList">
                 <ul role="list" class="flex-1 divide-y divide-gray-200 overflow-y-auto">
                   <template x-for="contact in contacts.filter(contact => contact.last_name !== null)
-                    .sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="contact.id">
+                    .sort((a, b) => a.full_name.localeCompare(b.full_name))">
                     <li>
                       <div class="group relative flex items-center py-6 px-5">
                         <button @click="tabs.push({ 
