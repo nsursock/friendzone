@@ -65,10 +65,15 @@
                     <template x-for="tab in tabs" :key="tab.id">
                       <button @click="selectedTab = tab.id" class="mr-3 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                         :class="selectedTab === tab.id ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                        <template x-if="tab.picture">
+                        <template x-if="!tab.picture && tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
+                          <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100">
+                            <span class="text-xs font-medium leading-none text-gray-400" x-text="tab.initials"></span>
+                          </span>
+                        </template>
+                        <template x-if="tab.picture && tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
                           <img class="h-6 w-6 rounded-full" :src="tab.picture.includes('unsplash') ? tab.picture+'&fit=facearea&facepad=2&w=256&h=256&q=80' : tab.picture" alt=""/>
                         </template>
-                        <template x-if="!tab.picture">
+                        <template x-if="!tab.picture && tabs.slice(0, 4).findIndex((t) => t.id === tab.id) !== -1">
                           <span x-text="tab.id"></span>
                         </template>
                       </button>
@@ -78,53 +83,9 @@
               </div>
               <template x-for="tab in tabs" :key="tab.id">
                 <div>
-                  <template x-if="tab.picture">
+                  <template x-if="tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
                     <div x-show="selectedTab === tab.id"
                   x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null, messages: null }">
-                      <div class="mx-6 my-3 ">
-
-                        <template x-if="!derivedKey || !messages">
-                          <div class="text-center mt-5">
-                            <svg class="animate-spin mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">Loading... Please wait.</h3>
-                            <p class="mt-1 text-sm text-gray-500">This messaging service uses end to end encryption.</p>
-                            {# <div class="mt-6">
-                              <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                <!-- Heroicon name: mini/plus -->
-                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                  <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
-                                </svg>
-                               Cancel
-                             </button>
-                            </div> #}
-                          </div>
-                        </template>
-
-                        <template x-if="derivedKey">
-                          <ul role="list" class=""
-                      x-effect="messages = (await (await fetch(`/api/contact?mode=conversation&sender=${$store.auth.user?.email}&receiver=${tab.id}`)).json()).data">
-                            <template x-for="message in messages || []" :key="message.id">
-                              <li class="py-4">
-                                <div class="flex space-x-3">
-                                  <img class="h-6 w-6 rounded-full" :src="message.sender.avatar_url.includes('unsplash') ? message.sender.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : message.sender.avatar_url" alt="">
-                                  <div class="flex-1 space-y-1">
-                                    <div class="flex items-center justify-between">
-                                      <h3 class="text-sm font-medium" x-text="message.sender.first_name + ' ' + message.sender.last_name"></h3>
-                                      <p class="text-sm text-gray-500" x-text="formatDate(new Date(message.created_at), 'distance')"></p>
-                                    </div>
-                                    <p x-html="marked.parse(await decrypt(message.content))" class="prose text-sm text-gray-500"></p>
-                                  </div>
-                                </div>
-                              </li>
-                            </template>
-
-                            <!-- More items... -->
-                          </ul>
-                        </template>
-                      </div>
 
                       <!--
   This example requires some changes to your config:
@@ -171,6 +132,60 @@
                         </form>
                       </template>
 
+                      <div class="mx-6 my-3 ">
+
+                        <template x-if="!derivedKey || !messages">
+                          <div class="text-center mt-5">
+                            <svg class="animate-spin mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">Loading... Please wait.</h3>
+                            <p class="mt-1 text-sm text-gray-500">This messaging service uses end to end encryption.</p>
+                            {# <div class="mt-6">
+                              <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <!-- Heroicon name: mini/plus -->
+                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+                                </svg>
+                               Cancel
+                             </button>
+                            </div> #}
+                          </div>
+                        </template>
+
+                        <template x-if="derivedKey">
+                          <ul role="list" class=""
+                      x-effect="messages = (await (await fetch(`/api/contact?mode=conversation&sender=${$store.auth.user?.email}&receiver=${tab.id}`)).json()).data">
+                            <template x-for="message in messages || []" :key="message.id">
+                              <li class="py-4">
+                                <div class="flex">
+                                  <template x-if="!message.sender.avatar_url">
+                                    <span class="inline-block h-6 w-6 overflow-hidden rounded-full bg-gray-100">
+                                      <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                      </svg>
+                                    </span>
+                                  </template>
+                                  <template x-if="message.sender.avatar_url">
+                                    <img class="h-6 w-6 rounded-full" :src="message.sender.avatar_url.includes('unsplash') ? message.sender.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : message.sender.avatar_url" alt="">
+                                  </template>
+                                  <div class="flex-1 space-y-1 ml-3">
+                                    <div class="flex items-center justify-between">
+                                      <h3 class="text-sm font-medium" x-text="message.sender.first_name + ' ' + message.sender.last_name"></h3>
+                                      <p class="text-sm text-gray-500" x-text="formatDate(new Date(message.created_at), 'distance')"></p>
+                                    </div>
+                                    <p x-html="marked.parse(await decrypt(message.content))" class="prose text-sm text-gray-500"></p>
+                                  </div>
+                                </div>
+                              </li>
+                            </template>
+
+                            <!-- More items... -->
+                          </ul>
+                        </template>
+                      </div>
+
                     </div>
                   </template>
                 </div>
@@ -182,14 +197,23 @@
                     .sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="contact.id">
                     <li>
                       <div class="group relative flex items-center py-6 px-5">
-                        <button @click="tabs.push({ id: contact.email, picture: contact.avatar_url }); selectedTab = contact.email" class="-m-1 block flex-1 p-1">
+                        <button @click="tabs.push({ id: contact.email, initials: contact.first_name[0] + contact.last_name[0], picture: contact.avatar_url }); selectedTab = contact.email" class="-m-1 block flex-1 p-1">
                           <div class="absolute inset-0 group-hover:bg-gray-50" aria-hidden="true"></div>
                           <div class="relative flex min-w-0 flex-1 items-center">
-                            <span class="relative inline-block flex-shrink-0">
-                              <img class="h-10 w-10 rounded-full" :src="contact.avatar_url?.includes('unsplash') ? contact.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : contact.avatar_url" alt="">
-                              <!-- Online: "bg-green-400", Offline: "bg-gray-300" -->
-                              <span class="bg-green-400 absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white" aria-hidden="true"></span>
-                            </span>
+                            <template x-if="!contact.avatar_url">
+                              <span class="h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+                                <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                              </span>
+                            </template>
+                            <template x-if="contact.avatar_url">
+                              <span class="relative inline-block flex-shrink-0">
+                                <img class="h-10 w-10 rounded-full" :src="contact.avatar_url?.includes('unsplash') ? contact.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : contact.avatar_url" alt="">
+                                <!-- Online: "bg-green-400", Offline: "bg-gray-300" -->
+                                <span class="bg-green-400 absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white" aria-hidden="true"></span>
+                              </span>
+                            </template>
                             <div class="ml-4 truncate">
                               <p class="text-left truncate text-sm font-medium text-gray-900" x-text="contact.first_name + ' ' + contact.last_name"></p>
                               <p class="text-left truncate text-sm text-gray-500" x-text="`@${contact.user_name}`"></p>
@@ -221,7 +245,7 @@
                             <div class="py-1" role="none">
                               <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                               <a :href="`/profile/?email=${contact.email}`" target="_blank" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">View profile</a>
-                              <button @click="open = !open; tabs.push({ id: contact.email, picture: contact.avatar_url })" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">Send message</button>
+                              <button @click="open = !open; tabs.push({ id: contact.email, initials: contact.first_name[0] + contact.last_name[0], picture: contact.avatar_url })" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">Send message</button>
                             </div>
                           </div>
                         </div>

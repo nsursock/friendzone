@@ -22,7 +22,7 @@ export default async function handler(request, response) {
 
         var { data, error } = (await supabase.from(table)
           .select(`id, created_at, content, sender (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
-          .in('receiver', emails).in('sender', emails).order('created_at', { ascending: true }))
+          .in('receiver', emails).in('sender', emails).order('created_at', { ascending: false }))
         if (error) throw new Error(error)
 
         response.status(200).json({ data })
