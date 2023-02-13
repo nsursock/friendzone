@@ -79,13 +79,34 @@
               <template x-for="tab in tabs" :key="tab.id">
                 <div>
                   <template x-if="tab.picture">
-                    <div x-show="selectedTab === tab.id" 
-                  x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null }">
-                      <div class="mx-6 my-3">
+                    <div x-show="selectedTab === tab.id"
+                  x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null, messages: null }">
+                      <div class="mx-6 my-3 ">
+
+                        <template x-if="!derivedKey || !messages">
+                          <div class="text-center mt-5">
+                            <svg class="animate-spin mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">Loading... Please wait.</h3>
+                            <p class="mt-1 text-sm text-gray-500">This messaging service uses end to end encryption.</p>
+                            {# <div class="mt-6">
+                              <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <!-- Heroicon name: mini/plus -->
+                                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+                                </svg>
+                               Cancel
+                             </button>
+                            </div> #}
+                          </div>
+                        </template>
+
                         <template x-if="derivedKey">
-                          <ul role="list" class="" x-data="{ messages: [] }"
+                          <ul role="list" class=""
                       x-effect="messages = (await (await fetch(`/api/contact?mode=conversation&sender=${$store.auth.user?.email}&receiver=${tab.id}`)).json()).data">
-                            <template x-for="message in messages" :key="message.id">
+                            <template x-for="message in messages || []" :key="message.id">
                               <li class="py-4">
                                 <div class="flex space-x-3">
                                   <img class="h-6 w-6 rounded-full" :src="message.sender.avatar_url.includes('unsplash') ? message.sender.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : message.sender.avatar_url" alt="">
@@ -406,6 +427,6 @@
                 }, true, ["encrypt", "decrypt"]);
             });
         }
-    }
+      }
   }
 </script>
