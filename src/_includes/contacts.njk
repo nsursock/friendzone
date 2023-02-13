@@ -40,14 +40,14 @@
               x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
               x-transition:leave-start="translate-x-0"
               x-transition:leave-end="translate-x-full"
-            x-data="{ contactList: [], unreadList: [], selectedTab: 'All' }" 
+            x-data="{ contactList: [], unreadList: [], selectedTab: 'All', person: '' }" 
             x-init="contactList = (await (await fetch(`/api/directory?mode=friends&email=${$store.auth.user?.email}`)).json()).data;
               unreadList = (await (await fetch(`/api/contact?mode=unread&email=${$store.auth.user?.email}`)).json()).data"
             class="pointer-events-auto w-screen max-w-md">
             <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
               <div class="p-6">
                 <div class="flex items-start justify-between">
-                  <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Team</h2>
+                  <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Chat</h2>
                   <div class="ml-3 flex h-7 items-center">
                     <button @click="if (selectedTab === 'All') openContacts = !openContacts; else { tabs.splice(tabs.findIndex(tab => tab.id === selectedTab), 1); selectedTab = 'All' }" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500">
                       <span class="sr-only">Close panel</span>
@@ -86,6 +86,7 @@
                   <template x-if="tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
                     <div x-show="selectedTab === tab.id"
                   x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null, messages: null }">
+                   <h3 class="text-center mt-3 text-lg font-medium text-gray-900" id="slide-over-title" x-text="tab.name"></h2>
 
                       <!--
   This example requires some changes to your config:
@@ -132,7 +133,7 @@
                         </form>
                       </template>
 
-                      <div class="mx-6 my-3 ">
+                      <div class="mx-6 my-3">
 
                         <template x-if="!derivedKey || !messages">
                           <div class="text-center mt-5">
@@ -197,7 +198,12 @@
                     .sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="contact.id">
                     <li>
                       <div class="group relative flex items-center py-6 px-5">
-                        <button @click="tabs.push({ id: contact.email, initials: contact.first_name[0] + contact.last_name[0], picture: contact.avatar_url }); selectedTab = contact.email" class="-m-1 block flex-1 p-1">
+                        <button @click="tabs.push({ 
+                          id: contact.email, 
+                          name: contact.first_name + ' ' + contact.last_name,
+                          initials: contact.first_name[0] + contact.last_name[0], 
+                          picture: contact.avatar_url 
+                        }); selectedTab = contact.email" class="-m-1 block flex-1 p-1">
                           <div class="absolute inset-0 group-hover:bg-gray-50" aria-hidden="true"></div>
                           <div class="relative flex min-w-0 flex-1 items-center">
                             <template x-if="!contact.avatar_url">
@@ -245,7 +251,12 @@
                             <div class="py-1" role="none">
                               <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
                               <a :href="`/profile/?email=${contact.email}`" target="_blank" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">View profile</a>
-                              <button @click="open = !open; tabs.push({ id: contact.email, initials: contact.first_name[0] + contact.last_name[0], picture: contact.avatar_url })" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">Send message</button>
+                              <button @click="open = !open; tabs.push({ 
+                                id: contact.email, 
+                                name: contact.first_name + ' ' + contact.last_name,
+                                initials: contact.first_name[0] + contact.last_name[0], 
+                                picture: contact.avatar_url 
+                              })" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">Send message</button>
                             </div>
                           </div>
                         </div>
