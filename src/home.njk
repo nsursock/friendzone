@@ -132,7 +132,7 @@
                 <label for="question-tabs" class="sr-only">Select a tab</label>
                 <select @change="innerTab = event.target.value; 
                   if (innerTab.includes('Recent')) posts = posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                  else if (tab.includes('Liked')) posts = posts.sort((a, b) => { 
+                  else if (innerTab.includes('Liked')) posts = posts.sort((a, b) => { 
                       if (b.num_like - a.num_like === 0) return new Date(b.created_at).getTime() - new Date(a.created_at).getTime() 
                       else return b.num_like - a.num_like })
                   else if (innerTab.includes('Comments')) posts = posts.sort((a, b) => { 

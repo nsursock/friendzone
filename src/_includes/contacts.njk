@@ -370,41 +370,42 @@
               }, true, ["deriveKey", "deriveBits"]);
           })
 
-        await fetch(`/api/contact?mode=receiver_keys&email=${contactEmail}`)
-          .then((response) => response.json())
-          .then(async (message) => {
+        if (contactEmail) 
+          await fetch(`/api/contact?mode=receiver_keys&email=${contactEmail}`)
+            .then((response) => response.json())
+            .then(async (message) => {
 
-            let publicKey = JSON.parse(message.data.publicKey)
-            let privateKey = JSON.parse(message.data.privateKey)
+              let publicKey = JSON.parse(message.data.publicKey)
+              let privateKey = JSON.parse(message.data.privateKey)
 
-            publicKey = await window
-              .crypto
-              .subtle
-              .importKey("jwk", publicKey, {
-                name: "ECDH",
-                namedCurve: "P-256"
-              }, true, []);
+              publicKey = await window
+                .crypto
+                .subtle
+                .importKey("jwk", publicKey, {
+                  name: "ECDH",
+                  namedCurve: "P-256"
+                }, true, []);
 
-            privateKey = await window
-              .crypto
-              .subtle
-              .importKey("jwk", privateKey, {
-                name: "ECDH",
-                namedCurve: "P-256"
-              }, true, ["deriveKey", "deriveBits"]);
+              privateKey = await window
+                .crypto
+                .subtle
+                .importKey("jwk", privateKey, {
+                  name: "ECDH",
+                  namedCurve: "P-256"
+                }, true, ["deriveKey", "deriveBits"]);
 
-            this.derivedKey = await window
-              .crypto
-              .subtle
-              .deriveKey({
-                name: "ECDH",
-                public: publicKey
-              }, this.privateKey, {
-                name: "AES-GCM",
-                length: 256
-              }, true, ["encrypt", "decrypt"]);
-          })
-      }
+              this.derivedKey = await window
+                .crypto
+                .subtle
+                .deriveKey({
+                  name: "ECDH",
+                  public: publicKey
+                }, this.privateKey, {
+                  name: "AES-GCM",
+                  length: 256
+                }, true, ["encrypt", "decrypt"]);
+            });
+        }
     }
   }
 </script>

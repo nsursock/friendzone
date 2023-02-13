@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs'
 
-import intersect from '@alpinejs/intersect' 
+import intersect from '@alpinejs/intersect'
 Alpine.plugin(intersect)
 
 import global from './global.js'
@@ -63,8 +63,44 @@ window.addEventListener('alpine:initializing', () => {
           body: token,
         })
           .then((response) => response.json())
-          .then((message) => {
-            if (message.success) this.user = message.user
+          .then(async (message) => {
+            if (message.success) {
+              this.user = message.user
+
+              if (!this.user.public_key || !this.user.private_key) {
+                // handle keys that are not in database
+                console.log('>>> creating keys');
+                const keyPair = await window
+                  .crypto
+                  .subtle
+                  .generateKey({
+                    name: "ECDH",
+                    namedCurve: "P-256"
+                  }, true, ["deriveKey", "deriveBits"]);
+
+                const publicKey = await window
+                  .crypto
+                  .subtle
+                  .exportKey("jwk", keyPair.publicKey);
+
+                const privateKey = await window
+                  .crypto
+                  .subtle
+                  .exportKey("jwk", keyPair.privateKey);
+
+                await fetch(`/api/contact?mode=sender_keys&email=${this.user.email}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    publicKey: JSON.stringify(publicKey),
+                    privateKey: JSON.stringify(privateKey)
+                  })
+                })
+              }
+              else console.log('>>> keys already exist');
+            }
           })
       }
     },
