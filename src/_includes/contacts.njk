@@ -162,7 +162,7 @@
                           <ul role="list" class=""
                       x-effect="messages = (await (await fetch(`/api/contact?mode=conversation&sender=${$store.auth.user?.email}&receiver=${tab.id}`)).json()).data">
                             <template x-for="message in messages || []" :key="message.id">
-                              <li class="py-4">
+                              <li class="py-4" x-intersect.once="message.receiver === $store.auth.user.email && await fetch(`/api/contact?mode=update&id=${message.id}`)">
                                 <div class="flex">
                                   <template x-if="!message.sender.avatar_url">
                                     <span class="inline-block h-6 w-6 overflow-hidden rounded-full bg-gray-100">

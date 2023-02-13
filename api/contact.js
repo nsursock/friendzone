@@ -13,6 +13,17 @@ export default async function handler(request, response) {
   try {
     switch (request.query.mode) {
 
+      case 'update':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'messages2.dev'
+          : 'messages2.dev'
+
+        var { data, error } = await supabase.from(table).update({ unread: false }).eq('id', request.query.id).select('*')
+        if (error) throw new Error(error)
+
+        response.status(200).json({ success: true })
+        break
+
       case 'conversation':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'messages2.dev'
@@ -21,7 +32,7 @@ export default async function handler(request, response) {
         const emails = [request.query.receiver, request.query.sender]
 
         var { data, error } = (await supabase.from(table)
-          .select(`id, created_at, content, sender (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
+          .select(`id, created_at, content, receiver, sender (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
           .in('receiver', emails).in('sender', emails).order('created_at', { ascending: false }))
         if (error) throw new Error(error)
 
@@ -35,7 +46,7 @@ export default async function handler(request, response) {
 
         var { data, error } = (await supabase.from(table)
           .select(`sender (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
-          .eq('receiver', request.query.email))
+          .eq('receiver', request.query.email).eq('unread', true))
         if (error) throw new Error(error)
 
         var data = [...new Map(data.map((item) => [item.sender["email"], item])).values()] // unique values
