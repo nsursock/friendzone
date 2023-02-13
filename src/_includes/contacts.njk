@@ -61,19 +61,19 @@
               </div>
               <div class="border-b border-gray-200">
                 <div class="px-6">
-                  <nav class="-mb-px flex">
+                  <nav class="-mb-px flex overflow-x-auto">
                     <template x-for="tab in tabs" :key="tab.id">
                       <button @click="selectedTab = tab.id" class="mr-3 whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
                         :class="selectedTab === tab.id ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
-                        <template x-if="!tab.picture && tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
+                        <template x-if="!tab.picture && tabs.slice(0, 3).findIndex((t) => t.id === tab.id) === -1">
                           <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100">
                             <span class="text-xs font-medium leading-none text-gray-400" x-text="tab.initials"></span>
                           </span>
                         </template>
-                        <template x-if="tab.picture && tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
+                        <template x-if="tab.picture && tabs.slice(0, 3).findIndex((t) => t.id === tab.id) === -1">
                           <img class="h-6 w-6 rounded-full" :src="tab.picture.includes('unsplash') ? tab.picture+'&fit=facearea&facepad=2&w=256&h=256&q=80' : tab.picture" alt=""/>
                         </template>
-                        <template x-if="!tab.picture && tabs.slice(0, 4).findIndex((t) => t.id === tab.id) !== -1">
+                        <template x-if="!tab.picture && tabs.slice(0, 3).findIndex((t) => t.id === tab.id) !== -1">
                           <span x-text="tab.id"></span>
                         </template>
                       </button>
@@ -83,10 +83,10 @@
               </div>
               <template x-for="tab in tabs" :key="tab.id">
                 <div>
-                  <template x-if="tabs.slice(0, 4).findIndex((t) => t.id === tab.id) === -1">
+                  <template x-if="tabs.slice(0, 3).findIndex((t) => t.id === tab.id) === -1">
                     <div x-show="selectedTab === tab.id"
                   x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null, messages: null }">
-                   <h3 class="text-center mt-3 text-lg font-medium text-gray-900" id="slide-over-title" x-text="tab.name"></h2>
+                      <h3 class="text-center mt-3 text-lg font-medium text-gray-900" id="slide-over-title" x-text="tab.name"></h2>
 
                       <!--
   This example requires some changes to your config:
@@ -127,6 +127,9 @@
                               </div>
                             </div>
                           </div>
+                          <p class="mt-3 text-sm text-gray-500">
+                            <a target="_blank" class="hover:underline" href="https://www.markdownguide.org/cheat-sheet/">You can use markdown to format your text.</a>
+                          </p>
                           <div class="mt-2 flex justify-end">
                             <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Send</button>
                           </div>
@@ -289,9 +292,9 @@
           id: 'All'
         }, {
           id: 'Online'
-        }, {
+        }, /*{
           id: 'Offline'
-        }, {
+        },*/ {
           id: 'Unread'
         }
       ],
