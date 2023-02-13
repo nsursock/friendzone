@@ -49,7 +49,7 @@
                 <div class="flex items-start justify-between">
                   <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Team</h2>
                   <div class="ml-3 flex h-7 items-center">
-                    <button @click="openContacts = !openContacts" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500">
+                    <button @click="if (selectedTab === 'All') openContacts = !openContacts; else { tabs.splice(tabs.findIndex(tab => tab.id === selectedTab), 1); selectedTab = 'All' }" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500">
                       <span class="sr-only">Close panel</span>
                       <!-- Heroicon name: outline/x-mark -->
                       <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -119,34 +119,36 @@
   }
   ```
 -->
-                      <form x-ref="content"  @submit.prevent="await handleSubmit(); $refs.content.reset()" class="mx-6 my-3" 
+                      <template x-if="derivedKey">
+                        <form x-ref="content"  @submit.prevent="handleSubmit" class="mx-6 my-3" 
                     x-data="{ tab: 'Write', content: '' }">
-                        <div>
-                          <div class="flex items-center" aria-orientation="horizontal" role="tablist">
-                            <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
-                            <button @click="tab = 'Write'" id="tabs-1-tab-1" :class="tab === 'Write' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-1" role="tab" type="button">Write</button>
-                            <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
-                            <button @click="tab = 'Preview'" id="tabs-1-tab-2" :class="tab === 'Preview' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-2" role="tab" type="button">Preview</button>
+                          <div>
+                            <div class="flex items-center" aria-orientation="horizontal" role="tablist">
+                              <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
+                              <button @click="tab = 'Write'" id="tabs-1-tab-1" :class="tab === 'Write' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-1" role="tab" type="button">Write</button>
+                              <!-- Selected: "text-gray-900 bg-gray-100 hover:bg-gray-200", Not Selected: "text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100" -->
+                              <button @click="tab = 'Preview'" id="tabs-1-tab-2" :class="tab === 'Preview' && 'text-gray-900 bg-gray-100 hover:bg-gray-200'" class="text-gray-500 hover:text-gray-900 bg-white hover:bg-gray-100 ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium" aria-controls="tabs-1-panel-2" role="tab" type="button">Preview</button>
 
-                          </div>
-                          <div class="mt-2">
-                            <div x-show="tab === 'Write'" id="tabs-1-panel-1" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-1" role="tabpanel" tabindex="0">
-                              <label for="comment" class="sr-only">Comment</label>
-                              <div>
-                                <textarea x-model="content" rows="4" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Write your message..."></textarea>
+                            </div>
+                            <div class="mt-2">
+                              <div x-show="tab === 'Write'" id="tabs-1-panel-1" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-1" role="tabpanel" tabindex="0">
+                                <label for="comment" class="sr-only">Comment</label>
+                                <div>
+                                  <textarea x-model="content" rows="4" name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Write your message..."></textarea>
+                                </div>
+                              </div>
+                              <div x-show="tab === 'Preview'" id="tabs-1-panel-2" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-2" role="tabpanel" tabindex="0">
+                                <div class="border-b">
+                                  <div x-html="marked.parse(content)" class="prose mx-px mt-px px-3 pt-2 pb-12 text-sm leading-5 text-gray-800"></div>
+                                </div>
                               </div>
                             </div>
-                            <div x-show="tab === 'Preview'" id="tabs-1-panel-2" class="-m-0.5 rounded-lg p-0.5" aria-labelledby="tabs-1-tab-2" role="tabpanel" tabindex="0">
-                              <div class="border-b">
-                                <div x-html="marked.parse(content)" class="prose mx-px mt-px px-3 pt-2 pb-12 text-sm leading-5 text-gray-800"></div>
-                              </div>
-                            </div>
                           </div>
-                        </div>
-                        <div class="mt-2 flex justify-end">
-                          <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Post</button>
-                        </div>
-                      </form>
+                          <div class="mt-2 flex justify-end">
+                            <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Send</button>
+                          </div>
+                        </form>
+                      </template>
 
                     </div>
                   </template>
@@ -159,7 +161,7 @@
                     .sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="contact.id">
                     <li>
                       <div class="group relative flex items-center py-6 px-5">
-                        <a href="#" class="-m-1 block flex-1 p-1">
+                        <button @click="tabs.push({ id: contact.email, picture: contact.avatar_url }); selectedTab = contact.email" class="-m-1 block flex-1 p-1">
                           <div class="absolute inset-0 group-hover:bg-gray-50" aria-hidden="true"></div>
                           <div class="relative flex min-w-0 flex-1 items-center">
                             <span class="relative inline-block flex-shrink-0">
@@ -168,11 +170,11 @@
                               <span class="bg-green-400 absolute top-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-white" aria-hidden="true"></span>
                             </span>
                             <div class="ml-4 truncate">
-                              <p class="truncate text-sm font-medium text-gray-900" x-text="contact.first_name + ' ' + contact.last_name"></p>
-                              <p class="truncate text-sm text-gray-500" x-text="`@${contact.user_name}`"></p>
+                              <p class="text-left truncate text-sm font-medium text-gray-900" x-text="contact.first_name + ' ' + contact.last_name"></p>
+                              <p class="text-left truncate text-sm text-gray-500" x-text="`@${contact.user_name}`"></p>
                             </div>
                           </div>
-                        </a>
+                        </button>
                         <div class="relative ml-2 inline-block flex-shrink-0 text-left" x-data="{ open: false }">
                           <button @click="open = !open" type="button" class="group relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open options menu</span>
@@ -257,7 +259,7 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(obj)
-        })
+        }).then(() => this.$refs.content.reset())
       },
 
       /*      async hash(string) {
@@ -321,7 +323,7 @@
             tagLength: 128
           }, this.derivedKey, _data);
         let text = new TextDecoder().decode(decryptedData)
-        if (text.includes('\\n'))
+        if (text.includes('\\n')) 
           text = text.slice(1, text.length - 1)
         return text.replace(/\\n/g, String.fromCharCode(10))
       },

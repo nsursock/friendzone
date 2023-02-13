@@ -38,7 +38,7 @@ export default async function handler(request, response) {
           .eq('receiver', request.query.email))
         if (error) throw new Error(error)
 
-        var data = [...new Map(data.map((item) => [item["email"], item])).values()] // unique values
+        var data = [...new Map(data.map((item) => [item.sender["email"], item])).values()] // unique values
 
         data = data.map((o) => o = {
           ...o.sender,
