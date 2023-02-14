@@ -75,15 +75,19 @@ export default async function handler(request, response) {
         const data1 = JSON.parse(JSON.stringify(data).split('"user1":').join('"friend":'))
         if (error) throw new Error(error)
 
+        // console.log(data1.slice(0,3))
+
         var { data, error } = (await supabase.from(table)
           .select(`user2 (id, first_name, last_name, user_name, avatar_url, cover_url, title, city, email, phone_number, country, birthday, description)`)
           .eq('user1', request.query.email).in('status', statuses))
         const data2 = JSON.parse(JSON.stringify(data).split('"user2":').join('"friend":'))
         if (error) throw new Error(error)
 
+        // console.log(data2.slice(0,3))
+
         var data = data1.concat(data2)?.map((o) => o = {
           ...o.friend,
-          full_name: o.friend.last_name + ' ' + o.friend.first_name
+          full_name: o.friend?.last_name + ' ' + o.friend?.first_name
         })
 
         response.status(200).json({ data })

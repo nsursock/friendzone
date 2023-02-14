@@ -287,18 +287,6 @@
       publicKey: null,
       privateKey: null,
 
-      tabs: [
-        {
-          id: 'All'
-        }, {
-          id: 'Online'
-        }, /*{
-          id: 'Offline'
-        },*/ {
-          id: 'Unread'
-        }
-      ],
-
       async handleSubmit() {
         var plaintext = this.content
         var ciphertext = await this.encrypt(plaintext);

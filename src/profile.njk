@@ -31,30 +31,19 @@
             </div>
           </template>
           <div class="mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
-            <div class="mt-6 min-w-0 flex-1 sm:hidden 2xl:block">
+            <div class="mt-6 min-w-0 flex-1 sm:hidden xl:block">
               <h1 class="truncate text-2xl font-bold text-gray-900">
                 <span x-text="user?.first_name + ' ' + user?.last_name"></span>
               </h1>
               {# <p class="text-sm text-gray-500" x-text="`@${user?.user_name}`"></p> #}
             </div>
             <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <button  type="button" class="sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                </svg>
-                <span>Deactivate</span>
-              </button>
-            </div>
-            <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <button type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <!-- Heroicon name: mini/user-minus -->
-                <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                </svg>
-                <span>Deactivate</span>
-              </button>
-              <div class="grid grid-cols-2 gap-3">
-                {# <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <button @click="openContacts = !openContacts; tabs.push({ 
+                                id: user?.email, 
+                                name: user?.first_name + ' ' + user?.last_name,
+                                initials: user?.first_name[0] + user?.last_name[0], 
+                                picture: user?.avatar_url 
+                              })" type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                 <!-- Heroicon name: mini/envelope -->
                 <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
@@ -63,18 +52,55 @@
                 <span>Message</span>
               </button>
               <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <!-- Heroicon name: mini/phone -->
-                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd"/>
+                <!-- Heroicon name: mini/flag -->
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                  <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
                 </svg>
-                <span>Call</span>
-              </button> #}
+                <span>Report</span>
+              </button>
+              <button @click="handleConnect(user?.email)" type="button" class="sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <!-- Heroicon name: mini/user-plus -->
+                <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                </svg>
+                <span>Connect</span>
+              </button>
+            </div>
+            <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+              <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <!-- Heroicon name: mini/user-plus -->
+                <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                </svg>
+                <span>Connect</span>
+              </button>
+              <div class="grid grid-cols-2 gap-3">
+                <button @click="openContacts = !openContacts; tabs.push({ 
+                                id: user?.email, 
+                                name: user?.first_name + ' ' + user?.last_name,
+                                initials: user?.first_name[0] + user?.last_name[0], 
+                                picture: user?.avatar_url 
+                              })" type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/envelope -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
+                    <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"/>
+                  </svg>
+                  <span>Message</span>
+                </button>
+                <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/flag -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
+                  </svg>
+                  <span>Report</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
         <template x-if="user?.first_name">
-          <div class="mt-6 hidden min-w-0 flex-1 sm:block 2xl:hidden">
+          <div class="mt-6 hidden min-w-0 flex-1 sm:block xl:hidden">
             <h1 class="truncate text-2xl font-bold text-gray-900">
               <span x-text="user?.first_name + ' ' + user?.last_name"></span>
             </h1>
@@ -108,7 +134,7 @@
               x-data="{ connections: [] }" x-effect="connections = (await (await fetch(`/api/directory?mode=friends&email=${user?.email}`)).json()).data; numFriends = connections.length">
 
       <ul role="list" class="sm:hidden grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <template x-for="connection in connections.sort((a, b) => a.full_name.localeCompare(b.full_name))" :key="connection.id">
+        <template x-for="connection in connections.sort((a, b) => a.full_name.localeCompare(b.full_name))">
           <li class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
             <div class="flex w-full items-center justify-between space-x-6 p-6">
               <div class="flex-1 truncate">
@@ -161,7 +187,7 @@
       </ul>
 
       <ul role="list" class="hidden sm:grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        <template x-for="connection in connections" :key="connection.id">
+        <template x-for="connection in connections">
           <li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
             <div class="flex flex-1 flex-col p-8">
               <template x-if="!connection.avatar_url">
