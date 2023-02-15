@@ -77,7 +77,12 @@
                     </div>
                     <template x-if="$store.auth.user?.email !== selected.email">
                       <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                        <button type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <button @click="openContacts = !openContacts; tabs.push({ 
+                                id: selected.email, 
+                                name: selected.first_name + ' ' + selected.last_name,
+                                initials: selected.first_name[0] + selected.last_name[0], 
+                                picture: selected.avatar_url 
+                              })" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <!-- Heroicon name: mini/envelope -->
                           <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
@@ -110,7 +115,12 @@
                         <span>Connect</span>
                       </button>
                       <div class="grid grid-cols-2 gap-3">
-                        <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <button @click="openContacts = !openContacts; tabs.push({ 
+                                id: selected.email, 
+                                name: selected.first_name + ' ' + selected.last_name,
+                                initials: selected.first_name[0] + selected.last_name[0], 
+                                picture: selected.avatar_url 
+                              })" type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <!-- Heroicon name: mini/envelope -->
                           <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
@@ -119,7 +129,7 @@
                           <span>Message</span>
                         </button>
                         <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                           <!-- Heroicon name: mini/flag -->
+                          <!-- Heroicon name: mini/flag -->
                           <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
                           </svg>
@@ -471,7 +481,10 @@
         getBook(search) {
           const book = this
             .users
-            .filter((u) => u.last_name.toLowerCase().includes(search.toLowerCase()) || u.first_name.toLowerCase().includes(search.toLowerCase()) || u.title.toLowerCase().includes(search.toLowerCase()))
+            .filter((u) => u.name.toLowerCase().includes(search.toLowerCase()) || 
+              u.last_name.toLowerCase().includes(search.toLowerCase()) || 
+              u.first_name.toLowerCase().includes(search.toLowerCase()) || 
+              u.title.toLowerCase().includes(search.toLowerCase()))
             .map((o) => o = {
               ...o,
               key: o.last_name[0]
@@ -490,6 +503,9 @@
             .data
             .filter(user => user.last_name !== null)
             .sort((a, b) => a.full_name.localeCompare(b.full_name))
+          const pick = Math.floor(Math.random() * this.users.length)
+          const emails = this.users.map((user) => user.email)
+          this.selected = this.users.find((person) => person.email === emails[pick])
 
           this.book = this
             .users
@@ -501,12 +517,7 @@
               ...hash,
               [obj['key']]: (hash[obj['key']] || []).concat(obj)
             }), {})
-          this.selected = this.book['A'][0]
-          /* this
-            .users
-            .find(
-              (u) => u.email === Alpine.store('auth').user
-              ?.email) */
+//          const email = new URLSearchParams(location.search).get('email') || Alpine.store('auth').user?.email
           this.isFetching = false
         }
       }

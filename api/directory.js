@@ -101,7 +101,8 @@ export default async function handler(request, response) {
         var data = (await supabase.from(table).select())
           .data.map((o) => o = {
             ...o,
-            full_name: o.last_name + ' ' + o.first_name
+            full_name: o.last_name + ' ' + o.first_name,
+            name: o.first_name + ' ' + o.last_name,
           })
         response.status(200).json({ data })
         break

@@ -118,7 +118,7 @@
                           <div x-show="open" @click.outside="open = !open" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button" tabindex="-1">
                             <div class="py-1" role="none">
                               <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                              <a :href="`/profile/?email=${clicked?.email}`" target="_blank" class="hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-item-0">View profile</a>
+                              <a :href="`/profile/?email=${clicked?.email}`" class="hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-item-0">View profile</a>
                               <button @click="navigator.clipboard.writeText(`https://friendzone-bay.vercel.app/profile/?email=${clicked?.email}`); open = !open" class="text-left w-full hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-item-1">Copy profile link</button>
                             </div>
                           </div>
