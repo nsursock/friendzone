@@ -801,6 +801,7 @@
         postId: null,
         //        day: new Date(),
 
+        originals: [],
         posts: [
           {
             id: -1,
@@ -834,10 +835,11 @@
           return this
             .posts
             .filter(
-              (post) => post.content
-              ?.toLowerCase().includes(this.searchText.toLowerCase()) || this.posts.find((original) => post.share_id === original.id)
-                ?.content
-                  ?.toLowerCase().includes(this.searchText.toLowerCase()))
+              (post) => post.content?.toLowerCase().includes(this.searchText.toLowerCase()) || 
+              (this.originals).find((original) => post.share_id === original.id)?.content
+                ?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+              (this.posts).find((original) => post.share_id === original.id)?.content
+                ?.toLowerCase().includes(this.searchText.toLowerCase()))
         },
 
         async refreshFeed() {
@@ -863,9 +865,10 @@
                   return b.num_like - a.num_like
               })
           else if (this.tab === 'Favorites') {
-            const posts = (await(await fetch(
+            const { data: posts, originals: orig } = (await(await fetch(
               `/api/content?mode=favorites&email=${Alpine.store('auth').user
-              ?.email}`)).json()).data
+              ?.email}`)).json())
+            this.originals = orig;
             this.posts = !posts
               ? []
               : posts.sort((a, b) => {

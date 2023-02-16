@@ -55,11 +55,19 @@ export default async function handler(request, response) {
           : 'trending.dev'
 
         var { data, error } = await supabase.from(table)
-          .select('id, created_at, related_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .select('id, created_at, related_id, share_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
           .in('id', data[0].favorites ?? [])
         if (error) console.log(error)
+        var data1 = data
 
-        response.status(200).json({ data })
+        const shares = data.filter((rec) => rec.share_id !== null).map((rec) => rec.share_id)
+        var { data, error } = await supabase.from(table)
+          .select('id, created_at, related_id, share_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .in('id', shares ?? [])
+        if (error) console.log(error)
+        // data = data1.concat(data.map((rec) => rec = {...rec, display: false}))
+
+        response.status(200).json({ data: data1, originals: data })
         break
 
       case 'bookmark':
