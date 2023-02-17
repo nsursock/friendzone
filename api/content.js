@@ -60,7 +60,7 @@ export default async function handler(request, response) {
         if (error) console.log(error)
         var data1 = data
 
-        const shares = data.filter((rec) => rec.share_id !== null).map((rec) => rec.share_id)
+        var shares = data.filter((rec) => rec.share_id !== null).map((rec) => rec.share_id)
         var { data, error } = await supabase.from(table)
           .select('id, created_at, related_id, share_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
           .in('id', shares ?? [])
@@ -99,8 +99,14 @@ export default async function handler(request, response) {
         var { data, error } = (await supabase.from(tableTr)
           .select('id, created_at, related_id, author ( first_name, last_name, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans'))
         if (error) console.log(error)
+        var dataBasic = data
 
-        response.status(200).json({ data })
+        var shares = data.filter((rec) => rec.share_id !== null).map((rec) => rec.share_id)
+        var { data, error } = await supabase.from(tableTr)
+          .select('id, created_at, related_id, share_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .in('id', shares ?? [])
+
+        response.status(200).json({ data: dataBasic, originals: data })
         break
 
       case 'increment':
@@ -188,6 +194,12 @@ export default async function handler(request, response) {
           // .gt('created_at', dateString1)
           .in('author', emails).is('related_id', null).order('created_at', { ascending: false })
         if (error) console.log(error)
+        var dataBasic = data
+
+        var shares = data.filter((rec) => rec.share_id !== null).map((rec) => rec.share_id)
+        var { data, error } = await supabase.from(tableTr)
+          .select('id, created_at, related_id, share_id, author ( first_name, last_name, email, avatar_url, cover_url, city, country, website, birthday, user_name, description ), content, num_like, num_impr, num_ans')
+          .in('id', shares ?? [])
 
         // console.log(data.slice(0, 10))
 
@@ -198,7 +210,7 @@ export default async function handler(request, response) {
         //   return { ...item, num_ans: data?.length ?? 0 }
         // }))
 
-        response.status(200).json({ data })
+        response.status(200).json({ data: dataBasic, originals: data })
         break
     }
 

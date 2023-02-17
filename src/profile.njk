@@ -30,7 +30,8 @@
               <img class="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32" :src="user.avatar_url.includes('unsplash') ? user.avatar_url+'&fit=facearea&facepad=8&w=1024&h=1024&q=80' : user.avatar_url" alt="">
             </div>
           </template>
-          <div class="mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
+          <div x-data="{ rel: null }" x-effect="rel = (await (await fetch(`/api/directory?mode=status&email2=${user?.email}&email1=${$store.auth.user?.email}`)).json()).data[0]"
+            class="mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
             <div class="mt-6 min-w-0 flex-1 sm:hidden xl:block">
               <h1 class="truncate text-2xl font-bold text-gray-900">
                 <span x-text="user?.first_name + ' ' + user?.last_name"></span>
@@ -58,22 +59,72 @@
                 </svg>
                 <span>Report</span>
               </button>
-              <button @click="handleConnect(user?.email)" type="button" class="sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <!-- Heroicon name: mini/user-plus -->
-                <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                </svg>
-                <span>Connect</span>
-              </button>
+              <template x-if="!rel">
+                <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/user-plus -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                  </svg>
+                  <span>Connect</span>
+                </button>
+              </template>
+              <template x-if="rel?.status === 'Pending'">
+                <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
+                          else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
+                  type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/user-plus -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                  </svg>
+                  <template x-if="rel?.user2 === $store.auth.user?.email">
+                    <span>Accept</span></template>
+                  <template x-if="rel?.user1 === $store.auth.user?.email">
+                    <span>Cancel</span></template>
+                </button>
+              </template>
+              <template x-if="rel?.status === 'Accepted'">
+                <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/user-minus -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                  </svg>
+                  <span>Remove</span>
+                </button>
+              </template>
             </div>
             <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <!-- Heroicon name: mini/user-plus -->
-                <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                </svg>
-                <span>Connect</span>
-              </button>
+              <template x-if="!rel">
+                <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/user-plus -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                  </svg>
+                  <span>Connect</span>
+                </button>
+              </template>
+              <template x-if="rel?.status === 'Pending'">
+                <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
+                          else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
+                  type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/user-plus -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                  </svg>
+                  <template x-if="rel?.user2 === $store.auth.user?.email">
+                    <span>Accept</span></template>
+                  <template x-if="rel?.user1 === $store.auth.user?.email">
+                    <span>Cancel</span></template>
+                </button>
+              </template>
+              <template x-if="rel?.status === 'Accepted'">
+                <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/user-minus -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                  </svg>
+                  <span>Remove</span>
+                </button>
+              </template>
               <div class="grid grid-cols-2 gap-3">
                 <button @click="openContacts = !openContacts; tabs.push({ 
                                 id: user?.email, 

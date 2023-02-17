@@ -10,6 +10,27 @@ export default async function handler(request, response) {
 
     switch (request.query.mode) {
 
+      case 'status':
+        var table = process.env.NODE_ENV.startsWith('dev')
+          ? 'relationships.dev'
+          : 'relationships.dev'
+
+        var data = (await supabase.from(table)
+          .select()
+          .eq('user1', request.query.email1)
+          .eq('user2', request.query.email2)).data
+
+        if (data.length === 0)
+          var data = (await supabase.from(table)
+            .select()
+            .eq('user2', request.query.email1)
+            .eq('user1', request.query.email2)).data
+
+        console.log(request.query.email1, request.query.email2)
+
+        response.status(200).json({ data })
+        break
+
       case 'connect':
         const { user1, user2, status } = request.body
         var table = process.env.NODE_ENV.startsWith('dev')
@@ -38,13 +59,19 @@ export default async function handler(request, response) {
 
       case 'Accepted':
       case 'Declined':
+      case 'Cancelled':
         var table = process.env.NODE_ENV.startsWith('dev')
           ? 'relationships.dev'
           : 'relationships.dev'
 
-        await supabase.from(table).update({
-          status: request.query.mode
-        }).eq('id', request.query.id)
+        if (request.query.mode === 'Cancelled') {
+          await supabase.from(table).delete().eq('id', request.query.id)
+        }
+        else {
+          await supabase.from(table).update({
+            status: request.query.mode
+          }).eq('id', request.query.id)
+        }
         response.status(200).json({ success: true })
         break
 

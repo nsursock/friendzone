@@ -206,9 +206,9 @@
                                 <button @click="clicked = post.author; openProfile = !openProfile" class="hover:underline" x-text="post.author.first_name + ' ' + post.author.last_name"></button>
                               </p>
                               <p class="text-sm text-gray-500">
-                                <a href="#" class="hover:underline">
+                                <span class="">
                                   <span x-text="formatDate(new Date(post.created_at), 'MMMM d') + ' at ' + formatDate(new Date(post.created_at), 'hh:mm aa')"></span>
-                                </a>
+                                </span>
                               </p>
                             </div>
                           </div>
@@ -295,9 +295,9 @@
                                     <button @click="clicked = shared.author; openProfile = !openProfile" class="hover:underline" x-text="shared.author.first_name + ' ' + shared.author.last_name"></button>
                                   </p>
                                   <p class="text-sm text-gray-500">
-                                    <a href="#" class="hover:underline">
+                                    <span class="">
                                       <span x-text="formatDate(new Date(shared.created_at), 'MMMM d') + ' at ' + formatDate(new Date(shared.created_at), 'hh:mm aa')"></span>
-                                    </a>
+                                    </span>
                                   </p>
                                 </div>
                               </div>
@@ -835,19 +835,20 @@
           return this
             .posts
             .filter(
-              (post) => post.content?.toLowerCase().includes(this.searchText.toLowerCase()) || 
-              (this.originals).find((original) => post.share_id === original.id)?.content
-                ?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              (this.posts).find((original) => post.share_id === original.id)?.content
-                ?.toLowerCase().includes(this.searchText.toLowerCase()))
+              (post) => post.content
+              ?.toLowerCase().includes(this.searchText.toLowerCase()) || this.originals.find((original) => post.share_id === original.id)
+                ?.content
+                  ?.toLowerCase().includes(this.searchText.toLowerCase()))
         },
 
         async refreshFeed() {
           this.isFetching = true;
           //console.log(this.day)
 
-          if (this.tab === 'Trending') 
-            this.posts = (await(await fetch('/api/content?mode=trending')).json())
+          if (this.tab === 'Trending') {
+            const {data: posts, originals: orig} = (await(await fetch('/api/content?mode=trending')).json())
+            this.originals = orig;
+            this.posts = posts
               .data
               .sort((a, b) => {
                 if (b.num_ans - a.num_ans === 0) 
@@ -855,8 +856,10 @@
                 else 
                   return b.num_ans - a.num_ans
               })
-          else if (this.tab === 'Popular') 
-            this.posts = (await(await fetch('/api/content?mode=trending')).json())
+          } else if (this.tab === 'Popular') {
+            const {data: posts, originals: orig} = (await(await fetch('/api/content?mode=trending')).json())
+            this.originals = orig;
+            this.posts = posts
               .data
               .sort((a, b) => {
                 if (b.num_like - a.num_like === 0) 
@@ -864,8 +867,8 @@
                 else 
                   return b.num_like - a.num_like
               })
-          else if (this.tab === 'Favorites') {
-            const { data: posts, originals: orig } = (await(await fetch(
+          } else if (this.tab === 'Favorites') {
+            const {data: posts, originals: orig} = (await(await fetch(
               `/api/content?mode=favorites&email=${Alpine.store('auth').user
               ?.email}`)).json())
             this.originals = orig;
@@ -875,9 +878,11 @@
                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
               })
           } else {
-            this.posts = (await(await fetch(
+            const {data: posts, originals: orig} = (await(await fetch(
               `/api/content?mode=display&email=${Alpine.store('auth').user
-              ?.email}`)).json()).data
+              ?.email}`)).json())
+            this.originals = orig;
+            this.posts = posts
           }
 
           this.isFetching = false
@@ -928,5 +933,5 @@
       }
     }
   </script>
-  
+
 {% endblock %}

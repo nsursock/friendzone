@@ -69,7 +69,7 @@ window.addEventListener('alpine:initializing', () => {
 
               if (!this.user.public_key || !this.user.private_key) {
                 // handle keys that are not in database
-                console.log('>>> creating keys');
+//                console.log('>>> creating keys');
                 const keyPair = await window
                   .crypto
                   .subtle
@@ -99,7 +99,7 @@ window.addEventListener('alpine:initializing', () => {
                   })
                 })
               }
-              else console.log('>>> keys already exist');
+//              else console.log('>>> keys already exist');
             }
           })
       }

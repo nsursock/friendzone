@@ -87,17 +87,31 @@
                       </div>
                       <p class="text-sm text-gray-500" x-text="`@${clicked?.user_name}`"></p>
                     </div>
-                    <div class="mt-5 flex flex-wrap space-y-3 sm:space-y-0 sm:space-x-3" x-data="{ open: false }">
-                      <button @click="handleConnect(clicked?.email)" type="button" class="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:flex-1">Connect</button>
+                    <div x-data="{ rel: null, open: false }" x-effect="rel = (await (await fetch(`/api/directory?mode=status&email2=${clicked?.email}&email1=${$store.auth.user?.email}`)).json()).data[0]"
+                      class="mt-5 flex flex-wrap space-y-3 sm:space-y-0">
+                      <template x-if="!rel">
+                        <button @click="handleConnect(clicked?.email)" type="button" class="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:flex-1">Connect</button>
+                      </template>
+                      <template x-if="rel?.status === 'Pending'">
+                          <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
+                            else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
+                              type="button" class="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:flex-1">
+                            <template x-if="rel?.user2 === $store.auth.user?.email"><span>Accept</span></template>
+                            <template x-if="rel?.user1 === $store.auth.user?.email"><span>Cancel</span></template>
+                          </button>
+                      </template>
+                      <template x-if="rel?.status === 'Accepted'">
+                          <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:flex-1">Remove</button>
+                      </template>
                       <button @click="openContacts = !openContacts; tabs.push({ 
                                 id: clicked?.email, 
                                 name: clicked?.first_name + ' ' + clicked?.last_name,
                                 initials: clicked?.first_name[0] + clicked?.last_name[0], 
                                 picture: clicked?.avatar_url 
-                              })" type="button" class="inline-flex w-full flex-1 items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Message</button>
+                              })" type="button" class="sm:ml-3 inline-flex w-full flex-1 items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Message</button>
                       <div class="ml-3 inline-flex sm:ml-0">
                         <div class="relative inline-block text-left">
-                          <button @click="open = !open" type="button" class="inline-flex items-center rounded-md border border-gray-300 bg-white p-2 text-sm font-medium text-gray-400 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="options-menu-button" aria-expanded="false" aria-haspopup="true">
+                          <button @click="open = !open" type="button" class="sm:ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white p-2 text-sm font-medium text-gray-400 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="options-menu-button" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open options menu</span>
                             <!-- Heroicon name: mini/ellipsis-vertical -->
                             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
