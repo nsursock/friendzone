@@ -6,6 +6,7 @@ export default () => ({
   notifications: [],
   showNotifications: false,
 
+  openWarning: false,
   openNewPost: false,
   openContacts: false,
   searchText: '',
@@ -25,6 +26,13 @@ export default () => ({
   // highlightAll() {
   //   hljs.highlightAll()
   // },
+
+  logout() {
+    sessionStorage.removeItem('friendzone_token')
+    localStorage.removeItem('friendzone_token')
+    Alpine.store('auth').setUser(null)
+    window.location.href = '/'
+  },
 
   async getConnects() {
     const invites = (await (await fetch('/api/directory?mode=invite', {

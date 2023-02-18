@@ -38,94 +38,37 @@
               </h1>
               {# <p class="text-sm text-gray-500" x-text="`@${user?.user_name}`"></p> #}
             </div>
-            <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <button @click="openContacts = !openContacts; tabs.push({ 
-                                id: user?.email, 
-                                name: user?.first_name + ' ' + user?.last_name,
-                                initials: user?.first_name[0] + user?.last_name[0], 
-                                picture: user?.avatar_url 
-                              })" type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <!-- Heroicon name: mini/envelope -->
-                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
-                  <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"/>
-                </svg>
-                <span>Message</span>
-              </button>
-              <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                <!-- Heroicon name: mini/flag -->
-                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                  <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
-                </svg>
-                <span>Report</span>
-              </button>
-              <template x-if="!rel">
-                <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <!-- Heroicon name: mini/user-plus -->
-                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+
+            <template x-if="$store.auth.user?.email === user?.email">
+              <div class="justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                <a href="/settings" class="hidden sm:inline-flex order-last sm:order-first w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/pencil -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"/>
+                    <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"/>
                   </svg>
-                  <span>Connect</span>
-                </button>
-              </template>
-              <template x-if="rel?.status === 'Pending'">
-                <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
-                          else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
-                  type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <!-- Heroicon name: mini/user-plus -->
-                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                  </svg>
-                  <template x-if="rel?.user2 === $store.auth.user?.email">
-                    <span>Accept</span></template>
-                  <template x-if="rel?.user1 === $store.auth.user?.email">
-                    <span>Cancel</span></template>
-                </button>
-              </template>
-              <template x-if="rel?.status === 'Accepted'">
-                <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <span>Edit</span>
+                </a>
+                <button @click="openWarning = !openWarning" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                   <!-- Heroicon name: mini/user-minus -->
                   <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
                   </svg>
-                  <span>Remove</span>
+                  <span>Deactivate</span>
                 </button>
-              </template>
-            </div>
-            <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <template x-if="!rel">
-                <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <!-- Heroicon name: mini/user-plus -->
-                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                <a href="/settings" class="sm:hidden w-full inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <!-- Heroicon name: mini/pencil -->
+                  <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"/>
+                    <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"/>
                   </svg>
-                  <span>Connect</span>
-                </button>
-              </template>
-              <template x-if="rel?.status === 'Pending'">
-                <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
-                          else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
-                  type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <!-- Heroicon name: mini/user-plus -->
-                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                  </svg>
-                  <template x-if="rel?.user2 === $store.auth.user?.email">
-                    <span>Accept</span></template>
-                  <template x-if="rel?.user1 === $store.auth.user?.email">
-                    <span>Cancel</span></template>
-                </button>
-              </template>
-              <template x-if="rel?.status === 'Accepted'">
-                <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <!-- Heroicon name: mini/user-minus -->
-                  <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
-                  </svg>
-                  <span>Remove</span>
-                </button>
-              </template>
-              <div class="grid grid-cols-2 gap-3">
+                  <span>Edit</span>
+                </a>
+              </div>
+            </template>
+
+            <template x-if="$store.auth.user?.email !== user?.email">
+              <div class="hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                 <button @click="openContacts = !openContacts; tabs.push({ 
                                 id: user?.email, 
                                 name: user?.first_name + ' ' + user?.last_name,
@@ -146,8 +89,98 @@
                   </svg>
                   <span>Report</span>
                 </button>
+                <template x-if="!rel">
+                  <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/user-plus -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                    <span>Connect</span>
+                  </button>
+                </template>
+                <template x-if="rel?.status === 'Pending'">
+                  <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
+                          else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
+                  type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/user-plus -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                    <template x-if="rel?.user2 === $store.auth.user?.email">
+                      <span>Accept</span></template>
+                    <template x-if="rel?.user1 === $store.auth.user?.email">
+                      <span>Cancel</span></template>
+                  </button>
+                </template>
+                <template x-if="rel?.status === 'Accepted'">
+                  <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/user-minus -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                    <span>Remove</span>
+                  </button>
+                </template>
               </div>
-            </div>
+            </template>
+            <template x-if="$store.auth.user?.email !== user?.email">
+              <div class="sm:hidden justify-stretch mt-6 sm:flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                <template x-if="!rel">
+                  <button @click="handleConnect(user?.email)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/user-plus -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                    <span>Connect</span>
+                  </button>
+                </template>
+                <template x-if="rel?.status === 'Pending'">
+                  <button @click="if (rel?.user1 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Cancelled`);
+                          else if (rel?.user2 === $store.auth.user?.email) fetch(`/api/directory?id=${rel.id}&mode=Accepted`)" 
+                  type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/user-plus -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                    <template x-if="rel?.user2 === $store.auth.user?.email">
+                      <span>Accept</span></template>
+                    <template x-if="rel?.user1 === $store.auth.user?.email">
+                      <span>Cancel</span></template>
+                  </button>
+                </template>
+                <template x-if="rel?.status === 'Accepted'">
+                  <button @click="fetch(`/api/directory?id=${rel.id}&mode=Cancelled`)" type="button" class="w-full sm:ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/user-minus -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                    </svg>
+                    <span>Remove</span>
+                  </button>
+                </template>
+                <div class="grid grid-cols-2 gap-3">
+                  <button @click="openContacts = !openContacts; tabs.push({ 
+                                id: user?.email, 
+                                name: user?.first_name + ' ' + user?.last_name,
+                                initials: user?.first_name[0] + user?.last_name[0], 
+                                picture: user?.avatar_url 
+                              })" type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/envelope -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z"/>
+                      <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z"/>
+                    </svg>
+                    <span>Message</span>
+                  </button>
+                  <button type="button" class="col-span-1 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <!-- Heroicon name: mini/flag -->
+                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                      <path d="M3.5 2.75a.75.75 0 00-1.5 0v14.5a.75.75 0 001.5 0v-4.392l1.657-.348a6.449 6.449 0 014.271.572 7.948 7.948 0 005.965.524l2.078-.64A.75.75 0 0018 12.25v-8.5a.75.75 0 00-.904-.734l-2.38.501a7.25 7.25 0 01-4.186-.363l-.502-.2a8.75 8.75 0 00-5.053-.439l-1.475.31V2.75z"/>
+                    </svg>
+                    <span>Report</span>
+                  </button>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
         <template x-if="user?.first_name">
@@ -407,4 +440,75 @@
               </div>
             </div> #}
   </article>
+
+  <div x-show="openWarning" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!--
+    Background backdrop, show/hide based on modal state.
+
+    Entering: "ease-out duration-300"
+      From: "opacity-0"
+      To: "opacity-100"
+    Leaving: "ease-in duration-200"
+      From: "opacity-100"
+      To: "opacity-0"
+  -->
+    <div x-show="openWarning" 
+    x-transition:enter=" ease-out duration-300 "
+    x-transition:enter-start="opacity-0 "
+    x-transition:enter-end="opacity-100  "
+    x-transition:leave=" ease-in duration-200 "
+    x-transition:leave-start="opacity-100 "
+    x-transition:leave-end="opacity-0 "
+    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <!--
+        Modal panel, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          To: "opacity-100 translate-y-0 sm:scale-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100 translate-y-0 sm:scale-100"
+          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      -->
+        <div x-show="openWarning" @click.outside="openWarning = !openWarning" 
+         x-transition:enter=" ease-out duration-300 "
+        x-transition:enter-start="opacity-0 translate-y-4 md:translate-y-0 md:scale-95 "
+        x-transition:enter-end="opacity-100 translate-y-0 md:scale-100  "
+        x-transition:leave=" ease-in duration-200 "
+        x-transition:leave-start="opacity-100 translate-y-0 md:scale-100 "
+        x-transition:leave-end="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+        class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+          <div class="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+            <button @click="openWarning = !openWarning" type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <span class="sr-only">Close</span>
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+              <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+              </svg>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Deactivate account</h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed from our servers forever. This action cannot be undone.</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button @click="await fetch(`/api/settings?mode=deactivate&email=${$store.auth.user?.email}`); logout()" type="button" class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">Deactivate</button>
+            <button @click="openWarning = !openWarning" type="button" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

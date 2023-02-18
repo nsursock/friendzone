@@ -13,12 +13,6 @@ async function handler(req, res) {
     ? 'users.dev'
     : 'users.dev'
 
-  // const uploadFile = async (files, err) => {
-  //   let cols = {}
-
-  //   return cols
-  // }
-
   const insertRecord = async () => {
     // eslint-disable-next-line
     return new Promise((resolve, reject) => {
@@ -61,11 +55,26 @@ async function handler(req, res) {
     })
   }
 
-  try {
-    await insertRecord()
-    res.status(200).send({ success: true })
-  } catch (err) {
-    res.status(400).send({ success: false })
+  switch (req.query.mode) {
+    case 'deactivate':
+      console.log('>>> deactivating user', req.query.email);
+      try {
+        var { error } = await supabase.from(storageName).delete().eq('email', req.query.email)
+        if (error) console.log(error)
+        res.status(200).send({ success: true })
+      } catch (err) {
+        res.status(400).send({ success: false })
+      }
+      break;
+
+    default:
+      try {
+        await insertRecord()
+        res.status(200).send({ success: true })
+      } catch (err) {
+        res.status(400).send({ success: false })
+      }
+      break;
   }
 }
 

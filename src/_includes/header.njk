@@ -21,12 +21,7 @@
     { text: 'Home', href: '/home/' },
     { text: 'Directory', href: '/directory/' },
     { text: 'Calendar', href: '/birthdays/' }
-  ], logout() {
-    sessionStorage.removeItem('friendzone_token')
-    localStorage.removeItem('friendzone_token')
-    $store.auth.user = null
-    window.location.href = '/'
-  } }" 
+  ] }" 
   class="bg-white shadow">
   <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
     <div class="flex h-16 justify-between">
