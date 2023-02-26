@@ -36,7 +36,18 @@ window.addEventListener('DOMContentLoaded', () => {
 //   })
 // })
 
+import {createClient} from '@supabase/supabase-js'
+
 window.addEventListener('alpine:initializing', () => {
+
+  Alpine.store('db', {
+    client: null,
+
+    createClient(url, key) {
+      this.client = createClient(url, key)
+    }
+  })
+
   Alpine.store('auth', {
     user: null,
 
@@ -69,7 +80,6 @@ window.addEventListener('alpine:initializing', () => {
 
               if (!this.user.public_key || !this.user.private_key) {
                 // handle keys that are not in database
-//                console.log('>>> creating keys');
                 const keyPair = await window
                   .crypto
                   .subtle
@@ -99,7 +109,6 @@ window.addEventListener('alpine:initializing', () => {
                   })
                 })
               }
-//              else console.log('>>> keys already exist');
             }
           })
       }

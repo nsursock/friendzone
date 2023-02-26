@@ -1,10 +1,12 @@
 import { format, formatRelative, formatDistance } from 'date-fns'
+
 // import hljs from 'highlight.js';
 
 export default () => ({
 
   notifications: [],
   showNotifications: false,
+  supabase: null,
 
   openWarning: false,
   openNewPost: false,

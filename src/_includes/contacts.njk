@@ -84,8 +84,8 @@
               <template x-for="tab in tabs" :key="tab.id">
                 <div>
                   <template x-if="tabs.slice(0, 3).findIndex((t) => t.id === tab.id) === -1">
-                    <div x-show="selectedTab === tab.id"
-                  x-init="handleKeys(receiver)" x-data="{ receiver: tab.id, derivedKey: null, messages: null }">
+                    <div x-show="selectedTab === tab.id" x-effect="handleRealtime(tab.id)"
+                  x-init="handleKeys(receiver)" x-data="{ supabase: null, changes: [], receiver: tab.id, derivedKey: null, messages: null }">
                       <h3 class="text-center mt-3 text-lg font-medium text-gray-900" id="slide-over-title" x-text="tab.name"></h2>
 
                       <!--
@@ -287,6 +287,45 @@
       publicKey: null,
       privateKey: null,
 
+      async handleRealtime(id) {
+
+        var table = ('{{ env.devMode }}')
+          ? 'messages2.dev'
+          : 'messages2.dev'
+
+        const channel = Alpine
+          .store('db')
+          .client
+          .channel('contact-chat-changes')
+          .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: table
+          }, async (payload) => {
+
+            let {data, error} = await Alpine
+              .store('db')
+              .client
+              .from('users.dev')
+              .select()
+              .eq("email", payload.new.sender)
+
+            if (error) {
+              console.log('ERROR', error.message)
+            }
+
+            this
+              .messages
+              .unshift({
+                ...payload.new,
+                sender: data[0]
+              })
+
+          })
+          .subscribe()
+
+      },
+
       async handleSubmit() {
         var plaintext = this.content
         var ciphertext = await this.encrypt(plaintext);
@@ -309,19 +348,12 @@
         }).then(() => this.$refs.content.reset())
       },
 
-      /*      async hash(string) {
-        const utf8 = new TextEncoder().encode(string);
-        const hashBuffer = await crypto
-          .subtle
-          .digest('SHA-256', utf8);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((bytes) => bytes.toString(16).padStart(2, '0'))
-          .join('');
-        return hashHex;
-      }, */
-
       async init() {
+
+        Alpine
+          .store('db')
+          .createClient('{{ env.supaUrl }}', '{{ env.supaKey }}')
+
         const keyPair = await window
           .crypto
           .subtle
