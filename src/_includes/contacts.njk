@@ -175,9 +175,9 @@
                                     <img class="h-6 w-6 rounded-full" :src="message.sender.avatar_url.includes('unsplash') ? message.sender.avatar_url+'&fit=facearea&facepad=2&w=256&h=256&q=80' : message.sender.avatar_url" alt="">
                                   </template>
                                   <div class="flex-1 space-y-1 ml-3">
-                                    <div class="flex items-center justify-between">
+                                    <div class="flex items-center justify-between" x-data="{ ago: formatDate(new Date(message.created_at), 'distance') }">
                                       <h3 class="text-sm font-medium" x-text="message.sender.first_name + ' ' + message.sender.last_name"></h3>
-                                      <p class="text-sm text-gray-500" x-text="formatDate(new Date(message.created_at), 'distance')"></p>
+                                      <p x-data="{ arr: ago.split(' ') }" class="text-sm text-gray-500" x-text="ago.includes('about') ? arr[1] + arr[2][0] : ago.includes('less') ? '1m' : arr[0] + arr[1][0]"></p>
                                     </div>
                                     <p x-html="marked.parse(await decrypt(message.content))" class="prose text-sm text-gray-500"></p>
                                   </div>
@@ -289,9 +289,13 @@
 
       async handleRealtime(id) {
 
-        var table = ('{{ env.devMode }}')
+        var tableMsg = ('{{ env.devMode }}')
           ? 'messages2.dev'
           : 'messages2.dev'
+
+        var tableUsr = ('{{ env.devMode }}')
+          ? 'users.dev'
+          : 'users.dev'
 
         const channel = Alpine
           .store('db')
@@ -300,13 +304,13 @@
           .on('postgres_changes', {
             event: 'INSERT',
             schema: 'public',
-            table: table
+            table: tableMsg
           }, async (payload) => {
-
+            // todo listen only for this convo
             let {data, error} = await Alpine
               .store('db')
               .client
-              .from('users.dev')
+              .from(tableUsr)
               .select()
               .eq("email", payload.new.sender)
 
@@ -350,6 +354,7 @@
 
       async init() {
 
+//        console.log('{{ env.supaUrl }}', '{{ env.supaKey }}')
         Alpine
           .store('db')
           .createClient('{{ env.supaUrl }}', '{{ env.supaKey }}')
