@@ -177,7 +177,7 @@
                                   <div class="flex-1 space-y-1 ml-3">
                                     <div class="flex items-center justify-between" x-data="{ ago: formatDate(new Date(message.created_at), 'distance') }">
                                       <h3 class="text-sm font-medium" x-text="message.sender.first_name + ' ' + message.sender.last_name"></h3>
-                                      <p x-data="{ arr: ago.split(' ') }" class="text-sm text-gray-500" x-text="ago.includes('about') ? arr[1] + arr[2][0] : ago.includes('less') ? '1m' : arr[0] + arr[1][0]"></p>
+                                      <p x-data="{ arr: ago.split(' ') }" class="text-sm text-gray-500" x-text="ago.includes('about') ? arr[1] + arr[2][0] : ago.includes('less') ? '<1m' : arr[0] + arr[1][0]"></p>
                                     </div>
                                     <p x-html="marked.parse(await decrypt(message.content))" class="prose text-sm text-gray-500"></p>
                                   </div>
@@ -354,7 +354,7 @@
 
       async init() {
 
-//        console.log('{{ env.supaUrl }}', '{{ env.supaKey }}')
+        //console.log('{{ env.supaUrl }}', '{{ env.supaKey }}')
         Alpine
           .store('db')
           .createClient('{{ env.supaUrl }}', '{{ env.supaKey }}')
