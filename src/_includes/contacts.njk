@@ -359,6 +359,33 @@
           .store('db')
           .createClient('{{ env.supaUrl }}', '{{ env.supaKey }}')
 
+        /*const channel = Alpine
+          .store('db')
+          .client
+          .channel('test', {
+            config: {
+              presence: {
+                key: Alpine
+                  .store('auth')
+                  .user
+                    ?.email
+              }
+            }
+          })
+
+        channel.subscribe(async (status) => {
+          if (status === 'SUBSCRIBED') {
+            const presenceTrackStatus = await channel.track({
+              user: Alpine
+                .store('auth')
+                .user
+                  ?.email,
+              online_at: new Date().toISOString()
+            })
+            console.log(presenceTrackStatus)
+          }
+        })*/
+
         const keyPair = await window
           .crypto
           .subtle

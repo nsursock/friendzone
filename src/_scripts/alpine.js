@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
 //   })
 // })
 
-import {createClient} from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
 window.addEventListener('alpine:initializing', () => {
 
@@ -44,7 +44,8 @@ window.addEventListener('alpine:initializing', () => {
     client: null,
 
     createClient(url, key) {
-      this.client = createClient(url, key)
+      if (this.client === null)
+        this.client = createClient(url, key)
     }
   })
 
