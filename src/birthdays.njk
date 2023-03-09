@@ -2,37 +2,57 @@
 {% extends "layouts/inside.njk" %}
 
 {% block body %}
-  <div class="max-w-5xl mx-auto pt-8 px-5">
+  <div class="max-w-5xl mx-auto pt-8 px-5" x-data="dataCalendar">
     <h2 class="text-lg font-semibold text-gray-900">Upcoming birthdays</h2>
     <div class="lg:grid lg:grid-cols-12 lg:gap-x-16">
       <div class="mt-10 text-center lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:mt-9 xl:col-start-9">
-        <div class="flex items-center text-gray-900">
-          <button type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
-            <span class="sr-only">Previous month</span>
-            <!-- Heroicon name: mini/chevron-left -->
-            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/>
-            </svg>
-          </button>
-          <div class="flex-auto font-semibold">January</div>
-          <button type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
-            <span class="sr-only">Next month</span>
-            <!-- Heroicon name: mini/chevron-right -->
-            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
-            </svg>
-          </button>
+        <div class="flex justify-between">
+          <div class="flex items-center text-gray-900 w-full">
+            <button @click="prevMonth" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Previous month</span>
+              <!-- Heroicon name: mini/chevron-left -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            <span class="flex-auto font-semibold" x-text="month"></span>
+            <button @click="nextMonth" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Next month</span>
+              <!-- Heroicon name: mini/chevron-right -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center text-gray-900 w-full">
+            <button @click="prevYear" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Previous year</span>
+              <!-- Heroicon name: mini/chevron-left -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            <span class="flex-auto font-semibold" x-text="year"></span>
+            <button @click="nextYear" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Next year</span>
+              <!-- Heroicon name: mini/chevron-right -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="mt-6 grid grid-cols-7 text-xs leading-6 text-gray-500">
+          <div>S</div>
           <div>M</div>
           <div>T</div>
           <div>W</div>
           <div>T</div>
           <div>F</div>
           <div>S</div>
-          <div>S</div>
         </div>
-        <div class="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
+        <div
+          class="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
           <!--
           Always include: "py-1.5 hover:bg-gray-100 focus:z-10"
           Is current month, include: "bg-white"
@@ -48,151 +68,43 @@
           Bottom left day, include: "rounded-bl-lg"
           Bottom right day, include: "rounded-br-lg"
         -->
-          <button type="button" class="rounded-tl-lg bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <!--
+          <template x-for="(day, dayIdx) in calendar" x-effect="computeDays">
+            <button @click="selectedDate = day.toLocaleDateString('fr-CA')" type="button" 
+            class="py-1.5 hover:bg-gray-100 focus:z-10"
+            :class="[
+              isCurrentMonth(day) ? 'bg-white' : 'bg-gray-50',
+                  (isSelected(day) || isToday(day)) && 'font-semibold',
+                  isSelected(day) && 'text-white',
+                  !isSelected(day) && isCurrentMonth(day) && !isToday(day) && 'text-gray-900',
+                  !isSelected(day) && !isCurrentMonth(day) && !isToday(day) && 'text-gray-400',
+                  isToday(day) && !isSelected(day) && 'text-indigo-600',
+                  dayIdx === 0 && 'rounded-tl-lg',
+                  dayIdx === 6 && 'rounded-tr-lg',
+                  dayIdx === calendar.length - 7 && 'rounded-bl-lg',
+                  dayIdx === calendar.length - 1 && 'rounded-br-lg'
+            ]">
+              <!--
             Always include: "mx-auto flex h-7 w-7 items-center justify-center rounded-full"
             Is selected and is today, include: "bg-indigo-600"
             Is selected and is not today, include: "bg-gray-900"
           -->
-            <time datetime="2021-12-27" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">27</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2021-12-28" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">28</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2021-12-29" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">29</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2021-12-30" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">30</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2021-12-31" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">31</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-01" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">1</time>
-          </button>
-          <button type="button" class="rounded-tr-lg bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-01" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">2</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-02" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">3</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-04" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">4</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-05" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">5</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-06" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">6</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-07" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">7</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-08" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">8</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-09" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">9</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-10" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">10</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-11" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">11</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 font-semibold text-indigo-600 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-12" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">12</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-13" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">13</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-14" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">14</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-15" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">15</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-16" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">16</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-17" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">17</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-18" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">18</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-19" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">19</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-20" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">20</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-21" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">21</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-22" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 font-semibold text-white">22</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-23" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">23</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-24" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">24</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-25" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">25</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-26" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">26</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-27" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">27</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-28" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">28</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-29" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">29</time>
-          </button>
-          <button type="button" class="bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-30" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">30</time>
-          </button>
-          <button type="button" class="rounded-bl-lg bg-white py-1.5 text-gray-900 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-01-31" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">31</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-02-01" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">1</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-02-02" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">2</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-02-03" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">3</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-02-04" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">4</time>
-          </button>
-          <button type="button" class="bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-02-05" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">5</time>
-          </button>
-          <button type="button" class="rounded-br-lg bg-gray-50 py-1.5 text-gray-400 hover:bg-gray-100 focus:z-10">
-            <time datetime="2022-02-06" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full">6</time>
-          </button>
+              <time :class="isSelected(day) ? isToday(day) ? 'bg-indigo-600' : 'bg-gray-900' : ''"
+                :datetime="day.toLocaleDateString('fr-CA')" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full" x-text="day.getDate()"></time>
+            </button>
+          </template>
         </div>
         <button type="button" class="mt-8 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add event</button>
       </div>
       <ol class="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8" x-data="{ events: [] }"
-      x-init="events = (await (await fetch(`/api/directory`)).json()).data.map((event) => {
+      x-effect="console.log(selectedDate); events = (await (await fetch(`/api/directory`)).json()).data.map((event) => {
           return { label: event.first_name + ' ' + event.last_name, avatar_url: event.avatar_url, date: event.birthday, key: event.full_name }
       }).filter((event) => {
-        const today = new Date().toLocaleDateString().split('T')[0].split('/').slice(0,2).join('/')
-        const birthday = new Date(event.date).toLocaleDateString().split('T')[0].split('/').slice(0,2).join('/')
-        return today === birthday
+        const birthday = new Date(event.date).toLocaleDateString('fr-CA').split('-').slice(1,3).join('/')
+        return selectedDate.split('-').slice(1,3).join('/') === birthday
         }).sort((a, b) => a.key.localeCompare(b.key))">
         <template x-for="event in events">
           <li class="relative flex space-x-6 py-6 xl:static">
-            <img :src="event.avatar_url + '&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="" class="h-14 w-14 flex-none rounded-full">
+            <img :src="event.avatar_url.includes('unsplash') ? event.avatar_url + '&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80' : event.avatar_url" alt="" class="h-14 w-14 flex-none rounded-full">
             <div class="flex-auto">
               <h3 class="pr-10 font-semibold text-gray-900 xl:pr-0" x-text="event.label"></h3>
               <dl class="mt-2 flex flex-col text-gray-500 xl:flex-row">
@@ -257,4 +169,112 @@
       </ol>
     </div>
   </div>
+  <script>
+    function dataCalendar() {
+      return {
+        days: [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+        ],
+        months: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December'
+        ],
+        year: null,
+        month: null,
+        selectedDate: new Date().toLocaleDateString('fr-CA'),
+        calendar: [],
+
+        nextYear() {
+          this.year = this.year + 1
+        },
+
+        prevYear() {
+          this.year = this.year - 1
+        },
+
+        nextMonth() {
+          let m = this
+            .months
+            .indexOf(this.month) + 1
+          if (m > 11) 
+            this.nextYear()
+          this.month = this.months[m % 12]
+        },
+
+        prevMonth() {
+          let m = this
+            .months
+            .indexOf(this.month) - 1
+          if (m < 0) 
+            this.prevYear()
+          this.month = this.months[(m + 12) % 12]
+        },
+
+        init() {
+          this.year = (new Date()).getFullYear()
+          let month = (new Date()).getMonth()
+          this.month = this.months[month]
+        },
+
+        isToday(someDate) {
+          const today = new Date()
+          return someDate.getDate() == today.getDate() && someDate.getMonth() == today.getMonth() && someDate.getFullYear() == today.getFullYear()
+        },
+
+        isCurrentMonth(someDate) {
+          const today = new Date()
+          return someDate.getMonth() === today.getMonth()
+        },
+
+        isSelected(someDate) {
+          //console.log(someDate.toLocaleDateString('fr-CA'), this.selectedDate)
+          return someDate.toLocaleDateString('fr-CA') === this.selectedDate
+        },
+
+        computeDays() {
+          month = this
+            .months
+            .indexOf(this.month)
+
+          let numDays = 32 - new Date(this.year, month, 32).getDate()
+          this.calendar = Array.from({
+            length: numDays
+          }, (_, i) => new Date(this.year, month, i + 1))
+
+          let d = new Date(this.year, month, 1)
+          while (this.days[d.getDay()] !== 'Sunday') {
+            d.setDate(d.getDate() - 1)
+            this
+              .calendar
+              .unshift(new Date(d.getTime()))
+          }
+
+          d = new Date(this.year, month, numDays)
+          while (this.days[d.getDay()] !== 'Saturday') {
+            d.setDate(d.getDate() + 1)
+            this
+              .calendar
+              .push(new Date(d.getTime()))
+          }
+        }
+
+      }
+    }
+  </script>
 {% endblock %}
