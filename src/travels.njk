@@ -1,0 +1,664 @@
+{% set title = 'Birthdays' %}
+{% extends "layouts/inside.njk" %}
+
+{% block body %}
+  <div class="max-w-5xl mx-auto pt-8 px-5" x-data="dataCalendar">
+    <h2 class="text-lg font-semibold text-gray-900">Upcoming trips to Lebanon</h2>
+    <div class="lg:grid lg:grid-cols-12 lg:gap-x-16">
+      <div class="mt-10 text-center lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:mt-9 xl:col-start-9">
+        <div class="flex justify-between">
+          <div class="flex items-center text-gray-900 w-full">
+            <button @click="prevMonth" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Previous month</span>
+              <!-- Heroicon name: mini/chevron-left -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            <span class="flex-auto font-semibold" x-text="month"></span>
+            <button @click="nextMonth" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Next month</span>
+              <!-- Heroicon name: mini/chevron-right -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center text-gray-900 w-full">
+            <button @click="prevYear" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Previous year</span>
+              <!-- Heroicon name: mini/chevron-left -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            <span class="flex-auto font-semibold" x-text="year"></span>
+            <button @click="nextYear" type="button" class="-m-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500">
+              <span class="sr-only">Next year</span>
+              <!-- Heroicon name: mini/chevron-right -->
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="mt-6 grid grid-cols-7 text-xs leading-6 text-gray-500">
+          <div>S</div>
+          <div>M</div>
+          <div>T</div>
+          <div>W</div>
+          <div>T</div>
+          <div>F</div>
+          <div>S</div>
+        </div>
+        <div
+          class="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
+          <!--
+          Always include: "py-1.5 hover:bg-gray-100 focus:z-10"
+          Is current month, include: "bg-white"
+          Is not current month, include: "bg-gray-50"
+          Is selected or is today, include: "font-semibold"
+          Is selected, include: "text-white"
+          Is not selected, is not today, and is current month, include: "text-gray-900"
+          Is not selected, is not today, and is not current month, include: "text-gray-400"
+          Is today and is not selected, include: "text-indigo-600"
+
+          Top left day, include: "rounded-tl-lg"
+          Top right day, include: "rounded-tr-lg"
+          Bottom left day, include: "rounded-bl-lg"
+          Bottom right day, include: "rounded-br-lg"
+        -->
+          <template x-for="(day, dayIdx) in calendar" x-effect="computeDays">
+            <button @click="selectedDate = day.toLocaleDateString('fr-CA')" type="button" 
+            class="py-1.5 hover:bg-gray-100 focus:z-10"
+            :class="[
+              isCurrentMonth(day) ? 'bg-white' : 'bg-gray-50',
+                  (isSelected(day) || isToday(day)) && 'font-semibold',
+                  isSelected(day) && 'text-white',
+                  !isSelected(day) && isCurrentMonth(day) && !isToday(day) && 'text-gray-900',
+                  !isSelected(day) && !isCurrentMonth(day) && !isToday(day) && 'text-gray-400',
+                  isToday(day) && !isSelected(day) && 'text-indigo-600',
+                  dayIdx === 0 && 'rounded-tl-lg',
+                  dayIdx === 6 && 'rounded-tr-lg',
+                  dayIdx === calendar.length - 7 && 'rounded-bl-lg',
+                  dayIdx === calendar.length - 1 && 'rounded-br-lg'
+            ]">
+              <!--
+            Always include: "mx-auto flex h-7 w-7 items-center justify-center rounded-full"
+            Is selected and is today, include: "bg-indigo-600"
+            Is selected and is not today, include: "bg-gray-900"
+          -->
+              <time :class="isSelected(day) ? isToday(day) ? 'bg-indigo-600' : 'bg-gray-900' : ''"
+                :datetime="day.toLocaleDateString('fr-CA')" class="mx-auto flex h-7 w-7 items-center justify-center rounded-full" x-text="day.getDate()"></time>
+            </button>
+          </template>
+        </div>
+        <button @click="open = !open" type="button" class="mt-8 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add event</button>
+      </div>
+      <ol class="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8" x-data="{ events: [] }"
+      x-effect="console.log(selectedDate); events = (await (await fetch(`/api/travel?mode=read&arrival=${selectedDate}`)).json()).data.map((event) => {
+          return { label: event.traveler.first_name + ' ' + event.traveler.last_name, avatar_url: event.traveler.avatar_url, date: event.arrival_date, location: event.from, key: event.traveler.last_name + ' ' + event.traveler.first_name }
+      }).sort((a, b) => a.key.localeCompare(b.key))">
+        <template x-for="event in events">
+          <li class="relative flex space-x-6 py-6 xl:static">
+            <img :src="event.avatar_url.includes('unsplash') ? event.avatar_url + '&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80' : event.avatar_url" alt="" class="h-14 w-14 flex-none rounded-full">
+            <div class="flex-auto">
+              <h3 class="pr-10 font-semibold text-gray-900 xl:pr-0" x-text="event.label"></h3>
+              <dl class="mt-2 flex flex-col text-gray-500 xl:flex-row">
+                <div class="flex items-start space-x-3">
+                  <dt class="mt-0.5">
+                    <span class="sr-only">Date</span>
+                    <!-- Heroicon name: mini/calendar -->
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd"/>
+                    </svg>
+                  </dt>
+                  <dd>
+                    <time :datetime="new Date(event.date).toISOString()" 
+                      x-text="formatDate(new Date(event.date), 'MMMM d, y') + ' at ' + formatDate(new Date(event.date), 'h:mm aa')"></time>
+                  </dd>
+                </div>
+                <div class="mt-2 flex items-start space-x-3 xl:mt-0 xl:ml-3.5 xl:border-l xl:border-gray-400 xl:border-opacity-50 xl:pl-3.5">
+                  <dt class="mt-0.5">
+                    <span class="sr-only">Location</span>
+                    <!-- Heroicon name: mini/map-pin -->
+                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"/>
+                    </svg>
+                  </dt>
+                  <dd x-text="event.location"></dd>
+                </div>
+              </dl>
+            </div>
+            <div class="absolute top-6 right-0 xl:relative xl:top-auto xl:right-auto xl:self-center" x-data="{ open: false }">
+              <div>
+                <button @click="open = !open" type="button" class="-m-2 flex items-center rounded-full p-2 text-gray-500 hover:text-gray-600" id="menu-0-button" aria-expanded="false" aria-haspopup="true">
+                  <span class="sr-only">Open options</span>
+                  <!-- Heroicon name: mini/ellipsis-horizontal -->
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M3 10a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM8.5 10a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM15.5 8.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+              <div @click.outside="open = !open" x-show="open" class="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-0-button" tabindex="-1">
+                <div class="py-1" role="none">
+                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                  <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-0">Edit</a>
+                  <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-1">Cancel</a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </template>
+
+        <!-- More meetings... -->
+      </ol>
+    </div>
+
+    <div x-show="open" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <!--
+    Background backdrop, show/hide based on modal state.
+
+    Entering: "ease-out duration-300"
+      From: "opacity-0"
+      To: "opacity-100"
+    Leaving: "ease-in duration-200"
+      From: "opacity-100"
+      To: "opacity-0"
+  -->
+      <div x-show="open" 
+      x-transition:enter=" ease-out duration-300 "
+    x-transition:enter-start="opacity-0 "
+    x-transition:enter-end="opacity-100  "
+    x-transition:leave=" ease-in duration-200 "
+    x-transition:leave-start="opacity-100 "
+    x-transition:leave-end="opacity-0 "
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <!--
+        Modal panel, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          To: "opacity-100 translate-y-0 sm:scale-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100 translate-y-0 sm:scale-100"
+          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      -->
+          <div @click.outside="open = !open" x-show="open" 
+          x-transition:enter=" ease-out duration-300 "
+        x-transition:enter-start="opacity-0 translate-y-4 md:translate-y-0 md:scale-95 "
+        x-transition:enter-end="opacity-100 translate-y-0 md:scale-100  "
+        x-transition:leave=" ease-in duration-200 "
+        x-transition:leave-start="opacity-100 translate-y-0 md:scale-100 "
+        x-transition:leave-end="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+          class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+            <div>
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:mt-5">
+                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Travel Information</h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">When sharing your travel details, you agree to help solve the pharmaceutical crisis in Lebanon by transferring prescription drugs from abroad to those in need.</p>
+                </div>
+              </div>
+              <div>
+
+                <div class="grid sm:grid-cols-6 gap-3 mt-3">
+                  <div class="sm:col-span-3">
+                    <label for="from-country" class="block text-sm font-medium text-gray-900">Country</label>
+                    <select @change="fromCities = (await (await fetch('https://countriesnow.space/api/v0.1/countries/cities/q?country='+fromCountry)).json()).data"
+          x-ref="fromCountry" x-model="fromCountry" id="from-country" name="from-country" autocomplete="country-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <option disabled></option>
+                      <option value="Afghanistan">Afghanistan</option>
+                      <option value="Åland Islands">Åland Islands</option>
+                      <option value="Albania">Albania</option>
+                      <option value="Algeria">Algeria</option>
+                      <option value="American Samoa">American Samoa</option>
+                      <option value="Andorra">Andorra</option>
+                      <option value="Angola">Angola</option>
+                      <option value="Anguilla">Anguilla</option>
+                      <option value="Antarctica">Antarctica</option>
+                      <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                      <option value="Argentina">Argentina</option>
+                      <option value="Armenia">Armenia</option>
+                      <option value="Aruba">Aruba</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Austria">Austria</option>
+                      <option value="Azerbaijan">Azerbaijan</option>
+                      <option value="Bahamas">Bahamas</option>
+                      <option value="Bahrain">Bahrain</option>
+                      <option value="Bangladesh">Bangladesh</option>
+                      <option value="Barbados">Barbados</option>
+                      <option value="Belarus">Belarus</option>
+                      <option value="Belgium">Belgium</option>
+                      <option value="Belize">Belize</option>
+                      <option value="Benin">Benin</option>
+                      <option value="Bermuda">Bermuda</option>
+                      <option value="Bhutan">Bhutan</option>
+                      <option value="Bolivia">Bolivia</option>
+                      <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                      <option value="Botswana">Botswana</option>
+                      <option value="Bouvet Island">Bouvet Island</option>
+                      <option value="Brazil">Brazil</option>
+                      <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+                      <option value="Brunei Darussalam">Brunei Darussalam</option>
+                      <option value="Bulgaria">Bulgaria</option>
+                      <option value="Burkina Faso">Burkina Faso</option>
+                      <option value="Burundi">Burundi</option>
+                      <option value="Cambodia">Cambodia</option>
+                      <option value="Cameroon">Cameroon</option>
+                      <option value="Canada">Canada</option>
+                      <option value="Cape Verde">Cape Verde</option>
+                      <option value="Cayman Islands">Cayman Islands</option>
+                      <option value="Central African Republic">Central African Republic</option>
+                      <option value="Chad">Chad</option>
+                      <option value="Chile">Chile</option>
+                      <option value="China">China</option>
+                      <option value="Christmas Island">Christmas Island</option>
+                      <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+                      <option value="Colombia">Colombia</option>
+                      <option value="Comoros">Comoros</option>
+                      <option value="Congo">Congo</option>
+                      <option value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</option>
+                      <option value="Cook Islands">Cook Islands</option>
+                      <option value="Costa Rica">Costa Rica</option>
+                      <option value="Cote D'ivoire">Cote D'ivoire</option>
+                      <option value="Croatia">Croatia</option>
+                      <option value="Cuba">Cuba</option>
+                      <option value="Cyprus">Cyprus</option>
+                      <option value="Czech Republic">Czech Republic</option>
+                      <option value="Denmark">Denmark</option>
+                      <option value="Djibouti">Djibouti</option>
+                      <option value="Dominica">Dominica</option>
+                      <option value="Dominican Republic">Dominican Republic</option>
+                      <option value="Ecuador">Ecuador</option>
+                      <option value="Egypt">Egypt</option>
+                      <option value="El Salvador">El Salvador</option>
+                      <option value="Equatorial Guinea">Equatorial Guinea</option>
+                      <option value="Eritrea">Eritrea</option>
+                      <option value="Estonia">Estonia</option>
+                      <option value="Ethiopia">Ethiopia</option>
+                      <option value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</option>
+                      <option value="Faroe Islands">Faroe Islands</option>
+                      <option value="Fiji">Fiji</option>
+                      <option value="Finland">Finland</option>
+                      <option value="France">France</option>
+                      <option value="French Guiana">French Guiana</option>
+                      <option value="French Polynesia">French Polynesia</option>
+                      <option value="French Southern Territories">French Southern Territories</option>
+                      <option value="Gabon">Gabon</option>
+                      <option value="Gambia">Gambia</option>
+                      <option value="Georgia">Georgia</option>
+                      <option value="Germany">Germany</option>
+                      <option value="Ghana">Ghana</option>
+                      <option value="Gibraltar">Gibraltar</option>
+                      <option value="Greece">Greece</option>
+                      <option value="Greenland">Greenland</option>
+                      <option value="Grenada">Grenada</option>
+                      <option value="Guadeloupe">Guadeloupe</option>
+                      <option value="Guam">Guam</option>
+                      <option value="Guatemala">Guatemala</option>
+                      <option value="Guernsey">Guernsey</option>
+                      <option value="Guinea">Guinea</option>
+                      <option value="Guinea-bissau">Guinea-bissau</option>
+                      <option value="Guyana">Guyana</option>
+                      <option value="Haiti">Haiti</option>
+                      <option value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</option>
+                      <option value="Holy See (Vatican City State)">Holy See (Vatican City State)</option>
+                      <option value="Honduras">Honduras</option>
+                      <option value="Hong Kong">Hong Kong</option>
+                      <option value="Hungary">Hungary</option>
+                      <option value="Iceland">Iceland</option>
+                      <option value="India">India</option>
+                      <option value="Indonesia">Indonesia</option>
+                      <option value="Iran, Islamic Republic of">Iran, Islamic Republic of</option>
+                      <option value="Iraq">Iraq</option>
+                      <option value="Ireland">Ireland</option>
+                      <option value="Isle of Man">Isle of Man</option>
+                      <option value="Israel">Israel</option>
+                      <option value="Italy">Italy</option>
+                      <option value="Jamaica">Jamaica</option>
+                      <option value="Japan">Japan</option>
+                      <option value="Jersey">Jersey</option>
+                      <option value="Jordan">Jordan</option>
+                      <option value="Kazakhstan">Kazakhstan</option>
+                      <option value="Kenya">Kenya</option>
+                      <option value="Kiribati">Kiribati</option>
+                      <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
+                      <option value="Korea, Republic of">Korea, Republic of</option>
+                      <option value="Kuwait">Kuwait</option>
+                      <option value="Kyrgyzstan">Kyrgyzstan</option>
+                      <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+                      <option value="Latvia">Latvia</option>
+                      <option value="Lebanon">Lebanon</option>
+                      <option value="Lesotho">Lesotho</option>
+                      <option value="Liberia">Liberia</option>
+                      <option value="Libyan Arab Jamahiriya">Libyan Arab Jamahiriya</option>
+                      <option value="Liechtenstein">Liechtenstein</option>
+                      <option value="Lithuania">Lithuania</option>
+                      <option value="Luxembourg">Luxembourg</option>
+                      <option value="Macao">Macao</option>
+                      <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
+                      <option value="Madagascar">Madagascar</option>
+                      <option value="Malawi">Malawi</option>
+                      <option value="Malaysia">Malaysia</option>
+                      <option value="Maldives">Maldives</option>
+                      <option value="Mali">Mali</option>
+                      <option value="Malta">Malta</option>
+                      <option value="Marshall Islands">Marshall Islands</option>
+                      <option value="Martinique">Martinique</option>
+                      <option value="Mauritania">Mauritania</option>
+                      <option value="Mauritius">Mauritius</option>
+                      <option value="Mayotte">Mayotte</option>
+                      <option value="Mexico">Mexico</option>
+                      <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+                      <option value="Moldova, Republic of">Moldova, Republic of</option>
+                      <option value="Monaco">Monaco</option>
+                      <option value="Mongolia">Mongolia</option>
+                      <option value="Montenegro">Montenegro</option>
+                      <option value="Montserrat">Montserrat</option>
+                      <option value="Morocco">Morocco</option>
+                      <option value="Mozambique">Mozambique</option>
+                      <option value="Myanmar">Myanmar</option>
+                      <option value="Namibia">Namibia</option>
+                      <option value="Nauru">Nauru</option>
+                      <option value="Nepal">Nepal</option>
+                      <option value="Netherlands">Netherlands</option>
+                      <option value="Netherlands Antilles">Netherlands Antilles</option>
+                      <option value="New Caledonia">New Caledonia</option>
+                      <option value="New Zealand">New Zealand</option>
+                      <option value="Nicaragua">Nicaragua</option>
+                      <option value="Niger">Niger</option>
+                      <option value="Nigeria">Nigeria</option>
+                      <option value="Niue">Niue</option>
+                      <option value="Norfolk Island">Norfolk Island</option>
+                      <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+                      <option value="Norway">Norway</option>
+                      <option value="Oman">Oman</option>
+                      <option value="Pakistan">Pakistan</option>
+                      <option value="Palau">Palau</option>
+                      <option value="Palestinian Territory, Occupied">Palestinian Territory, Occupied</option>
+                      <option value="Panama">Panama</option>
+                      <option value="Papua New Guinea">Papua New Guinea</option>
+                      <option value="Paraguay">Paraguay</option>
+                      <option value="Peru">Peru</option>
+                      <option value="Philippines">Philippines</option>
+                      <option value="Pitcairn">Pitcairn</option>
+                      <option value="Poland">Poland</option>
+                      <option value="Portugal">Portugal</option>
+                      <option value="Puerto Rico">Puerto Rico</option>
+                      <option value="Qatar">Qatar</option>
+                      <option value="Reunion">Reunion</option>
+                      <option value="Romania">Romania</option>
+                      <option value="Russian Federation">Russian Federation</option>
+                      <option value="Rwanda">Rwanda</option>
+                      <option value="Saint Helena">Saint Helena</option>
+                      <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                      <option value="Saint Lucia">Saint Lucia</option>
+                      <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+                      <option value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</option>
+                      <option value="Samoa">Samoa</option>
+                      <option value="San Marino">San Marino</option>
+                      <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                      <option value="Saudi Arabia">Saudi Arabia</option>
+                      <option value="Senegal">Senegal</option>
+                      <option value="Serbia">Serbia</option>
+                      <option value="Seychelles">Seychelles</option>
+                      <option value="Sierra Leone">Sierra Leone</option>
+                      <option value="Singapore">Singapore</option>
+                      <option value="Slovakia">Slovakia</option>
+                      <option value="Slovenia">Slovenia</option>
+                      <option value="Solomon Islands">Solomon Islands</option>
+                      <option value="Somalia">Somalia</option>
+                      <option value="South Africa">South Africa</option>
+                      <option value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</option>
+                      <option value="Spain">Spain</option>
+                      <option value="Sri Lanka">Sri Lanka</option>
+                      <option value="Sudan">Sudan</option>
+                      <option value="Suriname">Suriname</option>
+                      <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+                      <option value="Swaziland">Swaziland</option>
+                      <option value="Sweden">Sweden</option>
+                      <option value="Switzerland">Switzerland</option>
+                      <option value="Syrian Arab Republic">Syrian Arab Republic</option>
+                      <option value="Taiwan">Taiwan</option>
+                      <option value="Tajikistan">Tajikistan</option>
+                      <option value="Tanzania, United Republic of">Tanzania, United Republic of</option>
+                      <option value="Thailand">Thailand</option>
+                      <option value="Timor-leste">Timor-leste</option>
+                      <option value="Togo">Togo</option>
+                      <option value="Tokelau">Tokelau</option>
+                      <option value="Tonga">Tonga</option>
+                      <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                      <option value="Tunisia">Tunisia</option>
+                      <option value="Turkey">Turkey</option>
+                      <option value="Turkmenistan">Turkmenistan</option>
+                      <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+                      <option value="Tuvalu">Tuvalu</option>
+                      <option value="Uganda">Uganda</option>
+                      <option value="Ukraine">Ukraine</option>
+                      <option value="United Arab Emirates">United Arab Emirates</option>
+                      <option value="United Kingdom">United Kingdom</option>
+                      <option value="United States">United States</option>
+                      <option value="United States Minor Outlying Islands">United States Minor Outlying Islands</option>
+                      <option value="Uruguay">Uruguay</option>
+                      <option value="Uzbekistan">Uzbekistan</option>
+                      <option value="Vanuatu">Vanuatu</option>
+                      <option value="Venezuela">Venezuela</option>
+                      <option value="Viet Nam">Viet Nam</option>
+                      <option value="Virgin Islands, British">Virgin Islands, British</option>
+                      <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
+                      <option value="Wallis and Futuna">Wallis and Futuna</option>
+                      <option value="Western Sahara">Western Sahara</option>
+                      <option value="Yemen">Yemen</option>
+                      <option value="Zambia">Zambia</option>
+                      <option value="Zimbabwe">Zimbabwe</option>
+                    </select>
+                  </div>
+
+                  <div class="sm:col-span-3">
+                    <label for="from-city" class="block text-sm font-medium text-gray-900">City</label>
+                    <select x-ref="fromCity" x-model="fromCity" id="from-city" name="from-city" autocomplete="city-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                      <option disabled></option>
+                      <template x-for="city in fromCities" :key="city">
+                        <option :value="city">
+                          <span x-text="city"></span></option>
+                      </template>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="mt-2">
+                  <label for="arrival-date" class="block text-sm font-medium leading-6 text-gray-900">Arrival</label>
+                  <div class="mt-1">
+                    <input x-model="arrivalDate" type="datetime-local" name="arrival-date" id="arrival-date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="you@example.com">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+              <button @click="handleSubmit" type="button" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2">Submit</button>
+              <button @click="open = !open" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script>
+    function dataCalendar() {
+      return {
+
+        open: false,
+        arrivalDate: new Date(),
+        fromCities: [],
+        fromCountry: null,
+        fromCity: null,
+
+        days: [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+        ],
+        months: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December'
+        ],
+        year: null,
+        month: null,
+        selectedDate: new Date().toLocaleDateString('fr-CA'),
+        calendar: [],
+
+        async handleSubmit() {
+          const obj = {
+            traveler: Alpine
+              .store('auth')
+              .user
+              .email,
+            arrival_date: this.arrivalDate,
+            from: this.fromCity + ', ' + this.fromCountry
+          }
+          fetch('/api/travel?mode=create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(obj)
+          })
+            .then((response) => response.json())
+            .then((message) => {
+              if (message.success) {
+                this
+                  .notifications
+                  .push({show: true, success: true, title: 'Successfully saved!', description: 'Travel information are now visible.'})
+                Alpine
+                  .store('auth')
+                  .getLoggedInUser()
+              } else 
+                this
+                  .notifications
+                  .push({show: true, success: false, title: 'Sharing failed...', description: 'There was an error saving your travel information.'})
+              })
+            .catch((error) => {
+              console.error(error)
+              this
+                .notifications
+                .push({show: true, success: false, title: 'Sharing failed...', description: 'There was an error saving your travel information.'})
+            })
+            . finally(() => {
+              this.showNotifications = true
+            })
+
+        },
+
+        nextYear() {
+          this.year = this.year + 1
+        },
+
+        prevYear() {
+          this.year = this.year - 1
+        },
+
+        nextMonth() {
+          let m = this
+            .months
+            .indexOf(this.month) + 1
+          if (m > 11) 
+            this.nextYear()
+          this.month = this.months[m % 12]
+        },
+
+        prevMonth() {
+          let m = this
+            .months
+            .indexOf(this.month) - 1
+          if (m < 0) 
+            this.prevYear()
+          this.month = this.months[(m + 12) % 12]
+        },
+
+        init() {
+          this.year = (new Date()).getFullYear()
+          let month = (new Date()).getMonth()
+          this.month = this.months[month]
+        },
+
+        isToday(someDate) {
+          const today = new Date()
+          return someDate.getDate() == today.getDate() && someDate.getMonth() == today.getMonth() && someDate.getFullYear() == today.getFullYear()
+        },
+
+        isCurrentMonth(someDate) {
+          const today = new Date()
+          return someDate.getMonth() === today.getMonth()
+        },
+
+        isSelected(someDate) {
+          //console.log(someDate.toLocaleDateString('fr-CA'), this.selectedDate)
+          return someDate.toLocaleDateString('fr-CA') === this.selectedDate
+        },
+
+        computeDays() {
+          month = this
+            .months
+            .indexOf(this.month)
+
+          let numDays = 32 - new Date(this.year, month, 32).getDate()
+          this.calendar = Array.from({
+            length: numDays
+          }, (_, i) => new Date(this.year, month, i + 1))
+
+          let d = new Date(this.year, month, 1)
+          while (this.days[d.getDay()] !== 'Sunday') {
+            d.setDate(d.getDate() - 1)
+            this
+              .calendar
+              .unshift(new Date(d.getTime()))
+          }
+
+          d = new Date(this.year, month, numDays)
+          while (this.days[d.getDay()] !== 'Saturday') {
+            d.setDate(d.getDate() + 1)
+            this
+              .calendar
+              .push(new Date(d.getTime()))
+          }
+        }
+
+      }
+    }
+  </script>
+{% endblock %}

@@ -20,7 +20,7 @@
 <nav x-data="{ open: false, links: [
     { text: 'Home', href: '/home/' },
     { text: 'Directory', href: '/directory/' },
-    { text: 'Calendar', href: '/birthdays/' }
+    { text: 'Travels', href: '/travels/' }
   ] }" 
   class="bg-white shadow">
   <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
@@ -178,7 +178,7 @@
         { text: 'Trending', href: '/home/?tab=Trending' },
         { text: 'Favorites', href: '/home/?tab=Favorites' },
         { text: 'Directory', href: '/directory/' },
-        { text: 'Calendar', href: '/birthdays/' }
+        { text: 'Travels', href: '/travels/' }
       ]">
     <div class="space-y-1 pt-2 pb-3">
       <template x-for="link in links" :key="link.href">
