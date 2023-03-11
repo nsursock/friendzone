@@ -93,11 +93,11 @@
             </button>
           </template>
         </div>
-        <button @click="open = !open" type="button" class="mt-8 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add event</button>
+        <button @click="open = !open" type="button" class="mt-8 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add trip</button>
       </div>
       <ol class="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8" x-data="{ events: [] }"
       x-effect="console.log(selectedDate); events = (await (await fetch(`/api/travel?mode=read&arrival=${selectedDate}`)).json()).data.map((event) => {
-          return { label: event.traveler.first_name + ' ' + event.traveler.last_name, avatar_url: event.traveler.avatar_url, date: event.arrival_date, location: event.from, key: event.traveler.last_name + ' ' + event.traveler.first_name }
+          return { fname: event.traveler.first_name, lname: event.traveler.last_name, id: event.traveler.email, label: event.traveler.first_name + ' ' + event.traveler.last_name, avatar_url: event.traveler.avatar_url, date: event.arrival_date, location: event.from, key: event.traveler.last_name + ' ' + event.traveler.first_name }
       }).sort((a, b) => a.key.localeCompare(b.key))">
         <template x-for="event in events">
           <li class="relative flex space-x-6 py-6 xl:static">
@@ -152,11 +152,25 @@
               To: "transform opacity-0 scale-95"
           -->
               <div @click.outside="open = !open" x-show="open" class="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-0-button" tabindex="-1">
-                <div class="py-1" role="none">
-                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                  <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-0">Edit</a>
-                  <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-1">Cancel</a>
-                </div>
+                <template x-if="$store.auth.user?.email === event.id">
+                  <div class="py-1" role="none">
+                    <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                    <a href="#" class="hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-0">Edit</a>
+                    <a href="#" class="hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-1">Cancel</a>
+                  </div>
+                </template>
+                <template x-if="$store.auth.user?.email !== event.id">
+                  <div class="py-1" role="none">
+                    <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                    <button @click="openContacts = !openContacts; tabs.push({ 
+                                id: event.id, 
+                                name: event.fname + ' ' + event.lname,
+                                initials: event.fname[0] + event.lname[0], 
+                                picture: event.avatar_url 
+                              })" class="text-left w-full hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-0">Message</button>
+                    <a :href="`/profile/?email=${event.id}`" class="hover:bg-gray-100 hover:text-gray-900 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-0-item-1">Profile</a>
+                  </div>
+                </template>
               </div>
             </div>
           </li>
@@ -225,7 +239,7 @@
                     <label for="from-country" class="block text-sm font-medium text-gray-900">Country</label>
                     <select @change="fromCities = (await (await fetch('https://countriesnow.space/api/v0.1/countries/cities/q?country='+fromCountry)).json()).data"
           x-ref="fromCountry" x-model="fromCountry" id="from-country" name="from-country" autocomplete="country-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                      <option disabled></option>
+                      <option selected></option>
                       <option value="Afghanistan">Afghanistan</option>
                       <option value="Åland Islands">Åland Islands</option>
                       <option value="Albania">Albania</option>
@@ -476,8 +490,8 @@
                   <div class="sm:col-span-3">
                     <label for="from-city" class="block text-sm font-medium text-gray-900">City</label>
                     <select x-ref="fromCity" x-model="fromCity" id="from-city" name="from-city" autocomplete="city-name" class="mt-1 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                      <option disabled></option>
-                      <template x-for="city in fromCities" :key="city">
+                      <option selected></option>
+                      <template x-for="city in fromCities.sort((a,b) => a.localeCompare(b))" :key="city">
                         <option :value="city">
                           <span x-text="city"></span></option>
                       </template>
@@ -495,7 +509,7 @@
               </div>
             </div>
             <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-              <button @click="handleSubmit" type="button" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2">Submit</button>
+              <button @click="open = !open; handleSubmit()" type="button" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2">Submit</button>
               <button @click="open = !open" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0">Cancel</button>
             </div>
           </div>

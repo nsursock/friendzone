@@ -33,7 +33,7 @@ export default async function handler(request, response) {
         var { data, error } = (
           await supabase
             .from(table)
-            .select('traveler (first_name, last_name, avatar_url), arrival_date, from')
+            .select('traveler (email, first_name, last_name, avatar_url), arrival_date, from')
             .lt('arrival_date', dateString2)
             .gt('arrival_date', dateString1)
         )
