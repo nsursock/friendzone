@@ -49,7 +49,7 @@ const { faker } = require('@faker-js/faker');
       var { data, error } = await supabase.from(table).insert({
         traveler: emails[index % emails.length],
         arrival_date: faker.date.future(),
-        from: faker.address.city() + ', ' + faker.address.country(),
+        from: faker.address.city() + ' (' + faker.address.country() + ')',
       }).select('*')
 
       console.log({

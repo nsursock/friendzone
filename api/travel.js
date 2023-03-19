@@ -13,10 +13,20 @@ export default async function handler(request, response) {
       : 'travels.dev'
 
     switch (request.query.mode) {
-      case 'create':
-        const { traveler, arrival_date, from, to } = request.body
+      case 'edit':
+        var { traveler, arrival_date, from, to } = request.body
 
-        let object = { traveler, arrival_date, from, to }
+        var object = { traveler, arrival_date, from, to }
+        var { data, error } = await supabase.from(table).update(object).eq('id', request.query.id).select('*')
+
+        if (error) throw new Error(error)
+        response.status(200).json({ success: true })
+        break
+
+      case 'create':
+        var { traveler, arrival_date, from, to } = request.body
+
+        var object = { traveler, arrival_date, from, to }
         var { data, error } = await supabase.from(table).insert(object).select('*')
 
         if (error) throw new Error(error)
@@ -33,7 +43,7 @@ export default async function handler(request, response) {
         var { data, error } = (
           await supabase
             .from(table)
-            .select('traveler (email, first_name, last_name, avatar_url), arrival_date, from')
+            .select('id, traveler (email, first_name, last_name, avatar_url), arrival_date, from')
             .lt('arrival_date', dateString2)
             .gt('arrival_date', dateString1)
         )

@@ -303,12 +303,13 @@
                               </div>
                             </div>
                           </div>
-                          <div x-html="marked.parse(shared.content)" class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
+                          <div x-html="marked.parse(shared.content)" :class="/[\u0600-\u06FF]/.test(shared.content) && 'text-right'" class="prose mt-2 space-y-4 text-sm text-gray-700"></div>
                         </article>
 
                       </template>
                       <template x-if="!shared">
                         <div x-data="{ content: null }" x-effect="if (post.content) content = marked.parse(post.content)" x-html="content" 
+                        :class="/[\u0600-\u06FF]/.test(post.content) && 'text-right'"
                         class="prose mt-2 space-y-4 text-sm text-gray-700 prose-p:leading-snug"></div>
                       </template>
                       <div class="mt-6 flex justify-between space-x-8">
@@ -480,7 +481,7 @@
                                     </div>
                                   </div>
 
-                                  <div class="mt-2 text-sm text-gray-700">
+                                  <div class="mt-2 text-sm text-gray-700" :class="/[\u0600-\u06FF]/.test(comment.content) && 'text-right'">
                                     <p class="prose prose-sm prose-p:leading-snug" x-html="marked.parse(comment.content)"></p>
                                   </div>
 
