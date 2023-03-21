@@ -47,7 +47,7 @@ const { faker } = require('@faker-js/faker');
     for (let index = 0; index < num; index++) {
 
       var { data, error } = await supabase.from(table).insert({
-        related_id: ids[index % ids.length],
+        related_id: 8605, //ids[index % ids.length],
         created_at: faker.date.recent(20),
         author: emails[index % emails.length],
         content: faker.lorem.text(),
